@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'signup_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -14,27 +13,22 @@ class LoginPage extends StatelessWidget {
             flex: 4,
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(color: Color(0xffaf6363)),
+              decoration: const BoxDecoration(color: Color(0xffaf6363)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
                   Container(
-                    width: 180,
-                    height: 180,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xfffff299), shape: BoxShape.circle),
+                    margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    width: 230,
+                    height: 230,
+                    child: const Image(
+                      image: AssetImage('assets/pplogo.png'),
                     ),
                   ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Text(
-                    'PENNYPLANNER',
-                    style: TextStyle(color: Color(0xfffff299), fontSize: 30),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: const Image(
+                        image: AssetImage('assets/pplogo_bold_yellow.png')),
                   ),
                 ],
               ),
@@ -44,56 +38,79 @@ class LoginPage extends StatelessWidget {
             flex: 6,
             child: Container(
               width: double.infinity,
-              decoration: BoxDecoration(color: Color(0xffffe380)),
+              decoration: const BoxDecoration(color: Color(0xffffe380)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  Expanded(
+                    flex: 7,
                     child: Column(
                       children: [
                         ElevatedButton(
                           onPressed: null,
                           child: Text('LOG IN'),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(150, 35),
+                            backgroundColor: Color(0xffaf6363),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0)),
+                          ),
                         ),
                         ElevatedButton(
-                          onPressed: null,
-                          child: Text('SIGN UP'),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        const SignupPage(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(150, 35),
+                            backgroundColor: Color(0xffaf6363),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0)),
+                          ),
+                          child: const Text('SIGN UP'),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
-                  Container(
+                  Expanded(
+                    flex: 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           width: double.infinity,
-                          margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          decoration: BoxDecoration(
+                          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                          decoration: const BoxDecoration(
                             border: Border(
                               bottom: BorderSide(width: 1, color: Colors.black),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'OR CONTINUE WITH SOCIAL MEDIA',
                             style: TextStyle(
-                              fontFamily: 'Hotel De Paris Xe',
+                              fontFamily: 'Hind Siliguri',
                               fontSize: 12,
                             ),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                            height: 30,
-                            width: 30,
-                            child: Image(
-                                image: AssetImage('assets/google_logo.png')))
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Image(
+                              image: AssetImage('assets/google_logo.png')),
+                          iconSize: 30,
+                        )
                       ],
                     ),
                   ),
