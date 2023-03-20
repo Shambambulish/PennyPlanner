@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pennyplanner/logincred.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -47,14 +48,25 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         ElevatedButton(
-                          onPressed: null,
-                          child: Text('LOG IN'),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        const LoginCred(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(150, 35),
                             backgroundColor: Color(0xffaf6363),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6.0)),
                           ),
+                          child: const Text('LOG IN'),
                         ),
                         ElevatedButton(
                           onPressed: () {
