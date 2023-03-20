@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'home_page.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<SignupPage> createState() => SignupPageState();
+  State<SignInPage> createState() => SignInPageState();
 }
 
-class SignupPageState extends State<SignupPage> {
+class SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +65,7 @@ class SignupPageState extends State<SignupPage> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
                               child: const Text(
-                                'CREATE AN ACCOUNT',
+                                'LOG IN',
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
@@ -77,38 +78,6 @@ class SignupPageState extends State<SignupPage> {
                             margin: const EdgeInsets.fromLTRB(60, 10, 60, 0),
                             child: Column(
                               children: [
-                                const SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    'Username',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 18, color: Color(0xff0F5B2E)),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 35,
-                                  child: TextField(
-                                    cursorColor: Colors.black,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              width: 1,
-                                              color: Color(0xff0F5B2E)),
-                                          borderRadius:
-                                              BorderRadius.circular(30.0)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              width: 1,
-                                              color: Color(0xff0F5B2E)),
-                                          borderRadius:
-                                              BorderRadius.circular(30.0)),
-                                    ),
-                                  ),
-                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -188,9 +157,13 @@ class SignupPageState extends State<SignupPage> {
                           ElevatedButton(
                             onPressed: () {
                               const snackBar =
-                                  SnackBar(content: Text('Clicked SIGN UP'));
+                                  SnackBar(content: Text('Signing in'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomePage()));
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
@@ -198,7 +171,7 @@ class SignupPageState extends State<SignupPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6.0)),
                             ),
-                            child: const Text('SIGN UP'),
+                            child: const Text('SIGN IN'),
                           ),
                         ],
                       ),

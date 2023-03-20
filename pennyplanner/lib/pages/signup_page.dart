@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LoginCred extends StatefulWidget {
-  const LoginCred({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginCred> createState() => LoginCredState();
+  State<SignUpPage> createState() => SignUpPageState();
 }
 
-class LoginCredState extends State<LoginCred> {
+class SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +64,7 @@ class LoginCredState extends State<LoginCred> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
                               child: const Text(
-                                'LOG IN',
+                                'CREATE AN ACCOUNT',
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
@@ -77,6 +77,38 @@ class LoginCredState extends State<LoginCred> {
                             margin: const EdgeInsets.fromLTRB(60, 10, 60, 0),
                             child: Column(
                               children: [
+                                const SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    'Username',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 18, color: Color(0xff0F5B2E)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 35,
+                                  child: TextField(
+                                    cursorColor: Colors.black,
+                                    obscureText: false,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              width: 1,
+                                              color: Color(0xff0F5B2E)),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              width: 1,
+                                              color: Color(0xff0F5B2E)),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0)),
+                                    ),
+                                  ),
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -156,7 +188,7 @@ class LoginCredState extends State<LoginCred> {
                           ElevatedButton(
                             onPressed: () {
                               const snackBar =
-                                  SnackBar(content: Text('Signing in'));
+                                  SnackBar(content: Text('Clicked SIGN UP'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             },
@@ -166,7 +198,7 @@ class LoginCredState extends State<LoginCred> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6.0)),
                             ),
-                            child: const Text('SIGN IN'),
+                            child: const Text('SIGN UP'),
                           ),
                         ],
                       ),

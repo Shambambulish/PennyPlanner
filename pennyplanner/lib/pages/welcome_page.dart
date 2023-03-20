@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pennyplanner/cost_tracker_page.dart';
-import 'package:pennyplanner/logincred.dart';
+import 'package:pennyplanner/signin_page.dart';
 import 'signup_page.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +54,15 @@ class LoginPage extends StatelessWidget {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation1, animation2) =>
-                                        const LoginCred(),
+                                        const SignInPage(),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
                               ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(150, 35),
-                            backgroundColor: Color(0xffaf6363),
+                            minimumSize: const Size(150, 35),
+                            backgroundColor: const Color(0xffaf6363),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6.0)),
                           ),
@@ -76,15 +75,15 @@ class LoginPage extends StatelessWidget {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation1, animation2) =>
-                                        const SignupPage(),
+                                        const SignUpPage(),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
                               ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            minimumSize: Size(150, 35),
-                            backgroundColor: Color(0xffaf6363),
+                            minimumSize: const Size(150, 35),
+                            backgroundColor: const Color(0xffaf6363),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6.0)),
                           ),

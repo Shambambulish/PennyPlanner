@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../widgets/pp_appbar.dart';
 
-class CostTrackerPage extends StatefulWidget {
-  const CostTrackerPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<CostTrackerPage> createState() => _CostTrackerPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _CostTrackerPageState extends State<CostTrackerPage> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: const PPAppBar(
-          title: 'Ayaya',
-          returnToMain: false,
+          title: 'Home Page',
+          returnToHomePage: false,
         ),
         body: Column(
           children: [
@@ -56,7 +56,7 @@ class _CostTrackerPageState extends State<CostTrackerPage> {
                             ],
                           ),
                           child: Column(
-                            children: [],
+                            children: const [],
                           )),
                     ),
                     Expanded(
@@ -83,7 +83,7 @@ class _CostTrackerPageState extends State<CostTrackerPage> {
                             ],
                           ),
                           child: Column(
-                            children: [],
+                            children: const [],
                           )),
                     ),
                     Expanded(flex: 7, child: Container()),
@@ -108,7 +108,7 @@ class _CostTrackerPageState extends State<CostTrackerPage> {
                               ],
                             ),
                             child: Column(
-                              children: [],
+                              children: const [],
                             )),
                       ),
                       Expanded(flex: 7, child: Container()),

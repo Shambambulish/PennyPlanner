@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pennyplanner/cost_tracker_page.dart';
+import '../pages/home_page.dart';
 
 class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool returnToMain;
+  final bool returnToHomePage;
   const PPAppBar({
     this.title = '',
-    this.returnToMain = true,
+    this.returnToHomePage = true,
     super.key,
   });
 
@@ -25,14 +25,13 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
               Material(
                 borderRadius: BorderRadius.circular(36),
                 color: Colors.transparent,
-                child: returnToMain
+                child: returnToHomePage
                     ? InkWell(
                         onTap: () {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CostTrackerPage()));
+                                  builder: (context) => const HomePage()));
                         },
                         child: Image.asset('assets/pplogo_red.png'),
                       )
