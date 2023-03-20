@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pennyplanner/cost_tracker_page.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -47,7 +48,10 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         ElevatedButton(
-                          onPressed: null,
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const CostTrackerPage()));
+                          },
                           child: Text('LOG IN'),
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(150, 35),
