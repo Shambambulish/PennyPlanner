@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
+import '../pages/settings_page.dart';
 
 class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -45,7 +46,12 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
                 borderRadius: BorderRadius.circular(36),
                 color: Colors.transparent,
                 child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SettingsPage()));
+                    },
                     iconSize: 30,
                     icon: const Icon(Icons.settings_outlined)),
               )
