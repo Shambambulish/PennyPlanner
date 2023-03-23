@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pennyplanner/pages/settings_page.dart';
+import 'package:pennyplanner/pages/home_page.dart';
 import 'pages/welcome_page.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
+      home: const HomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
     );
   }
 }
