@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pennyplanner/signin_page.dart';
+import 'signin_page.dart';
 import 'signup_page.dart';
 
 class WelcomePage extends StatelessWidget {

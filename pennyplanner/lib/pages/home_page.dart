@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pennyplanner/widgets/manage_expenses.dart';
 
 import '../widgets/pp_appbar.dart';
 
@@ -40,30 +41,7 @@ class _HomePageState extends State<HomePage> {
               child: TabBarView(children: [
                 // 1st tab
                 Container(
-                  child: Column(children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 5))
-                            ],
-                          ),
-                          child: Column(
-                            children: const [],
-                          )),
-                    ),
-                    Expanded(
-                      flex: 7,
-                      child: Container(),
-                    ),
-                  ]),
+                  child: const ManageExpenses(),
                 ),
                 // 2nd tab
                 Container(
