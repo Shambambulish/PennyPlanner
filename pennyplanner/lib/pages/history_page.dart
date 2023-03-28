@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/pp_appbar.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -9,37 +10,25 @@ class HistoryPage extends StatefulWidget {
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
+//MAP CATEGORIES
+Map<String, double> categoryMap = {
+  "Groceries": 5,
+  "Bills": 3,
+  "Car": 2,
+  "Funmoney": 2,
+};
+
 class _HistoryPageState extends State<HistoryPage> {
   bool init = false;
 
   List<Widget> categoryElements = [];
-  List<Widget> expenseElements = [];
   List<List<Widget>> allElements = [];
-
-  FractionallySizedBox testElement = FractionallySizedBox(
-    widthFactor: 1,
-    child: Container(
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 3,
-              offset: const Offset(0, 5))
-        ],
-      ),
-      child: Text("moi"),
-    ),
-  );
 
   var listOpenIndex = -1;
   List<Widget> testElements = [];
 
   void InitCategoryElements() {
-    print("run only once");
-    for (var i = 0; i < 2; i++) {
+    categoryMap.forEach((key, value) {
       categoryElements.add(Column(children: [
         FractionallySizedBox(
             alignment: Alignment.topCenter,
@@ -47,12 +36,22 @@ class _HistoryPageState extends State<HistoryPage> {
             child: InkWell(
                 onTap: () {
                   //
-                  setState(() {
-                    GetElements(0);
-                  });
+                  setState(() {});
                 },
                 child: Container(
                   height: 50,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      key,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w100,
+                          fontFamily: "Hind Siliguri",
+                          color: Color(0xff0F5B2E)),
+                    ),
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14),
@@ -65,28 +64,12 @@ class _HistoryPageState extends State<HistoryPage> {
                     ],
                   ),
                 ))),
-        Column(children: [
-          for (var e in expenseElements) ...[
-            SizedBox(
-              height: 20,
-            ),
-            Container(child: e),
-          ],
-        ])
       ]));
-    }
+    });
   }
 
   void InitTestElements() {
-    testElements.add(testElement);
-    testElements.add(testElement);
-    testElements.add(testElement);
-    allElements.add(testElements);
     init = true;
-  }
-
-  void GetElements(int index) {
-    expenseElements = allElements[index];
   }
 
   @override
@@ -98,38 +81,59 @@ class _HistoryPageState extends State<HistoryPage> {
 
     return Stack(
       children: [
-        Container(
-          child: Column(children: [
+        Column(
+          children: [
             Expanded(
-              flex: 3,
-              child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 3,
-                          offset: const Offset(0, 5))
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.only(top: 20, left: 20),
-                          child: Text("Jan 1. 2023 - Mar 16. 2023",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w100,
-                                  fontFamily: "Hind Siliguri",
-                                  color: Color(0xff0F5B2E))))
-                    ],
-                  )),
-            ),
-            SizedBox(height: 20),
+                flex: 5,
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(top: 20, left: 20),
+                        child: Text(
+                          "Jan 1. 2023 - Mar 16. 2023",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w100,
+                              fontFamily: "Hind Siliguri",
+                              color: Color(0xff0F5B2E)),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 4,
+                        child: PieChart(
+                          dataMap: categoryMap,
+                          animationDuration: Duration(milliseconds: 800),
+                          chartLegendSpacing: 32,
+                          chartRadius: MediaQuery.of(context).size.width / 3.2,
+                          initialAngleInDegree: 0,
+                          chartType: ChartType.ring,
+                          ringStrokeWidth: 32,
+                          centerText: "",
+                          legendOptions: LegendOptions(
+                            showLegendsInRow: false,
+                            legendPosition: LegendPosition.right,
+                            showLegends: true,
+                            legendTextStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          chartValuesOptions: ChartValuesOptions(
+                            showChartValueBackground: true,
+                            showChartValues: true,
+                            showChartValuesInPercentage: false,
+                            showChartValuesOutside: false,
+                            decimalPlaces: 1,
+                          ),
+                          // gradientList: ---To add gradient colors---
+                          // emptyColorGradient: ---Empty Color gradient---
+                        ))
+                  ],
+                )),
             Expanded(
               flex: 7,
               child: Column(children: [
@@ -141,7 +145,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ],
               ]),
             ),
-          ]),
+          ],
         ),
       ],
     );
