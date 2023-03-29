@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/pp_appbar.dart';
 import 'package:pie_chart/pie_chart.dart';
+import '../widgets/expanding_category_container.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -29,54 +28,17 @@ class _HistoryPageState extends State<HistoryPage> {
 
   void InitCategoryElements() {
     categoryMap.forEach((key, value) {
-      categoryElements.add(Column(children: [
-        FractionallySizedBox(
-            alignment: Alignment.topCenter,
-            widthFactor: 0.9,
-            child: InkWell(
-                onTap: () {
-                  //
-                  setState(() {});
-                },
-                child: Container(
-                  height: 50,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      key,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w100,
-                          fontFamily: "Hind Siliguri",
-                          color: Color(0xff0F5B2E)),
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 3,
-                          offset: const Offset(0, 5))
-                    ],
-                  ),
-                ))),
-      ]));
+      categoryElements.add(ExpandingCategoryContainer(
+        categoryName: 'kategoria',
+      ));
     });
-  }
-
-  void InitTestElements() {
-    init = true;
   }
 
   @override
   Widget build(BuildContext context) {
     if (!init) {
       InitCategoryElements();
-      InitTestElements();
+      init = true;
     }
 
     return Stack(
@@ -92,7 +54,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       child: Container(
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.only(top: 20, left: 20),
-                        child: Text(
+                        child: const Text(
                           "Jan 1. 2023 - Mar 16. 2023",
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -114,7 +76,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           chartType: ChartType.ring,
                           ringStrokeWidth: 32,
                           centerText: "",
-                          legendOptions: LegendOptions(
+                          legendOptions: const LegendOptions(
                             showLegendsInRow: false,
                             legendPosition: LegendPosition.right,
                             showLegends: true,
@@ -122,7 +84,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          chartValuesOptions: ChartValuesOptions(
+                          chartValuesOptions: const ChartValuesOptions(
                             showChartValueBackground: true,
                             showChartValues: true,
                             showChartValuesInPercentage: false,
