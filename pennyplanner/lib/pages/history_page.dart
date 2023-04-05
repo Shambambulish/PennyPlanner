@@ -128,38 +128,46 @@ class _HistoryPageState extends State<HistoryPage> {
                           //BoxDecoration(border: Border.all(width: 1)),
                           child: Column(
                             children: [
-                              Text(
-                                resultsData[i][0].toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w100,
-                                    fontFamily: "Hind Siliguri",
-                                    color: Color(0xff0F5B2E)),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  resultsData[i][0].toString(),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w100,
+                                      fontFamily: "Hind Siliguri",
+                                      color: Color(0xff0F5B2E)),
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      collapsed: SizedBox(
-                          height: 20,
-                          child: Text(resultsData[i][1].length.toString() +
-                              " results")),
+                      collapsed: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                            height: 20,
+                            child: Text(resultsData[i][1].length.toString() +
+                                " results")),
+                      ),
                       expanded: Column(children: [
                         for (var e in resultsData[i][1])
                           Row(children: [
                             for (var ex in e)
                               Expanded(
                                   flex: 4,
-                                  child: Text(
-                                    ex.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w100,
-                                        fontFamily: "Hind Siliguri",
-                                        color: Color(0xff0F5B2E)),
-                                  ))
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        ex.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w100,
+                                            fontFamily: "Hind Siliguri",
+                                            color: Color(0xff0F5B2E)),
+                                      )))
                           ]),
                       ]),
                     ),
