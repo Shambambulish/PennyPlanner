@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/pp_appbar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, User? user});
 
   @override
   State<HomePage> createState() => _HomePageState();
