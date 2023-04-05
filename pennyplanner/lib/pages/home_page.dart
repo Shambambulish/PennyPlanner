@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../widgets/pp_appbar.dart';
 import 'history_page.dart';
+import 'package:pennyplanner/notifications.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +12,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final Notifications notificationService;
+
+  @override
+  void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
+    notificationService = Notifications();
+    notificationService.initialize();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -57,7 +68,19 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           child: Column(
-                            children: const [],
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: ElevatedButton(
+                                      onPressed: () async {
+                                        await notificationService
+                                            .showNotification(
+                                                id: 0,
+                                                title: "title",
+                                                body: "body");
+                                      },
+                                      child: const Text("notifikaatio"))),
+                            ],
                           )),
                     ),
                     Expanded(
