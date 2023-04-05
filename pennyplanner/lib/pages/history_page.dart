@@ -3,10 +3,11 @@ import 'dart:math';
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  HistoryPage({super.key, startDate, endDate});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -15,13 +16,19 @@ class HistoryPage extends StatefulWidget {
 //MAP CATEGORIES
 
 class _HistoryPageState extends State<HistoryPage> {
-  bool init = false;
-
-  var listOpenIndex = -1;
-  List<Widget> testElements = [];
+  DateTime? startDate = DateTime.now();
+  DateTime? endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    void FetchWithDate() {
+      print("fetchwithdate");
+      //tietokantakutsu startdaten ja enddaten perusteella
+      // asetus resultdataan
+    }
+
+    FetchWithDate();
+
     List resultsData = [
       [
         "Groceries",
@@ -65,23 +72,83 @@ class _HistoryPageState extends State<HistoryPage> {
       return chartMap;
     }
 
+    DateFormat dateFormat =
+        DateFormat.yMMMMd(); // how you want it to be formatted
+
     return Stack(children: [
       Column(
         children: [
           Column(
             children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(top: 20, left: 20, bottom: 20),
-                child: const Text(
-                  "Jan 1. 2023 - Mar 16. 2023",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w100,
-                      fontFamily: "Hind Siliguri",
-                      color: Color(0xff0F5B2E)),
-                ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(children: [
+                  InkWell(
+                    child: Text(
+                      dateFormat.format(startDate!),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w100,
+                          fontFamily: "Hind Siliguri",
+                          color: Color(0xff0F5B2E)),
+                    ),
+                    onTap: () async {
+                      DateTime d = DateTime.now();
+
+                      startDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(), //get today's date
+                              firstDate: DateTime(
+                                  2000), //DateTime.now() - not to allow to choose before today.
+                              lastDate: DateTime(2101))
+                          .then((value) {
+                        setState(() {
+                          d = value!;
+                        });
+                        return value;
+                      });
+                    },
+                  ),
+                  Container(
+                    child: const Text(
+                      " - ",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w100,
+                          fontFamily: "Hind Siliguri",
+                          color: Color(0xff0F5B2E)),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      DateTime d = DateTime.now();
+
+                      endDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(), //get today's date
+                              firstDate: DateTime(
+                                  2000), //DateTime.now() - not to allow to choose before today.
+                              lastDate: DateTime(2101))
+                          .then((value) {
+                        setState(() {
+                          d = value!;
+                        });
+                        return value;
+                      });
+                    },
+                    child: Text(
+                      dateFormat.format(endDate!),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w100,
+                          fontFamily: "Hind Siliguri",
+                          color: Color(0xff0F5B2E)),
+                    ),
+                  ),
+                ]),
               ),
               Container(
                   padding: EdgeInsets.only(bottom: 50),
