@@ -123,14 +123,17 @@ class WelcomePage extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () async {
+                            //odottaa käyttäjän todennuksen
                             User? user = await Authentication.signInWithGoogle(
                                 context: context);
 
                             if (user != null) {
+                              if (!context.mounted) return;
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
                                       builder: (context) => HomePage(
-                                            key: user,
+                                            //siirtää etusivulle kirjautumisen onnistuessa
+                                            user: user,
                                           )));
                             }
                           },

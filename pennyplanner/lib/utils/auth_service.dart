@@ -5,7 +5,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Authentication {
-  static Future<FirebaseApp> initializeFirebase() async {
+  static Future<void> signOut({required BuildContext context}) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    try {
+      if (!kIsWeb) {
+        await googleSignIn.signOut();
+      }
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        Authentication.customSnackBar(
+          content: 'Error signing out. Try again.',
+        ),
+      );
+    }
+  }
+
+  static Future<FirebaseApp> initializeFirebase(
+      {required BuildContext context}) async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
     //ADD auto login logic
@@ -15,6 +33,15 @@ class Authentication {
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
+
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
+
     User? user;
 
     if (kIsWeb) {
@@ -77,23 +104,23 @@ class Authentication {
     }
   }
 
-  static Future<void> signOut({required BuildContext context}) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+  // static Future<void> signOut({required BuildContext context}) async {
+  //   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    try {
-      if (!kIsWeb) {
-        await googleSignIn.signOut();
-      }
+  //   try {
+  //     if (!kIsWeb) {
+  //       await googleSignIn.signOut();
+  //     }
 
-      await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        Authentication.customSnackBar(
-          content: 'Error signing out. Try again',
-        ),
-      );
-    }
-  }
+  //     await FirebaseAuth.instance.signOut();
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       Authentication.customSnackBar(
+  //         content: 'Error signing out. Try again',
+  //       ),
+  //     );
+  //   }
+  // }
 
   static SnackBar customSnackBar({required String content}) {
     return SnackBar(
