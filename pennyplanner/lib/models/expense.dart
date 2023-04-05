@@ -4,12 +4,13 @@ class Expense {
   double amount;
   DateTime date;
   DateTime? dueDate;
+  bool reoccurring;
 
-  Expense({
-    required this.id,
-    required this.title,
-    required this.amount,
-    required this.date,
-    this.dueDate,
-  });
+  Expense(
+      {required this.id,
+      required this.title,
+      required this.amount,
+      required this.date,
+      this.dueDate,
+      this.reoccurring = false});
 }

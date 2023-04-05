@@ -1,6 +1,8 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
+import 'package:intl/intl.dart';
 
 import '../models/expense_category.dart';
 
@@ -22,6 +24,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
         ExpenseCategory(
           id: 0,
           title: 'Groceries',
+          allottedMaximum: 350.00,
           expenses: [
             Expense(
               id: 0,
@@ -40,17 +43,20 @@ class _ManageExpensesState extends State<ManageExpenses> {
         ExpenseCategory(
           id: 1,
           title: 'Bills',
+          allottedMaximum: 500.00,
           expenses: [
             Expense(
                 id: 0,
                 title: 'Electricity',
-                amount: 37.21,
+                amount: 50,
+                reoccurring: true,
                 date: DateTime.now(),
                 dueDate: DateTime(2023, 4, 12)),
             Expense(
                 id: 1,
                 title: 'Car payment',
                 amount: 200,
+                reoccurring: true,
                 date: DateTime.now(),
                 dueDate: DateTime(2023, 5, 2)),
           ],
@@ -65,6 +71,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
         Expanded(
           flex: 2,
           child: Container(
+              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -73,47 +80,80 @@ class _ManageExpensesState extends State<ManageExpenses> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 3,
-                      offset: Offset(0, 5))
+                      offset: const Offset(0, 5))
                 ],
               ),
               child: Column(
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       width: double.infinity,
-                      decoration: BoxDecoration(border: Border.all(width: 1)),
-                      child: Text(
-                        'Hi',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 24),
+                      child: Row(
+                        children: [
+                          Text(
+                            '${DateFormat('dd.MM.').format(budget.getStartDate)} - ${DateFormat('dd.MM.').format(budget.getEndDate)}',
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              color: Color(0xff0F5B2E),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(Icons.edit),
+                        ],
                       ),
                     ),
                   ),
                   Expanded(
-                    flex: 5,
+                    flex: 6,
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       width: double.infinity,
-                      decoration: BoxDecoration(border: Border.all(width: 1)),
-                      child: Text(
-                        'Hi',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 50),
+                      child: Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              '${budget.getBudget}€',
+                              style: const TextStyle(
+                                fontSize: 70,
+                                color: Color(0xff0F5B2E),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(7, 0, 0, 8),
+                            child: const Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                'left',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Color(0xff0F5B2E),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 2,
                     child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       width: double.infinity,
-                      decoration: BoxDecoration(border: Border.all(width: 1)),
                       child: Text(
-                        'Hi',
+                        '${budget.getBudget}€ budgeted for this period',
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color(0xff0F5B2E),
+                        ),
                       ),
                     ),
                   ),
@@ -122,7 +162,176 @@ class _ManageExpensesState extends State<ManageExpenses> {
         ),
         Expanded(
           flex: 8,
-          child: Container(),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(8, 15, 8, 0),
+            width: double.infinity,
+            child: Center(
+              child: Column(
+                children: budget.expenseCategories.map((e) {
+                  e.allottedMaximum;
+                  double totalCost = 0;
+                  for (final i in e.expenses) {
+                    totalCost += i.amount;
+                  }
+                  return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 3,
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
+                        child: ExpandableTheme(
+                          data: const ExpandableThemeData(hasIcon: false),
+                          child: ExpandablePanel(
+                            header: Row(children: [
+                              Expanded(
+                                flex: 8,
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.fromLTRB(
+                                            0, 5, 0, 0),
+                                        width: double.infinity,
+                                        child: Text(
+                                          e.title,
+                                          style: const TextStyle(
+                                              color: Color(0xff0F5B2E),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      LinearProgressIndicator(
+                                          backgroundColor: Colors.grey,
+                                          valueColor:
+                                              const AlwaysStoppedAnimation(
+                                                  Color(0xff7BE116)),
+                                          value: 1 -
+                                              (e.allottedMaximum - totalCost) /
+                                                  e.allottedMaximum),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '-$totalCost€',
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        '${e.allottedMaximum}€',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                            ]),
+                            collapsed: Container(
+                              margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                              child: Text(
+                                '${e.expenses.length.toString()} transactions',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                            expanded: Column(
+                              children: [
+                                Container(
+                                  child: Column(
+                                      children: e.expenses.map((e) {
+                                    return Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 5),
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(width: 1))),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                  child: e.reoccurring
+                                                      ? Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.repeat,
+                                                              size: 16,
+                                                            ),
+                                                            Text(e.title)
+                                                          ],
+                                                        )
+                                                      : Text(e.title))),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  DateFormat('dd.MM.yyyy')
+                                                      .format(e.date)),
+                                            ),
+                                          ),
+                                          Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text('${e.amount}€')))
+                                        ],
+                                      ),
+                                    );
+                                  }).toList()),
+                                ),
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 219, 211, 211),
+                                          foregroundColor: Colors.black,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18))),
+                                      onPressed: () {},
+                                      child: const Icon(
+                                        Icons.add,
+                                        size: 16,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xff0F5B2E),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(18))),
+                                        onPressed: () {},
+                                        child: const Text("EDIT"))
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ));
+                }).toList(),
+              ),
+            ),
+          ),
         ),
       ],
     );

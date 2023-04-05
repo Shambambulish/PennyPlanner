@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:pennyplanner/models/expense_category.dart';
 
 class Budget {
@@ -15,4 +14,20 @@ class Budget {
     required this.budget,
     required this.expenseCategories,
   });
+
+  DateTime get getStartDate {
+    return startDate;
+  }
+
+  DateTime get getEndDate {
+    return endDate;
+  }
+
+  double get getBudget {
+    return budget;
+  }
+
+  List<ExpenseCategory> get getExpenseCategories {
+    return expenseCategories;
+  }
 }
