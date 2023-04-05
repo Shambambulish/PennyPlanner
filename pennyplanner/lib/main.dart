@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/home_page.dart';
-import 'pages/welcome_page.dart';
 
 void main() {
   runApp(const MyApp());

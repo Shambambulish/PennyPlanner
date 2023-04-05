@@ -1,13 +1,11 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:expandable/expandable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class HistoryPage extends StatefulWidget {
-  HistoryPage({super.key, startDate, endDate});
+  const HistoryPage({super.key, startDate, endDate});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -21,13 +19,15 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    void FetchWithDate() {
-      print("fetchwithdate");
+    void fetchWithDate() {
+      if (kDebugMode) {
+        print("fetchwithdate");
+      }
       //tietokantakutsu startdaten ja enddaten perusteella
       // asetus resultdataan
     }
 
-    FetchWithDate();
+    fetchWithDate();
 
     List resultsData = [
       [
@@ -60,7 +60,7 @@ class _HistoryPageState extends State<HistoryPage> {
       ]
     ];
 
-    Map<String, double> CalcPercentanges() {
+    Map<String, double> calcPercentages() {
       Map<String, double> chartMap = {};
       for (int i = 0; i < resultsData.length; i++) {
         double sum = 0;
@@ -87,14 +87,14 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: Text(
                       dateFormat.format(startDate!),
                       textAlign: TextAlign.left,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w100,
                           fontFamily: "Hind Siliguri",
                           color: Color(0xff0F5B2E)),
                     ),
                     onTap: () async {
-                      DateTime d = DateTime.now();
+                      // DateTime d = DateTime.now();
 
                       startDate = await showDatePicker(
                               context: context,
@@ -104,26 +104,24 @@ class _HistoryPageState extends State<HistoryPage> {
                               lastDate: DateTime(2101))
                           .then((value) {
                         setState(() {
-                          d = value!;
+                          // d = value!;
                         });
                         return value;
                       });
                     },
                   ),
-                  Container(
-                    child: const Text(
-                      " - ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w100,
-                          fontFamily: "Hind Siliguri",
-                          color: Color(0xff0F5B2E)),
-                    ),
+                  const Text(
+                    " - ",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w100,
+                        fontFamily: "Hind Siliguri",
+                        color: Color(0xff0F5B2E)),
                   ),
                   InkWell(
                     onTap: () async {
-                      DateTime d = DateTime.now();
+                      // DateTime d = DateTime.now();
 
                       endDate = await showDatePicker(
                               context: context,
@@ -133,7 +131,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               lastDate: DateTime(2101))
                           .then((value) {
                         setState(() {
-                          d = value!;
+                          // d = value!;
                         });
                         return value;
                       });
@@ -141,7 +139,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: Text(
                       dateFormat.format(endDate!),
                       textAlign: TextAlign.left,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w100,
                           fontFamily: "Hind Siliguri",
@@ -151,10 +149,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 ]),
               ),
               Container(
-                  padding: EdgeInsets.only(bottom: 50),
+                  padding: const EdgeInsets.only(bottom: 50),
                   child: PieChart(
-                    dataMap: CalcPercentanges(),
-                    animationDuration: Duration(milliseconds: 800),
+                    dataMap: calcPercentages(),
+                    animationDuration: const Duration(milliseconds: 800),
                     chartLegendSpacing: 32,
                     chartRadius: MediaQuery.of(context).size.width / 3.2,
                     initialAngleInDegree: 0,
@@ -188,53 +186,39 @@ class _HistoryPageState extends State<HistoryPage> {
                   child: ExpandableTheme(
                     data: const ExpandableThemeData(hasIcon: false),
                     child: ExpandablePanel(
-                      header: Expanded(
-                        flex: 5,
-                        child: Container(
-                          //decoration:
-                          //BoxDecoration(border: Border.all(width: 1)),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  resultsData[i][0].toString(),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w100,
-                                      fontFamily: "Hind Siliguri",
-                                      color: Color(0xff0F5B2E)),
-                                ),
-                              ),
-                            ],
-                          ),
+                      header: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          resultsData[i][0].toString(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w100,
+                              fontFamily: "Hind Siliguri",
+                              color: Color(0xff0F5B2E)),
                         ),
                       ),
                       collapsed: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
                             height: 20,
-                            child: Text(resultsData[i][1].length.toString() +
-                                " results")),
+                            child: Text("${resultsData[i][1].length} results")),
                       ),
                       expanded: Column(children: [
                         for (var e in resultsData[i][1])
                           Row(children: [
                             for (var ex in e)
-                              Expanded(
-                                  flex: 4,
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        ex.toString(),
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w100,
-                                            fontFamily: "Hind Siliguri",
-                                            color: Color(0xff0F5B2E)),
-                                      )))
+                              Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    ex.toString(),
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w100,
+                                        fontFamily: "Hind Siliguri",
+                                        color: Color(0xff0F5B2E)),
+                                  ))
                           ]),
                       ]),
                     ),

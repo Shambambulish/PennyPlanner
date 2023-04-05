@@ -5,9 +5,11 @@ import '../pages/settings_page.dart';
 class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool returnToHomePage;
+  final bool showSettingsBtn;
   const PPAppBar({
     this.title = '',
     this.returnToHomePage = true,
+    this.showSettingsBtn = true,
     super.key,
   });
 
@@ -29,10 +31,10 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: returnToHomePage
                     ? InkWell(
                         onTap: () {
-                          Navigator.pushReplacement(
-                              context,
+                          Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
+                                  builder: (context) => const HomePage()),
+                              (Route<dynamic> route) => false);
                         },
                         child: Image.asset('assets/pplogo_red.png'),
                       )
@@ -42,19 +44,24 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
               SizedBox(
                   height: 40, child: Image.asset('assets/pplogo_bold_red.png')),
               const Spacer(),
-              Material(
-                borderRadius: BorderRadius.circular(36),
-                color: Colors.transparent,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SettingsPage()));
-                    },
-                    iconSize: 30,
-                    icon: const Icon(Icons.settings_outlined)),
-              )
+              showSettingsBtn
+                  ? Material(
+                      borderRadius: BorderRadius.circular(36),
+                      color: Colors.transparent,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SettingsPage()));
+                          },
+                          iconSize: 30,
+                          icon: const Icon(Icons.settings_outlined)),
+                    )
+                  : const SizedBox(
+                      width: 50,
+                    )
             ],
           ),
         ),

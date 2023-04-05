@@ -66,6 +66,13 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
   @override
   Widget build(BuildContext context) {
+    double totalCost = 0;
+    for (final i in budget.expenseCategories) {
+      for (final e in i.expenses) {
+        totalCost += e.amount;
+      }
+    }
+
     return Column(
       children: [
         Expanded(
@@ -118,7 +125,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              '${budget.getBudget}€',
+                              '${(budget.getBudget - totalCost).toStringAsFixed(2)}€',
                               style: const TextStyle(
                                 fontSize: 70,
                                 color: Color(0xff0F5B2E),
@@ -166,12 +173,11 @@ class _ManageExpensesState extends State<ManageExpenses> {
             padding: const EdgeInsets.fromLTRB(8, 15, 8, 0),
             width: double.infinity,
             child: Center(
-              child: Column(
-                children: budget.expenseCategories.map((e) {
-                  e.allottedMaximum;
-                  double totalCost = 0;
+              child: Column(children: [
+                ...budget.expenseCategories.map((e) {
+                  double expenseTotal = 0;
                   for (final i in e.expenses) {
-                    totalCost += i.amount;
+                    expenseTotal += i.amount;
                   }
                   return Card(
                       shape: RoundedRectangleBorder(
@@ -212,7 +218,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                               const AlwaysStoppedAnimation(
                                                   Color(0xff7BE116)),
                                           value: 1 -
-                                              (e.allottedMaximum - totalCost) /
+                                              (e.allottedMaximum -
+                                                      expenseTotal) /
                                                   e.allottedMaximum),
                                     ],
                                   ),
@@ -224,7 +231,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        '-$totalCost€',
+                                        '-$expenseTotal€',
                                         style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -249,52 +256,48 @@ class _ManageExpensesState extends State<ManageExpenses> {
                             ),
                             expanded: Column(
                               children: [
-                                Container(
-                                  child: Column(
-                                      children: e.expenses.map((e) {
-                                    return Container(
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 5),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              bottom: BorderSide(width: 1))),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                  child: e.reoccurring
-                                                      ? Row(
-                                                          children: [
-                                                            const Icon(
-                                                              Icons.repeat,
-                                                              size: 16,
-                                                            ),
-                                                            Text(e.title)
-                                                          ],
-                                                        )
-                                                      : Text(e.title))),
-                                          Expanded(
+                                ...e.expenses.map((e) {
+                                  return Container(
+                                    width: double.infinity,
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(width: 1))),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
                                             flex: 3,
                                             child: Container(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                  DateFormat('dd.MM.yyyy')
-                                                      .format(e.date)),
-                                            ),
+                                                child: e.reoccurring
+                                                    ? Row(
+                                                        children: [
+                                                          const Icon(
+                                                            Icons.repeat,
+                                                            size: 16,
+                                                          ),
+                                                          Text(e.title)
+                                                        ],
+                                                      )
+                                                    : Text(e.title))),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(DateFormat('dd.MM.yyyy')
+                                                .format(e.date)),
                                           ),
-                                          Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Text('${e.amount}€')))
-                                        ],
-                                      ),
-                                    );
-                                  }).toList()),
-                                ),
+                                        ),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text('${e.amount}€')))
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
                                 Row(
                                   children: [
                                     ElevatedButton(
@@ -329,7 +332,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         ),
                       ));
                 }).toList(),
-              ),
+              ]),
             ),
           ),
         ),
