@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -21,43 +22,48 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, double> categoryMap = {
-      "Groceries": 5,
-      "Bills": 3,
-      "Car": 2,
-      "Funmoney": 2,
-    };
-
     List resultsData = [
       [
         "Groceries",
         [
-          ["moi", "100€", "2.4."],
-          ["moro", "100€", "4.4."],
-          ["jou", "100€", "5.4."]
+          ["moi", 60, "2.4."],
+          ["moro", 30, "4.4."],
+          ["jou", 20, "5.4."]
         ]
       ],
       [
         "Bills",
         [
-          ["hei", "100€", "3.4."],
-          ["jou", "100€", "5.4."]
+          ["hei", 560, "3.4."],
+          ["jou", 50, "5.4."]
         ]
       ],
       [
         "Car",
         [
-          ["moro", "100€", "4.4."]
+          ["moro", 320, "4.4."]
         ]
       ],
       [
         "Funmoney",
         [
-          ["jou", "100€", "5.4."],
-          ["jou", "100€", "6.4."]
+          ["jou", 40, "5.4."],
+          ["jou", 20, "6.4."]
         ]
       ]
     ];
+
+    Map<String, double> CalcPercentanges() {
+      Map<String, double> chartMap = {};
+      for (int i = 0; i < resultsData.length; i++) {
+        double sum = 0;
+        for (var c in resultsData[i][1]) {
+          sum += c[1];
+        }
+        chartMap[resultsData[i][0]] = sum;
+      }
+      return chartMap;
+    }
 
     return Stack(children: [
       Column(
@@ -80,7 +86,7 @@ class _HistoryPageState extends State<HistoryPage> {
               Container(
                   padding: EdgeInsets.only(bottom: 50),
                   child: PieChart(
-                    dataMap: categoryMap,
+                    dataMap: CalcPercentanges(),
                     animationDuration: Duration(milliseconds: 800),
                     chartLegendSpacing: 32,
                     chartRadius: MediaQuery.of(context).size.width / 3.2,
