@@ -52,26 +52,17 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin{
             ),
           ),
 
-          /* Positioned(child: Container(
-                 child: const Image(
-                  image: AssetImage('assets/PPbottom.png'), #TESTINÄ SS FIGMAN SPLASH SCREEN
-                 ),
-                  
-              ))
-             
-          */
           Expanded(
-            flex: 4,
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xffffe380)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  
-                ],
-              ),
-              ),
+             flex: 4,
+             child: Container(
+                decoration: const BoxDecoration(
+                 image: DecorationImage(
+                   image: AssetImage(
+                  "assets/PPBG.jpg"),
+                fit: BoxFit.cover,
+               ),
+                 ),
+             ),
              ),
 
           ],
