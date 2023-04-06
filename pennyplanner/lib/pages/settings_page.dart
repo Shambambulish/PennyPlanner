@@ -28,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: const PPAppBar(
         title: 'Settings',
         returnToHomePage: true,
+        showSettingsBtn: false,
       ),
       body: Stack(
         children: [
@@ -48,7 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   padding: const EdgeInsets.only(right: 60, top: 40),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
+                      children: const [
                         Text("Hi,",
                             textAlign: TextAlign.right,
                             style: TextStyle(
@@ -69,7 +70,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: const [
                           Text("Email: yourname@here.com",
                               textAlign: TextAlign.left,
                               style: TextStyle(
@@ -104,12 +105,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   Container(
                       alignment: Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width,
-                      child: Text("Settings",
+                      child: const Text("Settings",
                           style: TextStyle(
                               fontSize: 40,
                               fontFamily: "Hind Siliguri",
                               color: Color(0xff0F5B2E)))),
-                  SizedBox(height: 25),
+                  const SizedBox(height: 25),
                   Container(
                       alignment: Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width,
@@ -132,13 +133,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                 });
                               }),
                           Container(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text("Currency",
+                            padding: const EdgeInsets.only(left: 20),
+                            child: const Text("Currency",
                                 style: TextStyle(fontSize: 25)),
                           )
                         ],
                       )),
-                  SizedBox(height: 25),
+                  const SizedBox(height: 25),
                   Container(
                       alignment: Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width,
@@ -151,21 +152,22 @@ class _SettingsPageState extends State<SettingsPage> {
                                 onChanged: (bool? value) {
                                   // This is called when the user selects an item.
                                   setState(() {
-                                    if (value!)
+                                    if (value!) {
                                       themeSetting = ThemeMode.dark;
-                                    else
+                                    } else {
                                       themeSetting = ThemeMode.light;
+                                    }
                                   });
                                 }),
                           ),
                           Container(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text("Dark Mode",
+                            padding: const EdgeInsets.only(left: 20),
+                            child: const Text("Dark Mode",
                                 style: TextStyle(fontSize: 25)),
                           )
                         ],
                       )),
-                  SizedBox(height: 25),
+                  const SizedBox(height: 25),
                   Container(
                       alignment: Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width,
@@ -181,13 +183,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                     });
                                   })),
                           Container(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text("Joku toinen asetus",
+                            padding: const EdgeInsets.only(left: 20),
+                            child: const Text("Joku toinen asetus",
                                 style: TextStyle(fontSize: 25)),
                           )
                         ],
                       )),
-                  SizedBox(height: 25),
+                  const SizedBox(height: 25),
                   Container(
                       alignment: Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width,
@@ -205,8 +207,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                     });
                                   })),
                           Container(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text("Joku kolmas asetus",
+                            padding: const EdgeInsets.only(left: 20),
+                            child: const Text("Joku kolmas asetus",
                                 style: TextStyle(fontSize: 25)),
                           )
                         ],
@@ -220,7 +222,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       height: 70,
                       child: ElevatedButton(
@@ -241,8 +243,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         child: const Text('SIGN OUT'),
                       )),
-                  SizedBox(height: 20),
-                  Container(
+                  const SizedBox(height: 20),
+                  SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       height: 50,
                       child: ElevatedButton(
@@ -251,7 +253,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(150, 35),
-                          backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                          backgroundColor: const Color.fromARGB(255, 255, 0, 0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6.0)),
                         ),

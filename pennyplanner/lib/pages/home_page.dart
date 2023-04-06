@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
+import 'package:pennyplanner/widgets/manage_expenses.dart';
 import '../widgets/pp_appbar.dart';
 import 'history_page.dart';
 import 'package:pennyplanner/notifications.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
         appBar: const PPAppBar(
           title: 'Home Page',
           returnToHomePage: false,
+          showSettingsBtn: true,
         ),
         body: Column(
           children: [
@@ -62,8 +64,12 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: TabBarView(children: [
                 // 1st tab
-                Container(
-                  child: Column(children: [
+                const ManageExpenses(),
+                // 2nd tab
+                const HistoryPage(),
+                // 3rd tab
+                Column(
+                  children: [
                     Expanded(
                       flex: 3,
                       child: Container(
@@ -80,43 +86,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      flex: 7,
-                      child: Container(),
-                    ),
-                  ]),
-                ),
-                // 2nd tab
-                Container(
-                  child: Column(children: [
-                    Expanded(flex: 3, child: HistoryPage()),
-                  ]),
-                ),
-                // 3rd tab
-                Container(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 3,
-                                    offset: const Offset(0, 5))
-                              ],
-                            ),
-                            child: Column(
-                              children: const [],
-                            )),
-                      ),
-                      Expanded(flex: 7, child: Container()),
-                    ],
-                  ),
+                    Expanded(flex: 7, child: Container()),
+                  ],
                 ),
               ]),
             ),
