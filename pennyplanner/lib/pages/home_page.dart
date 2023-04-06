@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:pennyplanner/pages/buy_premium_page.dart';
 import '../widgets/pp_appbar.dart';
 import 'history_page.dart';
 import 'package:pennyplanner/notifications.dart';
@@ -19,7 +20,17 @@ class _HomePageState extends State<HomePage> {
     WidgetsFlutterBinding.ensureInitialized();
     notificationService = Notifications();
     notificationService.initialize();
+    listenToNotification();
+    waitForPremiumNoti(); //JOS ALKAA ÄRSYTTÄÄ NIIN KOMMENTOI POIS
     super.initState();
+  }
+
+  void waitForPremiumNoti() async {
+    await notificationService.showScheduledNotification(
+        id: 0,
+        title: "scheduled",
+        body: "noni ostappa se premium jo painamalla tästä",
+        seconds: 4);
   }
 
   @override
@@ -56,32 +67,18 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       flex: 3,
                       child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 5))
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: ElevatedButton(
-                                      onPressed: () async {
-                                        await notificationService
-                                            .showNotification(
-                                                id: 0,
-                                                title: "title",
-                                                body: "body");
-                                      },
-                                      child: const Text("notifikaatio"))),
-                            ],
-                          )),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 3,
+                                offset: const Offset(0, 5))
+                          ],
+                        ),
+                      ),
                     ),
                     Expanded(
                       flex: 7,
@@ -127,5 +124,17 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void listenToNotification() => notificationService.onNotificationClick.stream
+      .listen(onNotificationListener);
+
+  void onNotificationListener(String? payload) {
+    if (payload != null && payload.isNotEmpty) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BuyPremiumPage(payload: payload)));
+    }
   }
 }
