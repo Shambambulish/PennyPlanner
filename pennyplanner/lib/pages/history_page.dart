@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 import '../models/expense_category.dart';
+import 'package:pennyplanner/models/budget.dart';
+import 'package:pennyplanner/models/expense.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key, startDate, endDate});
@@ -30,45 +32,63 @@ class _HistoryPageState extends State<HistoryPage> {
 
     fetchWithDate();
 
-    List resultsData = [
-      [
-        "Groceries",
-        [
-          ["moi", 60, "2.4."],
-          ["moro", 30, "4.4."],
-          ["jou", 20, "5.4."]
-        ]
-      ],
-      [
-        "Bills",
-        [
-          ["hei", 560, "3.4."],
-          ["jou", 50, "5.4."]
-        ]
-      ],
-      [
-        "Car",
-        [
-          ["moro", 320, "4.4."]
-        ]
-      ],
-      [
-        "Funmoney",
-        [
-          ["jou", 40, "5.4."],
-          ["jou", 20, "6.4."]
-        ]
-      ]
-    ];
+    Budget history = Budget(
+        id: 0,
+        startDate: DateTime.now(),
+        endDate: DateTime(2023, 4, 30),
+        budget: 2000,
+        expenseCategories: [
+          ExpenseCategory(
+            id: 0,
+            title: 'Groceries',
+            allottedMaximum: 350.00,
+            expenses: [
+              Expense(
+                id: 0,
+                title: 'Bottle of soda',
+                amount: 1.72,
+                date: DateTime.now(),
+              ),
+              Expense(
+                id: 1,
+                title: 'Bacon',
+                amount: 2.89,
+                date: DateTime.now(),
+              ),
+            ],
+          ),
+          ExpenseCategory(
+            id: 1,
+            title: 'Bills',
+            allottedMaximum: 500.00,
+            expenses: [
+              Expense(
+                  id: 0,
+                  title: 'Electricity',
+                  amount: 50,
+                  reoccurring: true,
+                  date: DateTime.now(),
+                  dueDate: DateTime(2023, 4, 12)),
+              Expense(
+                  id: 1,
+                  title: 'Car payment',
+                  amount: 200,
+                  reoccurring: true,
+                  date: DateTime.now(),
+                  dueDate: DateTime(2023, 5, 2)),
+            ],
+          ),
+        ]);
+    //init dummy data end
 
     Map<String, double> calcPercentages() {
       Map<String, double> chartMap = {};
-      for (int i = 0; i < resultsData.length; i++) {
+      for (ExpenseCategory e in history.expenseCategories) {
         double sum = 0;
-        for (var c in resultsData[i][1]) {
-          sum += c[1];
+        for (Expense ex in e.expenses) {
+          sum += ex.amount;
         }
-        chartMap[resultsData[i][0]] = sum;
+        chartMap[e.title] = sum;
       }
       return chartMap;
     }
@@ -146,6 +166,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               ]),
             ),
+            //PIECHART
             Container(
                 padding: const EdgeInsets.only(bottom: 50),
                 child: PieChart(
@@ -175,81 +196,85 @@ class _HistoryPageState extends State<HistoryPage> {
                   // gradientList: ---To add gradient colors---
                   // emptyColorGradient: ---Empty Color gradient---
                 )),
-            for (int i = 0; i < resultsData.length; i++) ...[
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 3,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
-                  child: ExpandableTheme(
-                    data: const ExpandableThemeData(hasIcon: false),
-                    child: ExpandablePanel(
-                      header: Container(
-                        child: Text(
-                          resultsData[i][0].toString(),
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "Hind Siliguri",
-                              color: Color(0xff0F5B2E)),
-                        ),
-                      ),
-                      collapsed: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                            height: 20,
-                            child: Text("${resultsData[i][1].length} results")),
-                      ),
-                      expanded: Column(children: [
-                        for (var e in resultsData[i][1])
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                            decoration: const BoxDecoration(
-                                border: Border(bottom: BorderSide(width: 1))),
-                            child: Row(
-                              children: [
-                                Text("title"),
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(DateFormat('dd.MM.yyyy')
-                                        .format(DateTime.now())),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    alignment: Alignment.centerRight,
-                                    child: Text('AMOUNT'),
-                                  ),
-                                ),
-                              ],
-                            ),
+            //PIECHART END
+            Column(children: [
+              ...history.expenseCategories.map((e) {
+                print(e);
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 3,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
+                    child: ExpandableTheme(
+                      data: const ExpandableThemeData(hasIcon: false),
+                      child: ExpandablePanel(
+                        header: Container(
+                          child: Text(
+                            e.title,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Hind Siliguri",
+                                color: Color(0xff0F5B2E)),
                           ),
-                        /*
-                        Row(children: [
-                          for (var ex in e)
-                            Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  ex.toString(),
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: "Hind Siliguri",
-                                      color: Color(0xff0F5B2E)),
-                                ))
-                        ]),*/
-                      ]),
+                        ),
+                        collapsed: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                              height: 20,
+                              child: Text(
+                                  '${e.expenses.length.toString()} transactions')),
+                        ),
+                        expanded: Column(children: [
+                          ...e.expenses.map((e) {
+                            return Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                              decoration: const BoxDecoration(
+                                  border: Border(bottom: BorderSide(width: 1))),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                          child: e.reoccurring
+                                              ? Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.repeat,
+                                                      size: 16,
+                                                    ),
+                                                    Text(e.title)
+                                                  ],
+                                                )
+                                              : Text(e.title))),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(DateFormat('dd.MM.yyyy')
+                                          .format(e.date)),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Text('${e.amount}€')))
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ]),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                );
+              })
+            ]),
           ],
         ),
       ],
