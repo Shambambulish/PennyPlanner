@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SettingsPage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
+      home: const HomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
     );
   }
 }
