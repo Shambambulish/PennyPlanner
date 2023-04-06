@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
+import '../models/expense_category.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key, startDate, endDate});
@@ -89,7 +90,6 @@ class _HistoryPageState extends State<HistoryPage> {
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontSize: 25,
-                        fontWeight: FontWeight.w100,
                         fontFamily: "Hind Siliguri",
                         color: Color(0xff0F5B2E)),
                   ),
@@ -115,7 +115,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 25,
-                      fontWeight: FontWeight.w100,
                       fontFamily: "Hind Siliguri",
                       color: Color(0xff0F5B2E)),
                 ),
@@ -141,7 +140,6 @@ class _HistoryPageState extends State<HistoryPage> {
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontSize: 25,
-                        fontWeight: FontWeight.w100,
                         fontFamily: "Hind Siliguri",
                         color: Color(0xff0F5B2E)),
                   ),
@@ -183,29 +181,56 @@ class _HistoryPageState extends State<HistoryPage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 elevation: 3,
-                child: ExpandableTheme(
-                  data: const ExpandableThemeData(hasIcon: false),
-                  child: ExpandablePanel(
-                    header: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        resultsData[i][0].toString(),
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w100,
-                            fontFamily: "Hind Siliguri",
-                            color: Color(0xff0F5B2E)),
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
+                  child: ExpandableTheme(
+                    data: const ExpandableThemeData(hasIcon: false),
+                    child: ExpandablePanel(
+                      header: Container(
+                        child: Text(
+                          resultsData[i][0].toString(),
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Hind Siliguri",
+                              color: Color(0xff0F5B2E)),
+                        ),
                       ),
-                    ),
-                    collapsed: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                          height: 20,
-                          child: Text("${resultsData[i][1].length} results")),
-                    ),
-                    expanded: Column(children: [
-                      for (var e in resultsData[i][1])
+                      collapsed: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                            height: 20,
+                            child: Text("${resultsData[i][1].length} results")),
+                      ),
+                      expanded: Column(children: [
+                        for (var e in resultsData[i][1])
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                            decoration: const BoxDecoration(
+                                border: Border(bottom: BorderSide(width: 1))),
+                            child: Row(
+                              children: [
+                                Text("title"),
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(DateFormat('dd.MM.yyyy')
+                                        .format(DateTime.now())),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Text('AMOUNT'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        /*
                         Row(children: [
                           for (var ex in e)
                             Container(
@@ -215,12 +240,12 @@ class _HistoryPageState extends State<HistoryPage> {
                                   textAlign: TextAlign.left,
                                   style: const TextStyle(
                                       fontSize: 20,
-                                      fontWeight: FontWeight.w100,
                                       fontFamily: "Hind Siliguri",
                                       color: Color(0xff0F5B2E)),
                                 ))
-                        ]),
-                    ]),
+                        ]),*/
+                      ]),
+                    ),
                   ),
                 ),
               )
