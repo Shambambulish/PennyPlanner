@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
 import 'package:intl/intl.dart';
+import 'package:pennyplanner/widgets/add_expense_dialog.dart';
+import 'package:pennyplanner/widgets/edit_category_dialog.dart';
+import 'package:pennyplanner/widgets/edit_expense_dialog.dart';
+import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 
 import '../models/expense_category.dart';
+import 'add_category_dialog.dart';
 
 class ManageExpenses extends StatefulWidget {
   const ManageExpenses({super.key});
@@ -264,37 +269,44 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                     decoration: const BoxDecoration(
                                         border: Border(
                                             bottom: BorderSide(width: 1))),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        EditExpenseDialog.run(
+                                            context, e.title, e.amount);
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                  child: e.reoccurring
+                                                      ? Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.repeat,
+                                                              size: 16,
+                                                            ),
+                                                            Text(e.title)
+                                                          ],
+                                                        )
+                                                      : Text(e.title))),
+                                          Expanded(
                                             flex: 3,
                                             child: Container(
-                                                child: e.reoccurring
-                                                    ? Row(
-                                                        children: [
-                                                          const Icon(
-                                                            Icons.repeat,
-                                                            size: 16,
-                                                          ),
-                                                          Text(e.title)
-                                                        ],
-                                                      )
-                                                    : Text(e.title))),
-                                        Expanded(
-                                          flex: 3,
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(DateFormat('dd.MM.yyyy')
-                                                .format(e.date)),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  DateFormat('dd.MM.yyyy')
+                                                      .format(e.date)),
+                                            ),
                                           ),
-                                        ),
-                                        Expanded(
-                                            flex: 3,
-                                            child: Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text('${e.amount}€')))
-                                      ],
+                                          Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text('${e.amount}€')))
+                                        ],
+                                      ),
                                     ),
                                   );
                                 }).toList(),
@@ -308,7 +320,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(18))),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        AddExpenseDialog.run(context);
+                                      },
                                       child: const Icon(
                                         Icons.add,
                                         size: 16,
@@ -322,7 +336,10 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(18))),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          EditCategoryDialog.run(context,
+                                              e.title, e.allottedMaximum);
+                                        },
                                         child: const Text("EDIT"))
                                   ],
                                 )
@@ -332,6 +349,22 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         ),
                       ));
                 }).toList(),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AddCategoryDialog.run(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 3,
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xff0F5B2E)),
+                    child: const Text("+ NEW CATEGORY"),
+                  ),
+                )
               ]),
             ),
           ),
