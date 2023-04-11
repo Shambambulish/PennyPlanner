@@ -106,7 +106,9 @@ class _HistoryPageState extends State<HistoryPage> {
               child: Row(children: [
                 InkWell(
                   child: Text(
-                    dateFormat.format(startDate!),
+                    startDate == null
+                        ? dateFormat.format(DateTime.now())
+                        : dateFormat.format(startDate!),
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontSize: 25,
@@ -156,7 +158,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     });
                   },
                   child: Text(
-                    dateFormat.format(endDate!),
+                    endDate == null
+                        ? dateFormat.format(DateTime.now())
+                        : dateFormat.format(endDate!),
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontSize: 25,
@@ -199,7 +203,6 @@ class _HistoryPageState extends State<HistoryPage> {
             //PIECHART END
             Column(children: [
               ...history.expenseCategories.map((e) {
-                print(e);
                 return Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
