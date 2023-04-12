@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pennyplanner/pages/home_page.dart';
+import '../pages/welcome_page.dart';
 
 void main() {
   runApp(const MyApp());
 
-  /*
   RequestConfiguration configuration =
       RequestConfiguration(testDeviceIds: ["CF3967800E18D9F4B4B5FDAECECEC421"]);
-  MobileAds.instance.updateRequestConfiguration(configuration);*/
+  MobileAds.instance.updateRequestConfiguration(configuration);
 }
 
 class MyApp extends StatelessWidget {

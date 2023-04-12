@@ -7,12 +7,10 @@ import '../models/expense_category.dart';
 import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-// TODO: Import ad_helper.dart
 import '../ad_helper.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key, startDate, endDate});
+  const HistoryPage({super.key});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -27,12 +25,11 @@ class _HistoryPageState extends State<HistoryPage> {
   // COMPLETE: Add _bannerAd
   BannerAd? _bannerAd;
 
-  // COMPLETE: Add _interstitialAd
-  InterstitialAd? _interstitialAd;
-
   @override
   void initState() {
     super.initState();
+
+    MobileAds.instance.initialize();
 
     // COMPLETE: Load a banner ad
     BannerAd(
@@ -54,11 +51,18 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _bannerAd?.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void fetchWithDate() {
       if (kDebugMode) {
         print("fetchwithdate");
       }
+
       //tietokantakutsu startdaten ja enddaten perusteella
       // asetus resultdataan
     }
@@ -149,8 +153,6 @@ class _HistoryPageState extends State<HistoryPage> {
                         color: Color(0xff0F5B2E)),
                   ),
                   onTap: () async {
-                    // DateTime d = DateTime.now();
-
                     startDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(), //get today's date
@@ -175,8 +177,6 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
                 InkWell(
                   onTap: () async {
-                    // DateTime d = DateTime.now();
-
                     endDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(), //get today's date
@@ -235,7 +235,8 @@ class _HistoryPageState extends State<HistoryPage> {
                 )),
             //PIECHART END
             Column(children: [
-              //AD
+              //BANNER AD
+
               if (_bannerAd != null)
                 Align(
                   alignment: Alignment.topCenter,
