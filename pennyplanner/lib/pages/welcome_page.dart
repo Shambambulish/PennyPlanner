@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pennyplanner/pages/home_page.dart';
+import 'package:pennyplanner/utils/auth_service.dart';
 import 'signin_page.dart';
 import 'signup_page.dart';
 
@@ -118,7 +122,21 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            //odottaa käyttäjän todennuksen
+                            User? user = await Authentication.signInWithGoogle(
+                                context: context);
+
+                            if (user != null) {
+                              if (!context.mounted) return;
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                      builder: (context) => HomePage(
+                                            //siirtää etusivulle kirjautumisen onnistuessa
+                                            user: user,
+                                          )));
+                            }
+                          },
                           icon: const Image(
                               image: AssetImage('assets/google_logo.png')),
                           iconSize: 30,
