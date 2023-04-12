@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pennyplanner/pages/home_page.dart';
-import 'package:pennyplanner/pages/settings_page.dart';
 
 void main() {
   runApp(const MyApp());
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
+  }
 }
 
 class MyApp extends StatelessWidget {
