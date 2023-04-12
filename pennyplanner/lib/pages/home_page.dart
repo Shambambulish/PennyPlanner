@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
 import 'package:pennyplanner/widgets/manage_expenses.dart';
@@ -7,7 +8,7 @@ import 'history_page.dart';
 import 'package:pennyplanner/notifications.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, User? user});
 
   @override
   State<HomePage> createState() => _HomePageState();
