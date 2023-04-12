@@ -34,6 +34,7 @@ dependencies:
   pie_chart: 5.3.2
   expandable: 5.0.1
   timezone: 0.9.1
+  google_mobile_ads: 2.4.0
   flutter:
     sdk: flutter
 

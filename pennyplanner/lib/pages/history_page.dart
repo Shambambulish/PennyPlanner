@@ -6,9 +6,11 @@ import 'package:pie_chart/pie_chart.dart';
 import '../models/expense_category.dart';
 import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../ad_helper.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key, startDate, endDate});
+  const HistoryPage({super.key});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -20,12 +22,47 @@ class _HistoryPageState extends State<HistoryPage> {
   DateTime? startDate = DateTime.now();
   DateTime? endDate = DateTime.now();
 
+  // COMPLETE: Add _bannerAd
+  BannerAd? _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+
+    MobileAds.instance.initialize();
+
+    // COMPLETE: Load a banner ad
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     void fetchWithDate() {
       if (kDebugMode) {
         print("fetchwithdate");
       }
+
       //tietokantakutsu startdaten ja enddaten perusteella
       // asetus resultdataan
     }
@@ -116,8 +153,6 @@ class _HistoryPageState extends State<HistoryPage> {
                         color: Color(0xff0F5B2E)),
                   ),
                   onTap: () async {
-                    // DateTime d = DateTime.now();
-
                     startDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(), //get today's date
@@ -142,8 +177,6 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
                 InkWell(
                   onTap: () async {
-                    // DateTime d = DateTime.now();
-
                     endDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(), //get today's date
@@ -202,6 +235,19 @@ class _HistoryPageState extends State<HistoryPage> {
                 )),
             //PIECHART END
             Column(children: [
+              //BANNER AD
+
+              if (_bannerAd != null)
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    width: _bannerAd!.size.width.toDouble(),
+                    height: _bannerAd!.size.height.toDouble(),
+                    child: AdWidget(ad: _bannerAd!),
+                  ),
+                ),
+              SizedBox(height: 30),
+              //AD END
               ...history.expenseCategories.map((e) {
                 return Card(
                   shape: RoundedRectangleBorder(
@@ -282,5 +328,10 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       ],
     ));
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
   }
 }
