@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/home_page.dart';
-import 'pages/welcome_page.dart';
+import 'pages/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
+      home: const Splash(), //Routtaa splash screenin kautta welcome_page.dart
     );
   }
 }
