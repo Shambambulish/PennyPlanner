@@ -50,13 +50,14 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDVMkwxuQtpaFev831PytJkyFBSYl-nEqk',
-    appId: '1:67687043326:web:9b134a52149c4fe23b95af',
-    messagingSenderId: '67687043326',
-    projectId: 'pennyplanner-c424c',
-    authDomain: 'pennyplanner-c424c.firebaseapp.com',
-    storageBucket: 'pennyplanner-c424c.appspot.com',
-    measurementId: 'G-R4YBGTHM9T',
+      apiKey: "AIzaSyDVMkwxuQtpaFev831PytJkyFBSYl-nEqk",
+      authDomain: "pennyplanner-c424c.firebaseapp.com",
+      databaseURL: "https://pennyplanner-c424c-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "pennyplanner-c424c",
+      storageBucket: "pennyplanner-c424c.appspot.com",
+      messagingSenderId: "67687043326",
+      appId: "1:67687043326:web:9b134a52149c4fe23b95af",
+      measurementId: "G-R4YBGTHM9T"
   );
 
   static const FirebaseOptions android = FirebaseOptions(
