@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pennyplanner/pages/signup_page.dart';
 import 'home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -93,6 +95,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
                                     decoration: InputDecoration(
@@ -128,6 +131,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    controller: passwordController,
                                     cursorColor: Colors.black,
                                     obscureText: true,
                                     decoration: InputDecoration(
@@ -155,7 +159,31 @@ class SignInPageState extends State<SignInPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async{
+                              {
+                                try {
+                                  final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                      email: emailController.text.trim(),
+                                      password: passwordController.text.trim()
+                                  );
+                                  FirebaseAuth.instance
+                                      .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
+                                      .listen((User? user) {
+                                    if (user == null) {
+                                      print('User is currently signed out!');
+                                    } else {
+                                      print('User is signed in!');
+                                    }
+                                  });
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'user-not-found') {
+                                    print('No user found for that email.');
+                                  } else if (e.code == 'wrong-password') {
+                                    print('Wrong password provided for that user.');
+                                  }
+                                }
+                              }
+
                               const snackBar =
                                   SnackBar(content: Text('Signing in'));
                               ScaffoldMessenger.of(context)

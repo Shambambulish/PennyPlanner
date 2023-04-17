@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
+      home: const WelcomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
     );
   }
 }

@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
   @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    emailController.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+  }
   State<SignUpPage> createState() => SignUpPageState();
 }
+
+FirebaseDatabase database = FirebaseDatabase.instance;
+DatabaseReference ref = FirebaseDatabase.instance.ref('/users').child(usernameController.text);
+
+final emailController = TextEditingController();
+final usernameController = TextEditingController();
+final passwordController = TextEditingController();
+final firebase = FirebaseDatabase.instance.ref();
 
 class SignUpPageState extends State<SignUpPage> {
   @override
@@ -89,6 +104,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    controller: usernameController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
                                     decoration: InputDecoration(
@@ -124,6 +140,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
                                     decoration: InputDecoration(
@@ -159,6 +176,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    controller: passwordController,
                                     cursorColor: Colors.black,
                                     obscureText: true,
                                     decoration: InputDecoration(
@@ -186,12 +204,29 @@ class SignUpPageState extends State<SignUpPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: ()
+                            async {
                               const snackBar =
                                   SnackBar(content: Text('Clicked SIGN UP'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            },
+                              try {
+                                final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'weak-password') {
+                                  print('The password provided is too weak.');
+                                } else if (e.code == 'email-already-in-use') {
+                                  print('The account already exists for that email.');
+                                }
+                              } catch (e) {
+                                print(e);
+                              }
+
+                            }
+                            ,
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
                               backgroundColor: const Color(0xffaf6363),

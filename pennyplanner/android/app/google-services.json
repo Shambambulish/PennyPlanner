@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "67687043326",
+    "firebase_url": "https://pennyplanner-c424c-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "pennyplanner-c424c",
     "storage_bucket": "pennyplanner-c424c.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "67687043326-rfaeb8qmej9am42f4vdi8uc5nmdlniqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pennyplanner.pennyplanner",
+            "certificate_hash": "106a02bb5ecafbb9cd60b13e3499397dc26203e7"
+          }
+        },
         {
           "client_id": "67687043326-qeo9ri0uvjopv9nbubnu7351fdgdtqb0.apps.googleusercontent.com",
           "client_type": 3
