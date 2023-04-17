@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -103,7 +104,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
-                                    controller: emailController,
+                                    controller: usernameController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
                                     decoration: InputDecoration(
@@ -139,7 +140,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
-                                    controller: usernameController,
+                                    controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
                                     decoration: InputDecoration(
@@ -209,12 +210,20 @@ class SignUpPageState extends State<SignUpPage> {
                                   SnackBar(content: Text('Clicked SIGN UP'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                              final userdata = <String, dynamic>{
-                                'username': usernameController.text,
-                                'email': emailController.text,
-                                'password': passwordController.text,
-                              };
-                              firebase.child('users').push().set(userdata);
+                              try {
+                                final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'weak-password') {
+                                  print('The password provided is too weak.');
+                                } else if (e.code == 'email-already-in-use') {
+                                  print('The account already exists for that email.');
+                                }
+                              } catch (e) {
+                                print(e);
+                              }
 
                             }
                             ,
