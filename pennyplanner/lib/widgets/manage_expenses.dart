@@ -144,7 +144,12 @@ class _ManageExpensesState extends State<ManageExpenses> {
                           const SizedBox(
                             width: 5,
                           ),
-                          const Icon(Icons.edit),
+                          InkWell(
+                            onTap: () {
+                              //implement backend: update budget period start/end
+                            },
+                            child: const Icon(Icons.edit),
+                          ),
                         ],
                       ),
                     ),

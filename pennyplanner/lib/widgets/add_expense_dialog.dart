@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'styled_dialog_popup.dart';
 
@@ -6,6 +7,8 @@ class AddExpenseDialog {
   static void run(BuildContext context) {
     bool dueDateCheckBoxValue = false;
     bool repeatEveryCheckBoxValue = false;
+    DateTime? dueDate;
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -92,8 +95,13 @@ class AddExpenseDialog {
                       children: [
                         Text(
                           'Due date',
-                          style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                          style: dueDateCheckBoxValue
+                              ? StyledDialogPopup
+                                  .customDialogTheme.textTheme.displayMedium
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -115,20 +123,57 @@ class AddExpenseDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
+                    child: GestureDetector(
+                      onTap: dueDateCheckBoxValue
+                          ? () async {
+                              showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2025),
+                              ).then((value) {
+                                print("old");
+                                print(dueDate);
+                                setState(() {
+                                  dueDate = value;
+                                });
+                                print("new");
+                                print(dueDate);
+                                return value;
+                              });
+                            }
+                          : () {},
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          initialValue: dueDate.toString(),
+                          // initialValue: dueDateCheckBoxValue
+                          //     ? (dueDate != null
+                          //         ? DateFormat('dd.MM.').format(dueDate!)
+                          //         : null)
+                          //     : null,
+                          cursorColor: Colors.black,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: dueDateCheckBoxValue
+                                ? Colors.white
+                                : Colors.grey.shade300,
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: dueDateCheckBoxValue
+                                        ? Color(0xff0F5B2E)
+                                        : Colors.grey),
+                                borderRadius: BorderRadius.circular(30.0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: dueDateCheckBoxValue
+                                        ? Color(0xff0F5B2E)
+                                        : Colors.grey),
+                                borderRadius: BorderRadius.circular(30.0)),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -141,8 +186,13 @@ class AddExpenseDialog {
                       children: [
                         Text(
                           'Repeat every',
-                          style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                          style: repeatEveryCheckBoxValue
+                              ? StyledDialogPopup
+                                  .customDialogTheme.textTheme.displayMedium
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -169,14 +219,22 @@ class AddExpenseDialog {
                       obscureText: false,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: repeatEveryCheckBoxValue
+                            ? Colors.white
+                            : Colors.grey.shade300,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: repeatEveryCheckBoxValue
+                                    ? Color(0xff0F5B2E)
+                                    : Colors.grey),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1,
+                                color: repeatEveryCheckBoxValue
+                                    ? Color(0xff0F5B2E)
+                                    : Colors.grey),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
