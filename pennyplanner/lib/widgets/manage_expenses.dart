@@ -7,7 +7,8 @@ import 'package:pennyplanner/widgets/add_expense_dialog.dart';
 import 'package:pennyplanner/widgets/edit_category_dialog.dart';
 import 'package:pennyplanner/widgets/edit_expense_dialog.dart';
 import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../ad_helper.dart';
 import '../models/expense_category.dart';
 import 'add_category_dialog.dart';
 
@@ -19,6 +20,9 @@ class ManageExpenses extends StatefulWidget {
 }
 
 class _ManageExpensesState extends State<ManageExpenses> {
+  // COMPLETE: Add _bannerAd
+  BannerAd? _bannerAd;
+
   //init dummy data
   Budget budget = Budget(
       id: 0,
@@ -70,6 +74,31 @@ class _ManageExpensesState extends State<ManageExpenses> {
   //init dummy data end
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    MobileAds.instance.initialize();
+
+    // COMPLETE: Load a banner ad
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double totalCost = 0;
     for (final i in budget.expenseCategories) {
@@ -115,7 +144,12 @@ class _ManageExpensesState extends State<ManageExpenses> {
                           const SizedBox(
                             width: 5,
                           ),
-                          const Icon(Icons.edit),
+                          InkWell(
+                            onTap: () {
+                              //implement backend: update budget period start/end
+                            },
+                            child: const Icon(Icons.edit),
+                          ),
                         ],
                       ),
                     ),
@@ -179,6 +213,19 @@ class _ManageExpensesState extends State<ManageExpenses> {
             width: double.infinity,
             child: Center(
               child: Column(children: [
+                //BANNER AD
+
+                if (_bannerAd != null)
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: _bannerAd!.size.width.toDouble(),
+                      height: _bannerAd!.size.height.toDouble(),
+                      child: AdWidget(ad: _bannerAd!),
+                    ),
+                  ),
+                SizedBox(height: 15),
+                //AD END
                 ...budget.expenseCategories.map((e) {
                   double expenseTotal = 0;
                   for (final i in e.expenses) {
@@ -371,5 +418,10 @@ class _ManageExpensesState extends State<ManageExpenses> {
         ),
       ],
     );
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    // TODO: Initialize Google Mobile Ads SDK
+    return MobileAds.instance.initialize();
   }
 }

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "67687043326",
+    "firebase_url": "https://pennyplanner-c424c-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "pennyplanner-c424c",
+    "storage_bucket": "pennyplanner-c424c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67687043326:android:07dc72824d7177c83b95af",
+        "android_client_info": {
+          "package_name": "com.pennyplanner.pennyplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67687043326-rfaeb8qmej9am42f4vdi8uc5nmdlniqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pennyplanner.pennyplanner",
+            "certificate_hash": "106a02bb5ecafbb9cd60b13e3499397dc26203e7"
+          }
+        },
+        {
+          "client_id": "67687043326-qeo9ri0uvjopv9nbubnu7351fdgdtqb0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUbP-kHPVZJNJw48fy5RJA3VP-N9xhh2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67687043326-0bjlgt45t1ecl21ijf7ec7cuobnjkc8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -90,7 +90,6 @@ class Notifications {
   }
 
   void onSelectNotification(NotificationResponse? payload) {
-    print(payload);
     if (payload != null && payload.toString().isNotEmpty) {
       onNotificationClick.add(payload.toString());
     }
