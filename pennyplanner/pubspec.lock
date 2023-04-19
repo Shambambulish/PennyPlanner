@@ -227,14 +227,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  google_mobile_ads:
-    dependency: "direct main"
-    description:
-      name: google_mobile_ads
-      sha256: "010b7a7a81b5c8f760eb2e5add8eaa7e429b4982dc8c8e465b709611f52887be"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -248,6 +240,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+  google_mobile_ads:
+    dependency: "direct main"
+    description:
+      name: google_mobile_ads
+      sha256: "010b7a7a81b5c8f760eb2e5add8eaa7e429b4982dc8c8e465b709611f52887be"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   google_sign_in:
     dependency: "direct main"
     description:

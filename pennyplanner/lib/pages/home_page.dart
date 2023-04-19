@@ -32,7 +32,11 @@ class _HomePageState extends State<HomePage> {
     notificationService = Notifications();
     notificationService.initialize();
     listenToNotification();
-    waitForPremiumNoti(); //JOS ALKAA ÄRSYTTÄÄ NIIN KOMMENTOI POIS
+
+    // async database query
+    // if (user doesn't have premium)
+    // waitForPremiumNoti();
+
     _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
       showInterAd();
     });
@@ -67,8 +71,8 @@ class _HomePageState extends State<HomePage> {
   void waitForPremiumNoti() async {
     await notificationService.showScheduledNotification(
         id: 0,
-        title: "scheduled",
-        body: "noni ostappa se premium jo painamalla tästä",
+        title: "Unlock additional features and remove ads",
+        body: "Click here to buy PennyPlanner Premium now for 6,90!",
         seconds: 4);
   }
 
