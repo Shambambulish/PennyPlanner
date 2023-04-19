@@ -1,4 +1,5 @@
 import 'package:expandable/expandable.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
@@ -10,7 +11,10 @@ import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
 import '../models/expense_category.dart';
+import '../pages/signup_page.dart';
 import 'add_category_dialog.dart';
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ManageExpenses extends StatefulWidget {
   const ManageExpenses({super.key});
@@ -18,6 +22,29 @@ class ManageExpenses extends StatefulWidget {
   @override
   State<ManageExpenses> createState() => _ManageExpensesState();
 }
+
+// random datan settausta alla älä välitä, poista jos alkaa risomaan
+String getRandomExpense() {
+  final expenses = [
+    'Groceries',
+    'Bills',
+    'Entertainment',
+    'Clothes',
+    'Transportation',
+    'Bottle of soda',
+    'Bacon',
+    'Electricity',
+    'Car payment',
+    'Movie ticket',
+    'T-shirt',
+    'Bus ticket',
+    'Other'
+  ];
+  return expenses[Random().nextInt(expenses.length)];
+}
+final userid = FirebaseAuth.instance.currentUser!.uid;
+FirebaseDatabase database = FirebaseDatabase.instance;
+DatabaseReference ref = FirebaseDatabase.instance.ref('expenses').child(userid);
 
 class _ManageExpensesState extends State<ManageExpenses> {
   // COMPLETE: Add _bannerAd
@@ -405,6 +432,27 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xff0F5B2E)),
                     child: const Text("+ NEW CATEGORY"),
+                  ),
+                )
+                ,Container(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final budgetdata = <String, dynamic>{
+                        'title': getRandomExpense(),
+                        'amount': Random().nextInt(25),
+                        'date': DateTime.now().millisecondsSinceEpoch,
+                      };
+                      firebase.child(userid + '/budgetdata/').push().set(budgetdata);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 3,
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xff0F5B2E)),
+                    child: const Text("+ NEW DUMMYDATA BUTTON"),
                   ),
                 )
               ]),
