@@ -9,6 +9,8 @@ class AddExpenseDialog {
     bool repeatEveryCheckBoxValue = false;
     DateTime? dueDate;
 
+    final ctrl = TextEditingController();
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -123,29 +125,27 @@ class AddExpenseDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: GestureDetector(
-                      onTap: dueDateCheckBoxValue
-                          ? () async {
-                              showDatePicker(
+                    child: InkWell(
+                      onTap: () async {
+                        dueDate = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2025),
-                              ).then((value) {
-                                print("old");
-                                print(dueDate);
-                                setState(() {
-                                  dueDate = value;
-                                });
-                                print("new");
-                                print(dueDate);
-                                return value;
-                              });
-                            }
-                          : () {},
+                                initialDate: DateTime.now(), //get today's date
+                                firstDate: DateTime(
+                                    2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101))
+                            .then((value) {
+                          print(value);
+                          ctrl.text =
+                              DateFormat('dd.MM.').format(value!).toString();
+                          return value;
+                        });
+                        setState() {}
+                        ;
+                      },
                       child: AbsorbPointer(
                         child: TextFormField(
-                          initialValue: dueDate.toString(),
+                          controller: ctrl,
+
                           // initialValue: dueDateCheckBoxValue
                           //     ? (dueDate != null
                           //         ? DateFormat('dd.MM.').format(dueDate!)
