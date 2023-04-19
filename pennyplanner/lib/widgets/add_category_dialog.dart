@@ -4,6 +4,9 @@ import 'styled_dialog_popup.dart';
 
 class AddCategoryDialog {
   static void run(BuildContext context) {
+    final descriptionTextController = TextEditingController();
+    final budgetTextController = TextEditingController();
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -34,6 +37,7 @@ class AddCategoryDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: descriptionTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -65,6 +69,7 @@ class AddCategoryDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: budgetTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(

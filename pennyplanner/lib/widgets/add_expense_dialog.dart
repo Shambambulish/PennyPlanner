@@ -6,10 +6,11 @@ import 'styled_dialog_popup.dart';
 class AddExpenseDialog {
   static void run(BuildContext context) {
     bool dueDateCheckBoxValue = false;
-    bool repeatEveryCheckBoxValue = false;
-    DateTime? dueDate;
+    bool repeatEveryMonthCheckBoxValue = false;
 
-    final ctrl = TextEditingController();
+    final dueDateTextController = TextEditingController();
+    final descriptionTextController = TextEditingController();
+    final amountTextController = TextEditingController();
 
     showDialog(
         context: context,
@@ -41,6 +42,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: descriptionTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -72,6 +74,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: amountTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -115,6 +118,7 @@ class AddExpenseDialog {
                           child: Checkbox(
                               value: dueDateCheckBoxValue,
                               onChanged: (bool? newValue) {
+                                dueDateTextController.text = "";
                                 setState(() {
                                   dueDateCheckBoxValue = newValue!;
                                 });
@@ -126,31 +130,29 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: InkWell(
-                      onTap: () async {
-                        dueDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(), //get today's date
-                                firstDate: DateTime(
-                                    2000), //DateTime.now() - not to allow to choose before today.
-                                lastDate: DateTime(2101))
-                            .then((value) {
-                          print(value);
-                          ctrl.text =
-                              DateFormat('dd.MM.').format(value!).toString();
-                          return value;
-                        });
-                        setState() {}
-                        ;
-                      },
+                      onTap: dueDateCheckBoxValue
+                          ? () async {
+                              await showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                          DateTime.now(), //get today's date
+                                      firstDate: DateTime(
+                                          2000), //DateTime.now() - not to allow to choose before today.
+                                      lastDate: DateTime(2101))
+                                  .then((value) {
+                                if (value != null) {
+                                  dueDateTextController.text =
+                                      DateFormat('dd.MM.yyyy')
+                                          .format(value)
+                                          .toString();
+                                }
+                                return value;
+                              });
+                            }
+                          : () {},
                       child: AbsorbPointer(
-                        child: TextFormField(
-                          controller: ctrl,
-
-                          // initialValue: dueDateCheckBoxValue
-                          //     ? (dueDate != null
-                          //         ? DateFormat('dd.MM.').format(dueDate!)
-                          //         : null)
-                          //     : null,
+                        child: TextField(
+                          controller: dueDateTextController,
                           cursorColor: Colors.black,
                           obscureText: false,
                           decoration: InputDecoration(
@@ -162,14 +164,14 @@ class AddExpenseDialog {
                                 borderSide: BorderSide(
                                     width: 1,
                                     color: dueDateCheckBoxValue
-                                        ? Color(0xff0F5B2E)
+                                        ? const Color(0xff0F5B2E)
                                         : Colors.grey),
                                 borderRadius: BorderRadius.circular(30.0)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     width: 1,
                                     color: dueDateCheckBoxValue
-                                        ? Color(0xff0F5B2E)
+                                        ? const Color(0xff0F5B2E)
                                         : Colors.grey),
                                 borderRadius: BorderRadius.circular(30.0)),
                           ),
@@ -185,8 +187,8 @@ class AddExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Repeat every',
-                          style: repeatEveryCheckBoxValue
+                          'Repeat every month',
+                          style: repeatEveryMonthCheckBoxValue
                               ? StyledDialogPopup
                                   .customDialogTheme.textTheme.displayMedium
                               : const TextStyle(
@@ -202,42 +204,18 @@ class AddExpenseDialog {
                           height: 12,
                           width: 12,
                           child: Checkbox(
-                              value: repeatEveryCheckBoxValue,
+                              value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  repeatEveryCheckBoxValue = newValue!;
+                                  repeatEveryMonthCheckBoxValue = newValue!;
                                 });
                               }),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: repeatEveryCheckBoxValue
-                            ? Colors.white
-                            : Colors.grey.shade300,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: repeatEveryCheckBoxValue
-                                    ? Color(0xff0F5B2E)
-                                    : Colors.grey),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1,
-                                color: repeatEveryCheckBoxValue
-                                    ? Color(0xff0F5B2E)
-                                    : Colors.grey),
-                            borderRadius: BorderRadius.circular(30.0)),
-                      ),
-                    ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   ElevatedButton(
                       onPressed: () {},
