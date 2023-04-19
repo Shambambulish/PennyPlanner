@@ -33,7 +33,7 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
                         onTap: () {
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                  builder: (context) => const HomePage()),
+                                  builder: (context) => HomePage()),
                               (Route<dynamic> route) => false);
                         },
                         child: Image.asset('assets/pplogo_red.png'),

@@ -159,13 +159,14 @@ class SignInPageState extends State<SignInPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () async{
+                            onPressed: () async {
                               {
                                 try {
-                                  final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                      email: emailController.text.trim(),
-                                      password: passwordController.text.trim()
-                                  );
+                                  final credential = await FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
+                                          email: emailController.text.trim(),
+                                          password:
+                                              passwordController.text.trim());
                                   FirebaseAuth.instance
                                       .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
                                       .listen((User? user) {
@@ -179,7 +180,8 @@ class SignInPageState extends State<SignInPage> {
                                   if (e.code == 'user-not-found') {
                                     print('No user found for that email.');
                                   } else if (e.code == 'wrong-password') {
-                                    print('Wrong password provided for that user.');
+                                    print(
+                                        'Wrong password provided for that user.');
                                   }
                                 }
                               }
@@ -191,7 +193,7 @@ class SignInPageState extends State<SignInPage> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const HomePage()));
+                                      builder: (context) => HomePage()));
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
