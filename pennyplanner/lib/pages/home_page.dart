@@ -15,7 +15,7 @@ import '../ad_helper.dart';
 class HomePage extends StatefulWidget {
   HomePage({super.key, User? user});
 
-  bool isPremium = true;
+  bool isPremium = false;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                 // 2nd tab
                 HistoryPage(isPremium: widget.isPremium),
                 // 3rd tab
-                const ManageGoals(),
+                ManageGoals(isPremium: widget.isPremium),
               ]),
             ),
           ],

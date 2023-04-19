@@ -22,16 +22,13 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   DateTime? startDate = DateTime.now();
   DateTime? endDate = DateTime.now();
-
-  // COMPLETE: Add _bannerAd
   BannerAd? _bannerAd;
 
   @override
   void initState() {
     super.initState();
 
-    // async database query
-    // if (user doesn't have premium)
+    // widget.isPremium = if (async database query user doesn't have premium)
     if (!widget.isPremium!) {
       MobileAds.instance.initialize();
 

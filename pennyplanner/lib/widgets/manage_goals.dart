@@ -1,8 +1,10 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pennyplanner/models/savedbudget.dart';
 import 'package:pennyplanner/models/saving_goal.dart';
 import 'package:intl/intl.dart';
+import '../ad_helper.dart';
 import 'add_category_dialog.dart';
 import 'package:pennyplanner/widgets/add_goal_dialog.dart';
 import 'package:pennyplanner/widgets/edit_category_dialog.dart';
@@ -13,13 +15,16 @@ import 'package:pennyplanner/widgets/edit_income_dialog.dart';
 import '../models/goal_category.dart';
 
 class ManageGoals extends StatefulWidget {
-  const ManageGoals({super.key});
+  bool? isPremium = false;
+  ManageGoals({super.key, this.isPremium});
 
   @override
   State<ManageGoals> createState() => _ManageGoalsState();
 }
 
 class _ManageGoalsState extends State<ManageGoals> {
+  BannerAd? _bannerAd;
+
   //init dummy data
   savedBudget savedbudget = savedBudget(
       id: 0,
@@ -32,21 +37,44 @@ class _ManageGoalsState extends State<ManageGoals> {
           id: 0,
           title: 'Uusi jääkaappi',
           goalAmount: 600,
-
-          savingGoal: [
-          ],
+          savingGoal: [],
         ),
         GoalCategory(
           savedAmount: 1000,
           id: 1,
           title: 'Autolaina',
           goalAmount: 3000,
-          savingGoal: [
-           
-          ],
+          savingGoal: [],
         ),
       ]);
   //init dummy data end
+
+  @override
+  void initState() {
+    // widget.isPremium = if (async database query user doesn't have premium)
+    if (!widget.isPremium!) {
+      MobileAds.instance.initialize();
+
+      // COMPLETE: Load a banner ad
+      BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        request: const AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              _bannerAd = ad as BannerAd;
+            });
+          },
+          onAdFailedToLoad: (ad, err) {
+            debugPrint('Failed to load a banner ad: ${err.message}');
+            ad.dispose();
+          },
+        ),
+      ).load();
+    }
+    ///// end premium check
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,17 +112,15 @@ class _ManageGoalsState extends State<ManageGoals> {
                               color: Color(0xff0F5B2E),
                             ),
                           ),
-                        Spacer(),
-                        
-                        InkWell(
-                          onTap: () {
-                            EditIncomeDialog.run(context, savedbudget.getincomeBudget);
-                          },
-                          child: Icon(
-                            Icons.edit
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              EditIncomeDialog.run(
+                                  context, savedbudget.getincomeBudget);
+                            },
+                            child: Icon(Icons.edit),
                           ),
-                        ),
-                        SizedBox(width: 10),
+                          SizedBox(width: 10),
                         ],
                       ),
                     ),
@@ -106,7 +132,6 @@ class _ManageGoalsState extends State<ManageGoals> {
                       width: double.infinity,
                       child: Row(
                         children: [
-                          
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
@@ -139,13 +164,27 @@ class _ManageGoalsState extends State<ManageGoals> {
         ),
         Expanded(
           flex: 8,
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(8, 15, 8, 0),
-                width: double.infinity,
-                child: Center(
-                  child: Column(
-                    children: [...savedbudget.goalCategories.map((e) {
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(8, 15, 8, 0),
+              width: double.infinity,
+              child: Center(
+                child: Column(
+                  children: [
+                    //BANNER AD
+
+                    if (_bannerAd != null)
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          width: _bannerAd!.size.width.toDouble(),
+                          height: _bannerAd!.size.height.toDouble(),
+                          child: AdWidget(ad: _bannerAd!),
+                        ),
+                      ),
+                    if (!widget.isPremium!) SizedBox(height: 15), //
+                    //AD END
+                    ...savedbudget.goalCategories.map((e) {
                       e.goalAmount;
                       double totalCost = 0;
                       for (final i in e.savingGoal) {
@@ -158,14 +197,14 @@ class _ManageGoalsState extends State<ManageGoals> {
                           elevation: 3,
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
-                      
-                            child: Column (
-                                children: [Row(children: [
+                            child: Column(
+                              children: [
+                                Row(children: [
                                   Expanded(
                                     flex: 8,
                                     child: Container(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 10),
                                       child: Column(
                                         children: [
                                           Container(
@@ -189,7 +228,8 @@ class _ManageGoalsState extends State<ManageGoals> {
                                                   const AlwaysStoppedAnimation(
                                                       Color(0xff7BE116)),
                                               value: 1 -
-                                                  (e.goalAmount - e.savedAmount) /
+                                                  (e.goalAmount -
+                                                          e.savedAmount) /
                                                       e.goalAmount),
                                         ],
                                       ),
@@ -198,10 +238,10 @@ class _ManageGoalsState extends State<ManageGoals> {
                                   Expanded(
                                     flex: 2,
                                     child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
                                           Text(
-                                             
                                             '${e.goalAmount}€ ',
                                             style: const TextStyle(
                                               color: Colors.grey,
@@ -212,59 +252,53 @@ class _ManageGoalsState extends State<ManageGoals> {
                                   ),
                                 ]),
                                 Row(
-                                      children: [
-                                      Text(
-                                    '${e.savedAmount}€ saved since ${savedbudget.startDate}',
-                                    style: const TextStyle(fontSize: 14),
-                                    
-                                  ),
-                                        const Spacer(),
-                                        ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color(0xff0F5B2E),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(18))),
-                                            onPressed: () {
-                                                  EditGoalDialog.run(context,
-                                                  e.title, e.goalAmount, e.savedAmount);
-                                            },
-                                            child: const Text("EDIT"))
-                                      ],
+                                  children: [
+                                    Text(
+                                      '${e.savedAmount}€ saved since ${savedbudget.startDate}',
+                                      style: const TextStyle(fontSize: 14),
                                     ),
-                                ],
-                                
+                                    const Spacer(),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xff0F5B2E),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(18))),
+                                        onPressed: () {
+                                          EditGoalDialog.run(context, e.title,
+                                              e.goalAmount, e.savedAmount);
+                                        },
+                                        child: const Text("EDIT"))
+                                  ],
+                                ),
+                              ],
                             ),
-                          
                           ));
                     }).toList(),
                     Container(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        AddGoalDialog.run(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          elevation: 3,
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xff0F5B2E)),
-                      child: const Text("+ NEW GOAL"),
-                    ),
-                  )
-                   
-                  ],),
+                      padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          AddGoalDialog.run(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            elevation: 3,
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xff0F5B2E)),
+                        child: const Text("+ NEW GOAL"),
+                      ),
+                    )
+                  ],
                 ),
-                
               ),
             ),
-          
-              
+          ),
         ),
       ],
-      );
+    );
   }
 }
