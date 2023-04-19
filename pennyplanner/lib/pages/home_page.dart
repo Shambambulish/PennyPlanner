@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
 import 'package:pennyplanner/widgets/manage_expenses.dart';
+import 'package:pennyplanner/widgets/manage_goals.dart';
 import '../widgets/pp_appbar.dart';
 import 'history_page.dart';
 import 'package:pennyplanner/notifications.dart';
@@ -68,27 +69,7 @@ class _HomePageState extends State<HomePage> {
                 // 2nd tab
                 const HistoryPage(),
                 // 3rd tab
-                Column(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 3,
-                                offset: const Offset(0, 5))
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(flex: 7, child: Container()),
-                  ],
-                ),
+                const ManageGoals(),
               ]),
             ),
           ],
