@@ -13,14 +13,14 @@ import '../models/expense_category.dart';
 import 'add_category_dialog.dart';
 
 class ManageExpenses extends StatefulWidget {
-  const ManageExpenses({super.key});
+  bool? isPremium = false;
+  ManageExpenses({super.key, this.isPremium});
 
   @override
   State<ManageExpenses> createState() => _ManageExpensesState();
 }
 
 class _ManageExpensesState extends State<ManageExpenses> {
-  // COMPLETE: Add _bannerAd
   BannerAd? _bannerAd;
 
   //init dummy data
@@ -77,25 +77,29 @@ class _ManageExpensesState extends State<ManageExpenses> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    MobileAds.instance.initialize();
 
-    // COMPLETE: Load a banner ad
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+    // async database query
+    // if (user doesn't have premium)
+    if (!widget.isPremium!) {
+      MobileAds.instance.initialize();
+      BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        request: const AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              _bannerAd = ad as BannerAd;
+            });
+          },
+          onAdFailedToLoad: (ad, err) {
+            debugPrint('Failed to load a banner ad: ${err.message}');
+            ad.dispose();
+          },
+        ),
+      ).load();
+    }
+    ///// end premium check
   }
 
   @override
@@ -224,7 +228,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                       child: AdWidget(ad: _bannerAd!),
                     ),
                   ),
-                SizedBox(height: 15),
+                if (!widget.isPremium!) SizedBox(height: 15),
                 //AD END
                 ...budget.expenseCategories.map((e) {
                   double expenseTotal = 0;

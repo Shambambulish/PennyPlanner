@@ -13,8 +13,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, User? user});
+  HomePage({super.key, User? user});
 
+  bool isPremium = true;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -35,12 +36,19 @@ class _HomePageState extends State<HomePage> {
     listenToNotification();
 
     // async database query
-    // if (user doesn't have premium)
-    waitForPremiumNoti();
+    //  widget.isPremium = if (user doesn't have premium)
+    // end premium checker
 
-    _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
-      showInterAd();
-    });
+    //SHOW ADS AND NOTI IF NOT PREMIUM
+    if (!widget.isPremium) {
+      waitForPremiumNoti();
+
+      _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
+        showInterAd();
+      });
+    }
+    /////////////////////////
+
     super.initState();
   }
 
@@ -107,9 +115,9 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: TabBarView(children: [
                 // 1st tab
-                const ManageExpenses(),
+                ManageExpenses(isPremium: widget.isPremium),
                 // 2nd tab
-                const HistoryPage(),
+                HistoryPage(isPremium: widget.isPremium),
                 // 3rd tab
                 const ManageGoals(),
               ]),

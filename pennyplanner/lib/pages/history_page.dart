@@ -10,7 +10,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  bool? isPremium = false;
+  HistoryPage({super.key, this.isPremium});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -29,25 +30,30 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     super.initState();
 
-    MobileAds.instance.initialize();
+    // async database query
+    // if (user doesn't have premium)
+    if (!widget.isPremium!) {
+      MobileAds.instance.initialize();
 
-    // COMPLETE: Load a banner ad
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('Failed to load a banner ad: ${err.message}');
-          ad.dispose();
-        },
-      ),
-    ).load();
+      // COMPLETE: Load a banner ad
+      BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        request: const AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              _bannerAd = ad as BannerAd;
+            });
+          },
+          onAdFailedToLoad: (ad, err) {
+            debugPrint('Failed to load a banner ad: ${err.message}');
+            ad.dispose();
+          },
+        ),
+      ).load();
+    }
+    ///// end premium check
   }
 
   @override
@@ -246,7 +252,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: AdWidget(ad: _bannerAd!),
                   ),
                 ),
-              SizedBox(height: 30),
+              if (!widget.isPremium!) SizedBox(height: 30), //
               //AD END
               ...history.expenseCategories.map((e) {
                 return Card(
