@@ -70,10 +70,12 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                       ),
                       ElevatedButton(
                           onPressed: () async {
+                            /* hasu vitsi mutta ei ehkä demoon
                             await notificationService.showNotification(
                                 id: 0,
                                 title: "sike",
                                 body: "ei olis kannattanu");
+                          */
                           },
                           child: const Text("Osta heti")),
                     ]),

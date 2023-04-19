@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
 
     // async database query
     // if (user doesn't have premium)
-    // waitForPremiumNoti();
+    waitForPremiumNoti();
 
     _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
       showInterAd();
