@@ -5,7 +5,10 @@ import 'package:pennyplanner/firebase_options.dart';
 import 'pages/welcome_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:pennyplanner/pages/home_page.dart';
+import 'package:pennyplanner/pages/settings_page.dart';
+import 'pages/splash_screen.dart';
 import '../pages/welcome_page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomePage(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
+      home: const Splash(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
     );
   }
 }
