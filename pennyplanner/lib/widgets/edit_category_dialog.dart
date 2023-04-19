@@ -6,6 +6,11 @@ class EditCategoryDialog {
   void deleteCategory(String title) {}
 
   static void run(BuildContext context, String title, double budget) {
+    final descriptionTextController = TextEditingController();
+    descriptionTextController.text = title;
+    final budgetTextController = TextEditingController();
+    budgetTextController.text = budget.toString();
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -109,8 +114,8 @@ class EditCategoryDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextFormField(
-                      initialValue: title,
+                    child: TextField(
+                      controller: descriptionTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -141,8 +146,8 @@ class EditCategoryDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextFormField(
-                      initialValue: budget.toString(),
+                    child: TextField(
+                      controller: budgetTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
