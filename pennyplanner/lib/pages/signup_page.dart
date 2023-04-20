@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../utils/auth_service.dart';
+import 'home_page.dart';
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -11,11 +15,13 @@ class SignUpPage extends StatefulWidget {
     usernameController.dispose();
     passwordController.dispose();
   }
+
   State<SignUpPage> createState() => SignUpPageState();
 }
 
 FirebaseDatabase database = FirebaseDatabase.instance;
-DatabaseReference ref = FirebaseDatabase.instance.ref('/users').child(usernameController.text);
+DatabaseReference ref =
+    FirebaseDatabase.instance.ref('/users').child(usernameController.text);
 
 final emailController = TextEditingController();
 final usernameController = TextEditingController();
@@ -204,14 +210,14 @@ class SignUpPageState extends State<SignUpPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: ()
-                            async {
+                            onPressed: () async {
                               const snackBar =
                                   SnackBar(content: Text('Clicked SIGN UP'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               try {
-                                final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                final credential = await FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
                                   email: emailController.text.trim(),
                                   password: passwordController.text.trim(),
                                 );
@@ -219,14 +225,13 @@ class SignUpPageState extends State<SignUpPage> {
                                 if (e.code == 'weak-password') {
                                   print('The password provided is too weak.');
                                 } else if (e.code == 'email-already-in-use') {
-                                  print('The account already exists for that email.');
+                                  print(
+                                      'The account already exists for that email.');
                                 }
                               } catch (e) {
                                 print(e);
                               }
-
-                            }
-                            ,
+                            },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
                               backgroundColor: const Color(0xffaf6363),
@@ -265,7 +270,22 @@ class SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              //odottaa käyttäjän todennuksen
+                              User? user =
+                                  await Authentication.signInWithGoogle(
+                                      context: context);
+
+                              if (user != null) {
+                                if (!context.mounted) return;
+                                Navigator.of(context)
+                                    .pushReplacement(MaterialPageRoute(
+                                        builder: (context) => HomePage(
+                                              //siirtää etusivulle kirjautumisen onnistuessa
+                                              user: user,
+                                            )));
+                              }
+                            },
                             icon: const Image(
                                 image: AssetImage('assets/google_logo.png')),
                             iconSize: 30,

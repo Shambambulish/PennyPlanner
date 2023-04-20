@@ -48,6 +48,7 @@ String getRandomExpense() {
   ];
   return expenses[Random().nextInt(expenses.length)];
 }
+
 final userid = FirebaseAuth.instance.currentUser!.uid;
 FirebaseDatabase database = FirebaseDatabase.instance;
 DatabaseReference ref = FirebaseDatabase.instance.ref('expenses').child(userid);
@@ -443,30 +444,41 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         foregroundColor: const Color(0xff0F5B2E)),
                     child: const Text("+ NEW CATEGORY"),
                   ),
-                )
-                ,Container(
+                ),
+                Container(
                   padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                       final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
-                       firebase.child(userid + '/budgetdata/' + newPostKey!).set(budgetdata); // set randomized data
-                       Future.delayed(const Duration(seconds: 15), () {
-                         firebase.child(userid + '/budgetdata/' + newPostKey).update({"amount": Random().nextInt(550)}); // update set data 15 seconds after, using future.delayed
-                       });
+                      final newPostKey = FirebaseDatabase.instance
+                          .ref()
+                          .child(userid + '/budgetdata/')
+                          .push()
+                          .key;
+                      firebase
+                          .child(userid + '/budgetdata/' + newPostKey!)
+                          .set(budgetdata); // set randomized data
+                      Future.delayed(const Duration(seconds: 15), () {
+                        firebase
+                            .child(userid + '/budgetdata/' + newPostKey)
+                            .update({
+                          "amount": Random().nextInt(550)
+                        }); // update set data 15 seconds after, using future.delayed
+                      });
 
-                       Future.delayed(const Duration(seconds: 30), () {
-                          // firebase.child(userid + '/budgetdata/' + newPostKey).remove(); // remove set data 30 seconds after, using future.delayed
-                       });
+                      Future.delayed(const Duration(seconds: 30), () {
+                        // firebase.child(userid + '/budgetdata/' + newPostKey).remove(); // remove set data 30 seconds after, using future.delayed
+                      });
 
-                       Future.delayed(const Duration(seconds: 45), () async {
-
-                         DataSnapshot dataSnapshot = await firebase.child(userid + '/budgetdata/' + newPostKey).get();
-                         Map<dynamic, dynamic> values = dataSnapshot.value as Map<dynamic, dynamic>;
-                          print (values["amount"]); // print out the value of the set data 45 seconds after, using future.delayed, readable values are amount, date, title.
-                       });
-
-
+                      Future.delayed(const Duration(seconds: 45), () async {
+                        DataSnapshot dataSnapshot = await firebase
+                            .child(userid + '/budgetdata/' + newPostKey)
+                            .get();
+                        Map<dynamic, dynamic> values =
+                            dataSnapshot.value as Map<dynamic, dynamic>;
+                        print(values[
+                            "amount"]); // print out the value of the set data 45 seconds after, using future.delayed, readable values are amount, date, title.
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -474,7 +486,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         elevation: 3,
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xff0F5B2E)),
-                    child: const Text("+ NEW DUMMYDATA BUTTON (C Inst, U 15s, D 30s)"),
+                    child: const Text(
+                        "+ NEW DUMMYDATA BUTTON (C Inst, U 15s, D 30s)"),
                   ),
                 ),
                 Container(
@@ -482,8 +495,14 @@ class _ManageExpensesState extends State<ManageExpenses> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
-                      firebase.child(userid + '/budgetdata/' + newPostKey!).set(budgetdata); // set randomized data
+                      final newPostKey = FirebaseDatabase.instance
+                          .ref()
+                          .child(userid + '/budgetdata/')
+                          .push()
+                          .key;
+                      firebase
+                          .child(userid + '/budgetdata/' + newPostKey!)
+                          .set(budgetdata); // set randomized data
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(

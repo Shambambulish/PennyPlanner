@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -11,6 +12,7 @@ void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); //käynnistetään firebase applikaatiossa
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   runApp(const MyApp());
 
   RequestConfiguration configuration =
