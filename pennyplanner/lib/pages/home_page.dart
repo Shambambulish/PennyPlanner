@@ -81,8 +81,8 @@ class _HomePageState extends State<HomePage> {
     await notificationService.showScheduledNotification(
         id: 0,
         title: "Unlock additional features and remove ads",
-        body: "Click here to buy PennyPlanner Premium now for 6,90!",
-        seconds: 4);
+        body: "Tap here to purchase PennyPlanner Premium now for 6,90!",
+        seconds: 10);
   }
 
   @override
