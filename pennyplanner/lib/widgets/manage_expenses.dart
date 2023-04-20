@@ -23,6 +23,12 @@ class ManageExpenses extends StatefulWidget {
   State<ManageExpenses> createState() => _ManageExpensesState();
 }
 
+final budgetdata = <String, dynamic>{
+  'title': getRandomExpense(),
+  'amount': Random().nextInt(25),
+  'date': DateTime.now().millisecondsSinceEpoch,
+};
+
 // random datan settausta alla älä välitä, poista jos alkaa risomaan
 String getRandomExpense() {
   final expenses = [
@@ -45,11 +51,17 @@ String getRandomExpense() {
 final userid = FirebaseAuth.instance.currentUser!.uid;
 FirebaseDatabase database = FirebaseDatabase.instance;
 DatabaseReference ref = FirebaseDatabase.instance.ref('expenses').child(userid);
+// final dataget =await ref.child(userid + '/budgetdata/').get();
+
+getexpensesfromDB() async {
+  final dataget = await ref.child(userid + '/budgetdata/').get();
+  print(dataget.value);
+  return dataget.value;
+}
 
 class _ManageExpensesState extends State<ManageExpenses> {
   // COMPLETE: Add _bannerAd
   BannerAd? _bannerAd;
-
   //init dummy data
   Budget budget = Budget(
       id: 0,
@@ -82,19 +94,17 @@ class _ManageExpensesState extends State<ManageExpenses> {
           allottedMaximum: 500.00,
           expenses: [
             Expense(
-                id: 0,
-                title: 'Electricity',
-                amount: 50,
-                reoccurring: true,
-                date: DateTime.now(),
-                dueDate: DateTime(2023, 4, 12)),
+              id: 0,
+              title: 'Electricity',
+              amount: 100.00,
+              date: DateTime.now(),
+            ),
             Expense(
-                id: 1,
-                title: 'Car payment',
-                amount: 200,
-                reoccurring: true,
-                date: DateTime.now(),
-                dueDate: DateTime(2023, 5, 2)),
+              id: 1,
+              title: 'Car payment',
+              amount: 400.00,
+              date: DateTime.now(),
+            ),
           ],
         ),
       ]);
@@ -439,12 +449,20 @@ class _ManageExpensesState extends State<ManageExpenses> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      final budgetdata = <String, dynamic>{
-                        'title': getRandomExpense(),
-                        'amount': Random().nextInt(25),
-                        'date': DateTime.now().millisecondsSinceEpoch,
-                      };
-                      firebase.child(userid + '/budgetdata/').push().set(budgetdata);
+                       final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
+                       firebase.child(userid + '/budgetdata/' + newPostKey!).set(budgetdata); // set randomized data
+                       Future.delayed(const Duration(seconds: 15), () {
+                         firebase.child(userid + '/budgetdata/' + newPostKey).update({"amount": 5192}); // update set data 15 seconds after, using future.delayed
+                       });
+
+                       Future.delayed(const Duration(seconds: 30), () {
+                          // firebase.child(userid + '/budgetdata/' + newPostKey).remove(); // remove set data 30 seconds after, using future.delayed
+                       });
+
+                       Future.delayed(const Duration(seconds: 45), () {
+                        final testprint = firebase.child(userid + '/budgetdata/' + newPostKey).get(); // get data 45 seconds after, using future.delayed
+                        debugPrint(testprint as String);
+                       });
                     },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -452,7 +470,24 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         elevation: 3,
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xff0F5B2E)),
-                    child: const Text("+ NEW DUMMYDATA BUTTON"),
+                    child: const Text("+ NEW DUMMYDATA BUTTON (C Inst, U 15s, D 30s)"),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
+                      firebase.child(userid + '/budgetdata/' + newPostKey!).set(budgetdata); // set randomized data
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 3,
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xff0F5B2E)),
+                    child: const Text("+ NEW DUMMYDATA BUTTON (C ONLY)"),
                   ),
                 )
               ]),
