@@ -67,9 +67,13 @@ class _HomePageState extends State<HomePage> {
             },
           );
 
-          setState(() {
-            _interstitialAd = ad;
-          });
+          if (this.mounted) {
+            print("ismoutned");
+            setState(() {
+              print("here");
+              _interstitialAd = ad;
+            });
+          }
         },
         onAdFailedToLoad: (err) {
           debugPrint('Failed to load an interstitial ad: ${err.message}');

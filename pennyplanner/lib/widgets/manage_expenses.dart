@@ -54,6 +54,7 @@ String getRandomExpense() {
   ];
   return expenses[Random().nextInt(expenses.length)];
 }
+
 final userid = FirebaseAuth.instance.currentUser!.uid;
 FirebaseDatabase database = FirebaseDatabase.instance;
 DatabaseReference ref = FirebaseDatabase.instance.ref('expenses').child(userid);
@@ -132,9 +133,11 @@ class _ManageExpensesState extends State<ManageExpenses> {
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
-            setState(() {
-              _bannerAd = ad as BannerAd;
-            });
+            if (this.mounted) {
+              (() {
+                _bannerAd = ad as BannerAd;
+              });
+            }
           },
           onAdFailedToLoad: (ad, err) {
             debugPrint('Failed to load a banner ad: ${err.message}');
