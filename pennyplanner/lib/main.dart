@@ -21,11 +21,20 @@ void main() async {
       .ensureInitialized(); //käynnistetään firebase applikaatiossa
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (prefs.getString("currency") == null) {
+    prefs.setString("currency", "€");
+  }
+  if (prefs.getString("language") == null) {
+    prefs.setString("language", "English");
+  }
+  if (prefs.getBool("isDarkMode") == null) {
+    prefs.setString("isDarkMode", "false");
+  }
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(
           create: (BuildContext context) =>
-              ThemeProvider(isDarkMode: prefs.getBool("isDarkTheme")!)),
+              ThemeProvider(isDarkMode: prefs.getBool("isDarkMode")!)),
       ChangeNotifierProvider(
           create: (BuildContext context) =>
               LocaleProvider(prefsLocale: prefs.getString("language")))
