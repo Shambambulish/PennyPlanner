@@ -22,7 +22,12 @@ final userid = FirebaseAuth.instance.currentUser!.uid;
 class AddExpenseDialog {
   static void run(BuildContext context) {
     bool dueDateCheckBoxValue = false;
-    bool repeatEveryCheckBoxValue = false;
+    bool repeatEveryMonthCheckBoxValue = false;
+
+    final dueDateTextController = TextEditingController();
+    final descriptionTextController = TextEditingController();
+    final amountTextController = TextEditingController();
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -111,8 +116,13 @@ class AddExpenseDialog {
                       children: [
                         Text(
                           'Due date',
-                          style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                          style: dueDateCheckBoxValue
+                              ? StyledDialogPopup
+                                  .customDialogTheme.textTheme.displayMedium
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -124,6 +134,7 @@ class AddExpenseDialog {
                           child: Checkbox(
                               value: dueDateCheckBoxValue,
                               onChanged: (bool? newValue) {
+                                dueDateTextController.text = "";
                                 setState(() {
                                   dueDateCheckBoxValue = newValue!;
                                 });
@@ -134,21 +145,53 @@ class AddExpenseDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextField(
-                      controller: duedateController,
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
+                    child: InkWell(
+                      onTap: dueDateCheckBoxValue
+                          ? () async {
+                              await showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                          DateTime.now(), //get today's date
+                                      firstDate: DateTime(
+                                          2000), //DateTime.now() - not to allow to choose before today.
+                                      lastDate: DateTime(2101))
+                                  .then((value) {
+                                if (value != null) {
+                                  dueDateTextController.text =
+                                      DateFormat('dd.MM.yyyy')
+                                          .format(value)
+                                          .toString();
+                                }
+                                return value;
+                              });
+                            }
+                          : () {},
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: dueDateTextController,
+                          cursorColor: Colors.black,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: dueDateCheckBoxValue
+                                ? Colors.white
+                                : Colors.grey.shade300,
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: dueDateCheckBoxValue
+                                        ? const Color(0xff0F5B2E)
+                                        : Colors.grey),
+                                borderRadius: BorderRadius.circular(30.0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: dueDateCheckBoxValue
+                                        ? const Color(0xff0F5B2E)
+                                        : Colors.grey),
+                                borderRadius: BorderRadius.circular(30.0)),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -160,9 +203,14 @@ class AddExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Repeat every',
-                          style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                          'Repeat every month',
+                          style: repeatEveryMonthCheckBoxValue
+                              ? StyledDialogPopup
+                                  .customDialogTheme.textTheme.displayMedium
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -172,34 +220,18 @@ class AddExpenseDialog {
                           height: 12,
                           width: 12,
                           child: Checkbox(
-                              value: repeatEveryCheckBoxValue,
+                              value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  repeatEveryCheckBoxValue = newValue!;
+                                  repeatEveryMonthCheckBoxValue = newValue!;
                                 });
                               }),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                      ),
-                    ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   ElevatedButton(
                       onPressed: () async{
