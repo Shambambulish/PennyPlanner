@@ -28,7 +28,7 @@ void main() async {
     prefs.setString("language", "English");
   }
   if (prefs.getBool("isDarkMode") == null) {
-    prefs.setString("isDarkMode", "false");
+    prefs.setBool("isDarkMode", false);
   }
   runApp(
     MultiProvider(providers: [
