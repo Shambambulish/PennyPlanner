@@ -5,6 +5,7 @@ import 'package:pennyplanner/models/savedbudget.dart';
 import 'package:pennyplanner/models/saving_goal.dart';
 import 'package:intl/intl.dart';
 import '../ad_helper.dart';
+import '../utils/theme.dart';
 import 'add_category_dialog.dart';
 import 'package:pennyplanner/widgets/add_goal_dialog.dart';
 import 'package:pennyplanner/widgets/edit_category_dialog.dart';
@@ -78,6 +79,7 @@ class _ManageGoalsState extends State<ManageGoals> {
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Column(
       children: [
         Expanded(
@@ -86,10 +88,14 @@ class _ManageGoalsState extends State<ManageGoals> {
               padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: ppColors.isDarkMode
+                    ? const Color(0xff141414)
+                    : Colors.white,
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: ppColors.isDarkMode
+                          ? Colors.black.withOpacity(0.5)
+                          : Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 3,
                       offset: const Offset(0, 5))
@@ -107,9 +113,9 @@ class _ManageGoalsState extends State<ManageGoals> {
                           Text(
                             'Income',
                             textAlign: TextAlign.left,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 30,
-                              color: Color(0xff0F5B2E),
+                              color: ppColors.primaryTextColor,
                             ),
                           ),
                           Spacer(),
@@ -136,21 +142,21 @@ class _ManageGoalsState extends State<ManageGoals> {
                             alignment: Alignment.topLeft,
                             child: Text(
                               '${savedbudget.getincomeBudget}€',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 70,
-                                color: Color(0xff0F5B2E),
+                                color: ppColors.primaryTextColor,
                               ),
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                            child: const Align(
+                            child: Align(
                               alignment: Alignment.bottomLeft,
                               child: Text(
                                 ' /month',
                                 style: TextStyle(
                                   fontSize: 40,
-                                  color: Color(0xff0F5B2E),
+                                  color: ppColors.primaryTextColor,
                                 ),
                               ),
                             ),
@@ -191,6 +197,9 @@ class _ManageGoalsState extends State<ManageGoals> {
                         totalCost += i.amount;
                       }
                       return Card(
+                          color: ppColors.isDarkMode
+                              ? const Color(0xff141414)
+                              : Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -213,8 +222,9 @@ class _ManageGoalsState extends State<ManageGoals> {
                                             width: double.infinity,
                                             child: Text(
                                               e.title,
-                                              style: const TextStyle(
-                                                  color: Color(0xff0F5B2E),
+                                              style: TextStyle(
+                                                  color:
+                                                      ppColors.primaryTextColor,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 18),
                                             ),
@@ -243,8 +253,9 @@ class _ManageGoalsState extends State<ManageGoals> {
                                         children: [
                                           Text(
                                             '${e.goalAmount}€ ',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
+                                            style: TextStyle(
+                                              color:
+                                                  ppColors.secondaryTextColor,
                                               fontSize: 20,
                                             ),
                                           ),
@@ -287,9 +298,14 @@ class _ManageGoalsState extends State<ManageGoals> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             elevation: 3,
-                            backgroundColor: Colors.white,
+                            backgroundColor: ppColors.isDarkMode
+                                ? const Color(0xff141414)
+                                : Colors.white,
                             foregroundColor: const Color(0xff0F5B2E)),
-                        child: const Text("+ NEW GOAL"),
+                        child: Text(
+                          "+ NEW GOAL",
+                          style: TextStyle(color: ppColors.primaryTextColor),
+                        ),
                       ),
                     )
                   ],

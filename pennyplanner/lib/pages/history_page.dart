@@ -8,6 +8,7 @@ import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
+import '../utils/theme.dart';
 
 class HistoryPage extends StatefulWidget {
   bool? isPremium = false;
@@ -136,6 +137,8 @@ class _HistoryPageState extends State<HistoryPage> {
     DateFormat dateFormat =
         DateFormat.yMMMMd(); // how you want it to be formatted
 
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
+
     return SingleChildScrollView(
         child: Column(
       children: [
@@ -150,10 +153,10 @@ class _HistoryPageState extends State<HistoryPage> {
                         ? dateFormat.format(DateTime.now())
                         : dateFormat.format(startDate!),
                     textAlign: TextAlign.left,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 25,
                         fontFamily: "Hind Siliguri",
-                        color: Color(0xff0F5B2E)),
+                        color: ppColors.primaryTextColor),
                   ),
                   onTap: () async {
                     startDate = await showDatePicker(
@@ -170,13 +173,13 @@ class _HistoryPageState extends State<HistoryPage> {
                     });
                   },
                 ),
-                const Text(
+                Text(
                   " - ",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 25,
                       fontFamily: "Hind Siliguri",
-                      color: Color(0xff0F5B2E)),
+                      color: ppColors.primaryTextColor),
                 ),
                 InkWell(
                   onTap: () async {
@@ -198,10 +201,10 @@ class _HistoryPageState extends State<HistoryPage> {
                         ? dateFormat.format(DateTime.now())
                         : dateFormat.format(endDate!),
                     textAlign: TextAlign.left,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 25,
                         fontFamily: "Hind Siliguri",
-                        color: Color(0xff0F5B2E)),
+                        color: ppColors.primaryTextColor),
                   ),
                 ),
               ]),
@@ -266,11 +269,11 @@ class _HistoryPageState extends State<HistoryPage> {
                           child: Text(
                             e.title,
                             textAlign: TextAlign.left,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "Hind Siliguri",
-                                color: Color(0xff0F5B2E)),
+                                color: ppColors.primaryTextColor),
                           ),
                         ),
                         collapsed: Padding(
@@ -285,8 +288,12 @@ class _HistoryPageState extends State<HistoryPage> {
                             return Container(
                               width: double.infinity,
                               padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                              decoration: const BoxDecoration(
-                                  border: Border(bottom: BorderSide(width: 1))),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1,
+                                          color:
+                                              ppColors.secondaryTextColor!))),
                               child: Row(
                                 children: [
                                   Expanded(

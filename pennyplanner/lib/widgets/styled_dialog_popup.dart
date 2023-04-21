@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../utils/theme.dart';
+
 class StyledDialogPopup extends StatefulWidget {
   final List<Widget> children;
 
   static ThemeData customDialogTheme = ThemeData(
-    primaryColor: const Color(0xffAF6363),
     buttonTheme: const ButtonThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -19,17 +20,17 @@ class StyledDialogPopup extends StatefulWidget {
           color: Colors.black,
         ),
         displayMedium: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.normal,
-            color: Color(0xff0F5B2E))),
+          fontSize: 18,
+          fontWeight: FontWeight.normal,
+        )),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(4),
-            ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(4),
           ),
-          backgroundColor: const Color(0xffAF6363)),
+        ),
+      ),
     ),
     dialogTheme: const DialogTheme(
         shape: RoundedRectangleBorder(
@@ -50,9 +51,11 @@ class StyledDialogPopup extends StatefulWidget {
 class _StyledDialogPopupState extends State<StyledDialogPopup> {
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Theme(
         data: StyledDialogPopup.customDialogTheme,
         child: Dialog(
+          backgroundColor: ppColors.isDarkMode ? Color(0xff121212) : null,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

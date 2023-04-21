@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
+import 'package:pennyplanner/utils/theme.dart';
 import 'package:pennyplanner/widgets/manage_expenses.dart';
 import 'package:pennyplanner/widgets/manage_goals.dart';
 import '../widgets/pp_appbar.dart';
@@ -87,6 +88,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -97,20 +99,25 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
-            const TabBar(
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(
-                  text: 'MANAGE',
-                ),
-                Tab(
-                  text: 'HISTORY',
-                ),
-                Tab(
-                  text: 'GOALS',
-                ),
-              ],
+            Container(
+              color:
+                  ppColors.isDarkMode ? const Color(0xff141414) : Colors.white,
+              child: TabBar(
+                labelColor: ppColors.primaryTextColor,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    text: 'MANAGE',
+                  ),
+                  Tab(
+                    text: 'HISTORY',
+                  ),
+                  Tab(
+                    text: 'GOALS',
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: TabBarView(children: [

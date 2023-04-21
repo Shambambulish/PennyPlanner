@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/home_page.dart';
 import 'package:pennyplanner/utils/auth_service.dart';
+import '../utils/theme.dart';
 import 'signin_page.dart';
 import 'signup_page.dart';
 
@@ -11,6 +12,7 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
       body: Center(
         child: Column(children: [
@@ -18,7 +20,10 @@ class WelcomePage extends StatelessWidget {
             flex: 4,
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xffaf6363)),
+              decoration: BoxDecoration(
+                  color: ppColors.isDarkMode
+                      ? Color(0xff111111)
+                      : Color(0xffaf6363)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -26,14 +31,18 @@ class WelcomePage extends StatelessWidget {
                     margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                     width: 230,
                     height: 230,
-                    child: const Image(
-                      image: AssetImage('assets/pplogo.png'),
+                    child: Image(
+                      image: ppColors.isDarkMode
+                          ? AssetImage('assets/pplogo_red.png')
+                          : AssetImage('assets/pplogo.png'),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: const Image(
-                        image: AssetImage('assets/pplogo_bold_yellow.png')),
+                    child: Image(
+                        image: ppColors.isDarkMode
+                            ? AssetImage('assets/pplogo_bold_red.png')
+                            : AssetImage('assets/pplogo_bold_yellow.png')),
                   ),
                 ],
               ),
@@ -43,7 +52,10 @@ class WelcomePage extends StatelessWidget {
             flex: 6,
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xffffe380)),
+              decoration: BoxDecoration(
+                  color: ppColors.isDarkMode
+                      ? Color(0xff333333)
+                      : Color(0xffffe380)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -107,9 +119,11 @@ class WelcomePage extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             border: Border(
-                              bottom: BorderSide(width: 1, color: Colors.black),
+                              bottom: BorderSide(
+                                  width: 1,
+                                  color: ppColors.secondaryTextColor!),
                             ),
                           ),
                           child: const Text(

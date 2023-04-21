@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/welcome_page.dart';
 
 import '../../widgets/pp_appbar.dart';
+import '../utils/theme.dart';
 
 const List<String> currencyValues = <String>['€', "USD", '£', '¥'];
 
@@ -24,11 +25,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
       appBar: const PPAppBar(
         title: 'Home Page',
-        returnToHomePage: false,
-        showSettingsBtn: true,
+        returnToHomePage: true,
+        showSettingsBtn: false,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -106,13 +108,13 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(
               padding: const EdgeInsets.only(left: 30),
               alignment: Alignment.centerLeft,
-              child: const Text(
+              child: Text(
                 "Settings",
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                   fontFamily: "Hind Siliguri",
-                  color: Color(0xff0F5B2E),
+                  color: ppColors.primaryTextColor,
                 ),
               ),
             ),
