@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import '../pages/signup_page.dart';
 import 'styled_dialog_popup.dart';
 
@@ -239,7 +240,7 @@ class AddExpenseDialog {
                           'title': descriptionController.text.trim(),
                           'amount': amountController.text.trim(),
                           'date': duedateController.text.trim(),
-                          'repeating': repeatEveryCheckBoxValue.toString(),
+                          'repeating': repeatEveryMonthCheckBoxValue.toString(),
                         };
                         final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
                         firebase.child(userid + '/budgetdata/' + newPostKey!).set(expensedata);
