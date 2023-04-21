@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditCategoryDialog {
   void deleteCategory(String title) {}
@@ -29,7 +30,7 @@ class EditCategoryDialog {
                                 color: ppColors.secondaryTextColor!))),
                     child: Row(
                       children: [
-                        Text('EDIT CATEGORY',
+                        Text(AppLocalizations.of(context)!.editCategory,
                             textAlign: TextAlign.left,
                             style: StyledDialogPopup
                                 .customDialogTheme.textTheme.displayLarge
@@ -48,7 +49,8 @@ class EditCategoryDialog {
                                       width: double.infinity,
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
-                                        'Are you sure you want to delete this category?',
+                                        AppLocalizations.of(context)!
+                                            .deleteCategoryConfirmation,
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: ppColors.secondaryTextColor),
@@ -79,7 +81,9 @@ class EditCategoryDialog {
                                               return Navigator.pop(
                                                   context, true);
                                             },
-                                            child: const Text('Yes'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .yes),
                                           ),
                                           const SizedBox(
                                             width: 30,
@@ -99,7 +103,9 @@ class EditCategoryDialog {
                                               return Navigator.pop(
                                                   context, false);
                                             },
-                                            child: const Text('No'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .no),
                                           )
                                         ],
                                       ),
@@ -107,8 +113,9 @@ class EditCategoryDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              const snackBar =
-                                  SnackBar(content: Text('Deleting category'));
+                              var snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .deletingCategory));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               int count = 0;
@@ -130,7 +137,7 @@ class EditCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -163,7 +170,7 @@ class EditCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Budget',
+                      AppLocalizations.of(context)!.budget,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -202,7 +209,7 @@ class EditCategoryDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Save'))
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));

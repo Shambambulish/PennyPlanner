@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/welcome_page.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditIncomeDialog {
   static void run(BuildContext context, double income) {
-    bool dueDateCheckBoxValue = false;
-    bool repeatEveryCheckBoxValue = false;
-
     final incomeTextController = TextEditingController();
     incomeTextController.text = income.toString();
 
@@ -28,7 +26,7 @@ class EditIncomeDialog {
                                 color: ppColors.secondaryTextColor!))),
                     child: Row(
                       children: [
-                        Text('EDIT INCOME',
+                        Text(AppLocalizations.of(context)!.editIncome,
                             textAlign: TextAlign.left,
                             style: StyledDialogPopup
                                 .customDialogTheme.textTheme.displayLarge
@@ -43,7 +41,7 @@ class EditIncomeDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Income',
+                      AppLocalizations.of(context)!.income,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -82,7 +80,7 @@ class EditIncomeDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Save'))
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));

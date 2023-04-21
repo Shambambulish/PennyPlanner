@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditExpenseDialog {
   static void run(BuildContext context, String title, double amount) {
@@ -31,7 +32,7 @@ class EditExpenseDialog {
                                 color: ppColors.secondaryTextColor!))),
                     child: Row(
                       children: [
-                        Text('EDIT EXPENSE',
+                        Text(AppLocalizations.of(context)!.editExpense,
                             textAlign: TextAlign.left,
                             style: StyledDialogPopup
                                 .customDialogTheme.textTheme.displayLarge
@@ -50,7 +51,8 @@ class EditExpenseDialog {
                                       width: double.infinity,
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
-                                        'Are you sure you want to delete this expense?',
+                                        AppLocalizations.of(context)!
+                                            .deleteExpenseConfirmation,
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: ppColors.secondaryTextColor),
@@ -81,7 +83,9 @@ class EditExpenseDialog {
                                               return Navigator.pop(
                                                   context, true);
                                             },
-                                            child: const Text('Yes'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .yes),
                                           ),
                                           const SizedBox(
                                             width: 30,
@@ -101,7 +105,9 @@ class EditExpenseDialog {
                                               return Navigator.pop(
                                                   context, false);
                                             },
-                                            child: const Text('No'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .no),
                                           )
                                         ],
                                       ),
@@ -109,8 +115,9 @@ class EditExpenseDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              const snackBar =
-                                  SnackBar(content: Text('Deleting expense'));
+                              var snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .deletingExpense));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               int count = 0;
@@ -132,7 +139,7 @@ class EditExpenseDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -165,7 +172,7 @@ class EditExpenseDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Amount',
+                      AppLocalizations.of(context)!.amount,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -200,7 +207,7 @@ class EditExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Due date',
+                          AppLocalizations.of(context)!.dueDate,
                           style: StyledDialogPopup
                               .customDialogTheme.textTheme.displayMedium
                               ?.apply(color: ppColors.primaryTextColor),
@@ -291,7 +298,7 @@ class EditExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Repeat every month',
+                          AppLocalizations.of(context)!.repeatEveryMonth,
                           style: repeatEveryMonthCheckBoxValue
                               ? StyledDialogPopup
                                   .customDialogTheme.textTheme.displayMedium
@@ -338,7 +345,7 @@ class EditExpenseDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Save'))
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddGoalDialog {
   static void run(BuildContext context) {
@@ -22,7 +23,7 @@ class AddGoalDialog {
                             bottom: BorderSide(
                                 width: 1,
                                 color: ppColors.secondaryTextColor!))),
-                    child: Text('NEW GOAL',
+                    child: Text(AppLocalizations.of(context)!.newGoal,
                         textAlign: TextAlign.left,
                         style: StyledDialogPopup
                             .customDialogTheme.textTheme.displayLarge
@@ -34,7 +35,7 @@ class AddGoalDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -66,7 +67,7 @@ class AddGoalDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Price',
+                      AppLocalizations.of(context)!.price,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -100,7 +101,7 @@ class AddGoalDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Amount to save in period',
+                          AppLocalizations.of(context)!.amountToSaveInPeriod,
                           style: StyledDialogPopup
                               .customDialogTheme.textTheme.displayMedium
                               ?.apply(color: ppColors.primaryTextColor),
@@ -147,7 +148,7 @@ class AddGoalDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Create'))
+                      child: Text(AppLocalizations.of(context)!.create))
                 ],
               );
             }));

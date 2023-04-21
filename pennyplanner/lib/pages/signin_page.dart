@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/signup_page.dart';
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -82,7 +84,7 @@ class SignInPageState extends State<SignInPage> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
                               child: Text(
-                                'LOG IN',
+                                AppLocalizations.of(context)!.login,
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
@@ -101,7 +103,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'E-mail',
+                                    AppLocalizations.of(context)!.email,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -140,7 +142,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'Password',
+                                    AppLocalizations.of(context)!.password,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -207,8 +209,9 @@ class SignInPageState extends State<SignInPage> {
                                 }
                               }
 
-                              const snackBar =
-                                  SnackBar(content: Text('Signing in'));
+                              var snackBar = SnackBar(
+                                  content: Text(
+                                      AppLocalizations.of(context)!.signingIn));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               Navigator.pushAndRemoveUntil(
@@ -226,7 +229,8 @@ class SignInPageState extends State<SignInPage> {
                                   ? Colors.black
                                   : Colors.white,
                             ),
-                            child: const Text('SIGN IN'),
+                            child:
+                                Text(AppLocalizations.of(context)!.loginButton),
                           ),
                         ],
                       ),
@@ -252,7 +256,8 @@ class SignInPageState extends State<SignInPage> {
                               ),
                             ),
                             child: Text(
-                              'OR CONTINUE WITH SOCIAL MEDIA',
+                              AppLocalizations.of(context)!
+                                  .continueWithSocialMedia,
                               style: TextStyle(
                                 fontFamily: 'Hind Siliguri',
                                 fontSize: 12,

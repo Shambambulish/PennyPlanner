@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditBudgetDialog {
   static void run(BuildContext context, double income) {
@@ -25,7 +26,7 @@ class EditBudgetDialog {
                                 color: ppColors.secondaryTextColor!))),
                     child: Row(
                       children: [
-                        Text('EDIT BUDGET',
+                        Text(AppLocalizations.of(context)!.editBudget,
                             textAlign: TextAlign.left,
                             style: StyledDialogPopup
                                 .customDialogTheme.textTheme.displayLarge
@@ -40,7 +41,7 @@ class EditBudgetDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Budget',
+                      AppLocalizations.of(context)!.budget,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -79,7 +80,7 @@ class EditBudgetDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Save'))
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));

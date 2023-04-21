@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PPColors extends ThemeExtension<PPColors> {
   PPColors(
@@ -7,7 +8,6 @@ class PPColors extends ThemeExtension<PPColors> {
       required this.secondaryTextColor,
       this.danger,
       this.progressBarColor});
-
   final bool isDarkMode;
   final Color? primaryTextColor;
   final Color? secondaryTextColor;
@@ -53,7 +53,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeData light = ThemeData.light().copyWith(
       colorScheme: ColorScheme(
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
           primary: const Color(0xffAF6363),
           onPrimary: Colors.white,
           secondary: const Color(0xffFFE381),
@@ -96,4 +96,11 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   ThemeData get getTheme => _selectedTheme;
+
+  Future<void> swapTheme(bool isDarkMode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _selectedTheme = isDarkMode ? dark : light;
+    prefs.setBool("isDarkTheme", isDarkMode);
+    notifyListeners();
+  }
 }

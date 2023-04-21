@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 
 class StyledDialogPopup extends StatefulWidget {
   final List<Widget> children;

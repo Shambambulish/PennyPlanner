@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddExpenseDialog {
   static void run(BuildContext context) {
@@ -28,7 +29,7 @@ class AddExpenseDialog {
                       bottom: BorderSide(
                           width: 1, color: ppColors.secondaryTextColor!),
                     )),
-                    child: Text('ADD EXPENSE',
+                    child: Text(AppLocalizations.of(context)!.addExpense,
                         textAlign: TextAlign.left,
                         style: StyledDialogPopup
                             .customDialogTheme.textTheme.displayLarge
@@ -40,7 +41,7 @@ class AddExpenseDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -73,7 +74,7 @@ class AddExpenseDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Amount',
+                      AppLocalizations.of(context)!.amount,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -108,7 +109,7 @@ class AddExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Due date',
+                          AppLocalizations.of(context)!.dueDate,
                           style: dueDateCheckBoxValue
                               ? StyledDialogPopup
                                   .customDialogTheme.textTheme.displayMedium
@@ -204,7 +205,7 @@ class AddExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Repeat every month',
+                          AppLocalizations.of(context)!.repeatEveryMonth,
                           style: repeatEveryMonthCheckBoxValue
                               ? StyledDialogPopup
                                   .customDialogTheme.textTheme.displayMedium
@@ -251,7 +252,7 @@ class AddExpenseDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Add'))
+                      child: Text(AppLocalizations.of(context)!.add))
                 ],
               );
             }));

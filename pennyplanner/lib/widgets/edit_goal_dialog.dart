@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditGoalDialog {
   static void run(
@@ -23,7 +24,7 @@ class EditGoalDialog {
                                 color: ppColors.secondaryTextColor!))),
                     child: Row(
                       children: [
-                        Text('EDIT GOAL',
+                        Text(AppLocalizations.of(context)!.editGoal,
                             textAlign: TextAlign.left,
                             style: StyledDialogPopup
                                 .customDialogTheme.textTheme.displayLarge
@@ -42,7 +43,8 @@ class EditGoalDialog {
                                       width: double.infinity,
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
-                                        'Are you sure you want to delete this goal?',
+                                        AppLocalizations.of(context)!
+                                            .deleteGoalConfirmation,
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: ppColors.secondaryTextColor),
@@ -73,7 +75,9 @@ class EditGoalDialog {
                                               return Navigator.pop(
                                                   context, true);
                                             },
-                                            child: const Text('Yes'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .yes),
                                           ),
                                           const SizedBox(
                                             width: 30,
@@ -93,7 +97,9 @@ class EditGoalDialog {
                                               return Navigator.pop(
                                                   context, false);
                                             },
-                                            child: const Text('No'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .no),
                                           )
                                         ],
                                       ),
@@ -101,8 +107,9 @@ class EditGoalDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              const snackBar =
-                                  SnackBar(content: Text('Deleting goal'));
+                              var snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .deletingGoal));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               int count = 0;
@@ -124,7 +131,7 @@ class EditGoalDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -157,7 +164,7 @@ class EditGoalDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Price',
+                      AppLocalizations.of(context)!.price,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -192,7 +199,7 @@ class EditGoalDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Amount to save in period',
+                          AppLocalizations.of(context)!.amountToSaveInPeriod,
                           style: StyledDialogPopup
                               .customDialogTheme.textTheme.displayMedium
                               ?.apply(color: ppColors.primaryTextColor),
@@ -240,7 +247,7 @@ class EditGoalDialog {
                                   Theme.of(context).colorScheme.primary),
                               foregroundColor: MaterialStatePropertyAll(
                                   Theme.of(context).colorScheme.onPrimary)),
-                      child: const Text('Save'))
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));

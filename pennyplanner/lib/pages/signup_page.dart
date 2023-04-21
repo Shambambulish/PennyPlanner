@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
-  @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     emailController.dispose();
@@ -15,6 +15,7 @@ class SignUpPage extends StatefulWidget {
     passwordController.dispose();
   }
 
+  @override
   State<SignUpPage> createState() => SignUpPageState();
 }
 
@@ -98,7 +99,7 @@ class SignUpPageState extends State<SignUpPage> {
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
                               child: Text(
-                                'CREATE AN ACCOUNT',
+                                AppLocalizations.of(context)!.createAnAccount,
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
@@ -117,7 +118,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'Username',
+                                    AppLocalizations.of(context)!.username,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -156,7 +157,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'E-mail',
+                                    AppLocalizations.of(context)!.email,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -195,7 +196,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'Password',
+                                    AppLocalizations.of(context)!.password,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -268,7 +269,8 @@ class SignUpPageState extends State<SignUpPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6.0)),
                             ),
-                            child: const Text('SIGN UP'),
+                            child: Text(
+                                AppLocalizations.of(context)!.signupButton),
                           ),
                         ],
                       ),
@@ -294,7 +296,8 @@ class SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                             child: Text(
-                              'OR CONTINUE WITH SOCIAL MEDIA',
+                              AppLocalizations.of(context)!
+                                  .continueWithSocialMedia,
                               style: TextStyle(
                                   fontFamily: 'Hind Siliguri',
                                   fontSize: 12,

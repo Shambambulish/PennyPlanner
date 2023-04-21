@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/home_page.dart';
 import '../pages/settings_page.dart';
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 
 class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

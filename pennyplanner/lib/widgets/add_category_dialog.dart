@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/theme.dart';
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddCategoryDialog {
   static void run(BuildContext context) {
@@ -23,7 +24,7 @@ class AddCategoryDialog {
                             bottom: BorderSide(
                                 width: 1,
                                 color: ppColors.secondaryTextColor!))),
-                    child: Text('ADD CATEGORY',
+                    child: Text(AppLocalizations.of(context)!.addCategory,
                         textAlign: TextAlign.left,
                         style: StyledDialogPopup
                             .customDialogTheme.textTheme.displayLarge
@@ -35,7 +36,7 @@ class AddCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -68,7 +69,7 @@ class AddCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Budget',
+                      AppLocalizations.of(context)!.budget,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -108,7 +109,7 @@ class AddCategoryDialog {
                         foregroundColor: MaterialStatePropertyAll(
                             Theme.of(context).colorScheme.onPrimary),
                       ),
-                      child: const Text('Add'))
+                      child: Text(AppLocalizations.of(context)!.add))
                 ],
               );
             }));
