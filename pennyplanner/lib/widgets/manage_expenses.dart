@@ -1,4 +1,5 @@
 import 'package:expandable/expandable.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/models/budget.dart';
 import 'package:pennyplanner/models/expense.dart';
@@ -10,7 +11,10 @@ import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
 import '../models/expense_category.dart';
+import '../pages/signup_page.dart';
 import 'add_category_dialog.dart';
+import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ManageExpenses extends StatefulWidget {
   bool? isPremium = false;
@@ -20,9 +24,44 @@ class ManageExpenses extends StatefulWidget {
   State<ManageExpenses> createState() => _ManageExpensesState();
 }
 
+final budgetdata = <String, dynamic>{
+  'title': getRandomExpense(),
+  'amount': Random().nextInt(25),
+  'date': DateTime.now().millisecondsSinceEpoch,
+};
+
+// random datan settausta alla älä välitä, poista jos alkaa risomaan
+String getRandomExpense() {
+  final expenses = [
+    'Groceries',
+    'Bills',
+    'Entertainment',
+    'Clothes',
+    'Transportation',
+    'Bottle of soda',
+    'Bacon',
+    'Electricity',
+    'Car payment',
+    'Movie ticket',
+    'T-shirt',
+    'Bus ticket',
+    'Other'
+  ];
+  return expenses[Random().nextInt(expenses.length)];
+}
+final userid = FirebaseAuth.instance.currentUser!.uid;
+FirebaseDatabase database = FirebaseDatabase.instance;
+DatabaseReference ref = FirebaseDatabase.instance.ref('expenses').child(userid);
+// final dataget =await ref.child(userid + '/budgetdata/').get();
+
+getexpensesfromDB() async {
+  final dataget = await ref.child(userid + '/budgetdata/').get();
+  print(dataget.value);
+  return dataget.value;
+}
+
 class _ManageExpensesState extends State<ManageExpenses> {
   BannerAd? _bannerAd;
-
   //init dummy data
   Budget budget = Budget(
       id: 0,
@@ -55,19 +94,17 @@ class _ManageExpensesState extends State<ManageExpenses> {
           allottedMaximum: 500.00,
           expenses: [
             Expense(
-                id: 0,
-                title: 'Electricity',
-                amount: 50,
-                reoccurring: true,
-                date: DateTime.now(),
-                dueDate: DateTime(2023, 4, 12)),
+              id: 0,
+              title: 'Electricity',
+              amount: 100.00,
+              date: DateTime.now(),
+            ),
             Expense(
-                id: 1,
-                title: 'Car payment',
-                amount: 200,
-                reoccurring: true,
-                date: DateTime.now(),
-                dueDate: DateTime(2023, 5, 2)),
+              id: 1,
+              title: 'Car payment',
+              amount: 400.00,
+              date: DateTime.now(),
+            ),
           ],
         ),
       ]);

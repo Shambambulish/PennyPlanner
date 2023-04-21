@@ -174,6 +174,7 @@ class SignInPageState extends State<SignInPage> {
                                       print('User is currently signed out!');
                                     } else {
                                       print('User is signed in!');
+                                      print('User id is:' + user.uid);
                                     }
                                   });
                                 } on FirebaseAuthException catch (e) {
