@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddGoalDialog {
   static void run(BuildContext context) {
@@ -9,17 +11,23 @@ class AddGoalDialog {
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
+              final PPColors ppColors =
+                  Theme.of(context).extension<PPColors>()!;
               return StyledDialogPopup(
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(width: 1))),
-                    child: Text('NEW GOAL',
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 1,
+                                color: ppColors.secondaryTextColor!))),
+                    child: Text(AppLocalizations.of(context)!.newGoal,
                         textAlign: TextAlign.left,
                         style: StyledDialogPopup
-                            .customDialogTheme.textTheme.displayLarge),
+                            .customDialogTheme.textTheme.displayLarge
+                            ?.apply(color: ppColors.secondaryTextColor)),
                   ),
                   const SizedBox(
                     height: 12,
@@ -27,9 +35,10 @@ class AddGoalDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium,
+                          .customDialogTheme.textTheme.displayMedium
+                          ?.apply(color: ppColors.primaryTextColor),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -42,12 +51,12 @@ class AddGoalDialog {
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -58,9 +67,10 @@ class AddGoalDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Price',
+                      AppLocalizations.of(context)!.price,
                       style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium,
+                          .customDialogTheme.textTheme.displayMedium
+                          ?.apply(color: ppColors.primaryTextColor),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -73,12 +83,12 @@ class AddGoalDialog {
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -91,9 +101,10 @@ class AddGoalDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Amount to save in period',
+                          AppLocalizations.of(context)!.amountToSaveInPeriod,
                           style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                              .customDialogTheme.textTheme.displayMedium
+                              ?.apply(color: ppColors.primaryTextColor),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -115,12 +126,12 @@ class AddGoalDialog {
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -128,12 +139,16 @@ class AddGoalDialog {
                   const SizedBox(
                     height: 12,
                   ),
-                 
                   ElevatedButton(
                       onPressed: () {},
                       style: StyledDialogPopup
-                          .customDialogTheme.elevatedButtonTheme.style,
-                      child: const Text('Create'))
+                          .customDialogTheme.elevatedButtonTheme.style
+                          ?.copyWith(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
+                              foregroundColor: MaterialStatePropertyAll(
+                                  Theme.of(context).colorScheme.onPrimary)),
+                      child: Text(AppLocalizations.of(context)!.create))
                 ],
               );
             }));

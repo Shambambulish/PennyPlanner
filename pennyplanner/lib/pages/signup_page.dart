@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../utils/theme_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
-  @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     emailController.dispose();
     usernameController.dispose();
     passwordController.dispose();
   }
+
+  @override
   State<SignUpPage> createState() => SignUpPageState();
 }
 
 FirebaseDatabase database = FirebaseDatabase.instance;
-DatabaseReference ref = FirebaseDatabase.instance.ref('/users').child(usernameController.text);
+DatabaseReference ref =
+    FirebaseDatabase.instance.ref('/users').child(usernameController.text);
 
 final emailController = TextEditingController();
 final usernameController = TextEditingController();
@@ -25,6 +31,7 @@ final firebase = FirebaseDatabase.instance.ref();
 class SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverFillRemaining(
@@ -34,7 +41,10 @@ class SignUpPageState extends State<SignUpPage> {
               flex: 4,
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(color: Color(0xffaf6363)),
+                decoration: BoxDecoration(
+                    color: ppColors.isDarkMode
+                        ? Color(0xff111111)
+                        : Color(0xffaf6363)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -42,14 +52,18 @@ class SignUpPageState extends State<SignUpPage> {
                       margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                       width: 230,
                       height: 230,
-                      child: const Image(
-                        image: AssetImage('assets/pplogo.png'),
+                      child: Image(
+                        image: ppColors.isDarkMode
+                            ? AssetImage('assets/pplogo_red.png')
+                            : AssetImage('assets/pplogo.png'),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: const Image(
-                          image: AssetImage('assets/pplogo_bold_yellow.png')),
+                      child: Image(
+                          image: ppColors.isDarkMode
+                              ? AssetImage('assets/pplogo_bold_red.png')
+                              : AssetImage('assets/pplogo_bold_yellow.png')),
                     ),
                   ],
                 ),
@@ -59,7 +73,10 @@ class SignUpPageState extends State<SignUpPage> {
               flex: 6,
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(color: Color(0xffffe380)),
+                decoration: BoxDecoration(
+                    color: ppColors.isDarkMode
+                        ? Color(0xff333333)
+                        : Color(0xffffe380)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -70,20 +87,23 @@ class SignUpPageState extends State<SignUpPage> {
                           Container(
                             width: double.infinity,
                             margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1, color: Colors.black),
+                                bottom: BorderSide(
+                                    width: 1,
+                                    color: ppColors.isDarkMode
+                                        ? ppColors.primaryTextColor!
+                                        : Colors.black),
                               ),
                             ),
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
-                              child: const Text(
-                                'CREATE AN ACCOUNT',
+                              child: Text(
+                                AppLocalizations.of(context)!.createAnAccount,
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
-                                    color: Color(0xff0F5B2E)),
+                                    color: ppColors.primaryTextColor),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -93,12 +113,16 @@ class SignUpPageState extends State<SignUpPage> {
                             child: Column(
                               children: [
                                 const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'Username',
+                                    AppLocalizations.of(context)!.username,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                        fontSize: 18, color: Color(0xff0F5B2E)),
+                                        fontSize: 18,
+                                        color: ppColors.primaryTextColor),
                                   ),
                                 ),
                                 SizedBox(
@@ -111,15 +135,17 @@ class SignUpPageState extends State<SignUpPage> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                     ),
@@ -128,13 +154,14 @@ class SignUpPageState extends State<SignUpPage> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'E-mail',
+                                    AppLocalizations.of(context)!.email,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                        fontSize: 18, color: Color(0xff0F5B2E)),
+                                        fontSize: 18,
+                                        color: ppColors.primaryTextColor!),
                                   ),
                                 ),
                                 SizedBox(
@@ -147,15 +174,17 @@ class SignUpPageState extends State<SignUpPage> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                     ),
@@ -164,13 +193,14 @@ class SignUpPageState extends State<SignUpPage> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'Password',
+                                    AppLocalizations.of(context)!.password,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                        fontSize: 18, color: Color(0xff0F5B2E)),
+                                        fontSize: 18,
+                                        color: ppColors.primaryTextColor!),
                                   ),
                                 ),
                                 SizedBox(
@@ -183,15 +213,17 @@ class SignUpPageState extends State<SignUpPage> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                     ),
@@ -204,14 +236,14 @@ class SignUpPageState extends State<SignUpPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: ()
-                            async {
+                            onPressed: () async {
                               const snackBar =
                                   SnackBar(content: Text('Clicked SIGN UP'));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               try {
-                                final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                final credential = await FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
                                   email: emailController.text.trim(),
                                   password: passwordController.text.trim(),
                                 );
@@ -219,21 +251,26 @@ class SignUpPageState extends State<SignUpPage> {
                                 if (e.code == 'weak-password') {
                                   print('The password provided is too weak.');
                                 } else if (e.code == 'email-already-in-use') {
-                                  print('The account already exists for that email.');
+                                  print(
+                                      'The account already exists for that email.');
                                 }
                               } catch (e) {
                                 print(e);
                               }
-
-                            }
-                            ,
+                            },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
-                              backgroundColor: const Color(0xffaf6363),
+                              backgroundColor: ppColors.isDarkMode
+                                  ? ppColors.primaryTextColor
+                                  : Theme.of(context).colorScheme.primary,
+                              foregroundColor: ppColors.isDarkMode
+                                  ? Colors.black
+                                  : Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6.0)),
                             ),
-                            child: const Text('SIGN UP'),
+                            child: Text(
+                                AppLocalizations.of(context)!.signupButton),
                           ),
                         ],
                       ),
@@ -249,18 +286,24 @@ class SignUpPageState extends State<SignUpPage> {
                           Container(
                             width: double.infinity,
                             margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1, color: Colors.black),
+                                bottom: BorderSide(
+                                    width: 1,
+                                    color: ppColors.isDarkMode
+                                        ? ppColors.primaryTextColor!
+                                        : Colors.black),
                               ),
                             ),
-                            child: const Text(
-                              'OR CONTINUE WITH SOCIAL MEDIA',
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .continueWithSocialMedia,
                               style: TextStyle(
-                                fontFamily: 'Hind Siliguri',
-                                fontSize: 12,
-                              ),
+                                  fontFamily: 'Hind Siliguri',
+                                  fontSize: 12,
+                                  color: ppColors.isDarkMode
+                                      ? ppColors.primaryTextColor
+                                      : Colors.black),
                               textAlign: TextAlign.center,
                             ),
                           ),

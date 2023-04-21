@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditCategoryDialog {
   void deleteCategory(String title) {}
@@ -14,19 +16,25 @@ class EditCategoryDialog {
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
+              final PPColors ppColors =
+                  Theme.of(context).extension<PPColors>()!;
               return StyledDialogPopup(
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(width: 1))),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 1,
+                                color: ppColors.secondaryTextColor!))),
                     child: Row(
                       children: [
-                        Text('EDIT CATEGORY',
+                        Text(AppLocalizations.of(context)!.editCategory,
                             textAlign: TextAlign.left,
                             style: StyledDialogPopup
-                                .customDialogTheme.textTheme.displayLarge),
+                                .customDialogTheme.textTheme.displayLarge
+                                ?.apply(color: ppColors.secondaryTextColor)),
                         const Spacer(),
                         InkWell(
                           onTap: () async {
@@ -39,10 +47,13 @@ class EditCategoryDialog {
                                     ),
                                     Container(
                                       width: double.infinity,
-                                      padding: EdgeInsets.all(10),
-                                      child: const Text(
-                                        'Are you sure you want to delete this category?',
-                                        style: TextStyle(fontSize: 20),
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .deleteCategoryConfirmation,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: ppColors.secondaryTextColor),
                                       ),
                                     ),
                                     const SizedBox(
@@ -57,28 +68,44 @@ class EditCategoryDialog {
                                             MainAxisAlignment.center,
                                         children: [
                                           ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                foregroundColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary),
                                             onPressed: () {
                                               return Navigator.pop(
                                                   context, true);
                                             },
-                                            child: const Text('Yes'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .yes),
                                           ),
                                           const SizedBox(
                                             width: 30,
                                           ),
                                           OutlinedButton(
                                             style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(
+                                                side: BorderSide(
                                                     width: 3,
-                                                    color: Color(0xffAF6363)),
-                                                backgroundColor: Colors.white,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary),
                                                 foregroundColor:
-                                                    const Color(0xffAF6363)),
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .primary),
                                             onPressed: () {
                                               return Navigator.pop(
                                                   context, false);
                                             },
-                                            child: const Text('No'),
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .no),
                                           )
                                         ],
                                       ),
@@ -86,8 +113,9 @@ class EditCategoryDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              const snackBar =
-                                  SnackBar(content: Text('Deleting category'));
+                              var snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)!
+                                      .deletingCategory));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               int count = 0;
@@ -95,7 +123,10 @@ class EditCategoryDialog {
                                   .popUntil((route) => route.isFirst);
                             }
                           },
-                          child: const Icon(Icons.delete),
+                          child: Icon(
+                            Icons.delete,
+                            color: ppColors.secondaryTextColor,
+                          ),
                         )
                       ],
                     ),
@@ -106,9 +137,10 @@ class EditCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium,
+                          .customDialogTheme.textTheme.displayMedium
+                          ?.apply(color: ppColors.primaryTextColor),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -122,12 +154,12 @@ class EditCategoryDialog {
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -138,9 +170,10 @@ class EditCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Budget',
+                      AppLocalizations.of(context)!.budget,
                       style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium,
+                          .customDialogTheme.textTheme.displayMedium
+                          ?.apply(color: ppColors.primaryTextColor),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -154,12 +187,12 @@ class EditCategoryDialog {
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -170,8 +203,13 @@ class EditCategoryDialog {
                   ElevatedButton(
                       onPressed: () {},
                       style: StyledDialogPopup
-                          .customDialogTheme.elevatedButtonTheme.style,
-                      child: const Text('Save'))
+                          .customDialogTheme.elevatedButtonTheme.style
+                          ?.copyWith(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
+                              foregroundColor: MaterialStatePropertyAll(
+                                  Theme.of(context).colorScheme.onPrimary)),
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));
