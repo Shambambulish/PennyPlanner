@@ -1,6 +1,23 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import '../pages/signup_page.dart';
 import 'styled_dialog_popup.dart';
+
+final descriptionController = TextEditingController();
+final amountController = TextEditingController();
+final duedateController = TextEditingController();
+final repeatEveryController = TextEditingController();
+
+@override
+void dispose() {
+  // Clean up the controller when the widget is disposed.
+  descriptionController.dispose();
+  amountController.dispose();
+  duedateController.dispose();
+}
+
+final userid = FirebaseAuth.instance.currentUser!.uid;
 
 class AddExpenseDialog {
   static void run(BuildContext context) {
@@ -36,6 +53,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: descriptionController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -67,6 +85,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: amountController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -116,6 +135,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: duedateController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -182,7 +202,20 @@ class AddExpenseDialog {
                     ),
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        final expensedata = <String, dynamic>{
+                          'title': descriptionController.text.trim(),
+                          'amount': amountController.text.trim(),
+                          'date': duedateController.text.trim(),
+                          'repeating': repeatEveryCheckBoxValue.toString(),
+                        };
+                        final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
+                        firebase.child(userid + '/budgetdata/' + newPostKey!).set(expensedata);
+                        Navigator.of(context).pop();
+                        descriptionController.clear();
+                        amountController.clear();
+                        duedateController.clear();
+                      },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style,
                       child: const Text('Add'))
