@@ -134,7 +134,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
-            _bannerAd = ad as BannerAd;
+            if (this.mounted) _bannerAd = ad as BannerAd;
           },
           onAdFailedToLoad: (ad, err) {
             debugPrint('Failed to load a banner ad: ${err.message}');
@@ -283,8 +283,10 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         child: Column(children: [
                           //BANNER AD
 
-                          if (!widget.isPremium! && _bannerAd != null)
-                            Align(
+                          if (!widget.isPremium! &&
+                              _bannerAd != null &&
+                              _bannerAd!.adUnitId.isEmpty)
+                            new Align(
                               alignment: Alignment.topCenter,
                               child: SizedBox(
                                 width: _bannerAd!.size.width.toDouble(),

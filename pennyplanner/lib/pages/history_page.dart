@@ -46,7 +46,7 @@ class _HistoryPageState extends State<HistoryPage> {
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
-              _bannerAd = ad as BannerAd;
+              if (_bannerAd!.adUnitId.isEmpty) _bannerAd = ad as BannerAd;
             });
           },
           onAdFailedToLoad: (ad, err) {
@@ -75,7 +75,6 @@ class _HistoryPageState extends State<HistoryPage> {
       //tietokantakutsu startdaten ja enddaten perusteella
       // asetus resultdataan
     }
-
 
     fetchWithDate();
 
