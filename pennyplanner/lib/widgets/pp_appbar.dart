@@ -7,10 +7,13 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool returnToHomePage;
   final bool showSettingsBtn;
+  final bool isPremium;
+
   const PPAppBar({
     this.title = '',
     this.returnToHomePage = true,
     this.showSettingsBtn = true,
+    this.isPremium = false,
     super.key,
   });
 
@@ -63,8 +66,9 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsPage()));
+                                    builder: (context) => SettingsPage(
+                                          isPremium: isPremium,
+                                        )));
                           },
                           iconSize: 30,
                           icon: const Icon(Icons.settings_outlined)),

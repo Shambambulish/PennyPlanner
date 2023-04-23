@@ -97,10 +97,11 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: const PPAppBar(
+        appBar: PPAppBar(
           title: 'Home Page',
           returnToHomePage: false,
           showSettingsBtn: true,
+          isPremium: widget.isPremium,
         ),
         body: Column(
           children: [
