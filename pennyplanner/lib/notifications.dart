@@ -19,6 +19,11 @@ class Notifications {
     final InitializationSettings settings =
         InitializationSettings(android: androidSettings);
 
+    _notificationService
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
     await _notificationService.initialize(settings,
         onDidReceiveNotificationResponse: onSelectNotification);
   }
@@ -90,7 +95,6 @@ class Notifications {
   }
 
   void onSelectNotification(NotificationResponse? payload) {
-    print(payload);
     if (payload != null && payload.toString().isNotEmpty) {
       onNotificationClick.add(payload.toString());
     }

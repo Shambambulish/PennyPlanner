@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/signup_page.dart';
 import '../utils/auth_service.dart';
+import '../utils/theme_provider.dart';
 import 'home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -14,6 +17,7 @@ class SignInPage extends StatefulWidget {
 class SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverFillRemaining(
@@ -23,7 +27,10 @@ class SignInPageState extends State<SignInPage> {
               flex: 4,
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(color: Color(0xffaf6363)),
+                decoration: BoxDecoration(
+                    color: ppColors.isDarkMode
+                        ? Color(0xff111111)
+                        : Color(0xffaf6363)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -31,14 +38,18 @@ class SignInPageState extends State<SignInPage> {
                       margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                       width: 230,
                       height: 230,
-                      child: const Image(
-                        image: AssetImage('assets/pplogo.png'),
+                      child: Image(
+                        image: ppColors.isDarkMode
+                            ? AssetImage('assets/pplogo_red.png')
+                            : AssetImage('assets/pplogo.png'),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: const Image(
-                          image: AssetImage('assets/pplogo_bold_yellow.png')),
+                      child: Image(
+                          image: ppColors.isDarkMode
+                              ? AssetImage('assets/pplogo_bold_red.png')
+                              : AssetImage('assets/pplogo_bold_yellow.png')),
                     ),
                   ],
                 ),
@@ -48,7 +59,10 @@ class SignInPageState extends State<SignInPage> {
               flex: 6,
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(color: Color(0xffffe380)),
+                decoration: BoxDecoration(
+                    color: ppColors.isDarkMode
+                        ? Color(0xff333333)
+                        : Color(0xffffe380)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -59,20 +73,23 @@ class SignInPageState extends State<SignInPage> {
                           Container(
                             width: double.infinity,
                             margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1, color: Colors.black),
+                                bottom: BorderSide(
+                                    width: 1,
+                                    color: ppColors.isDarkMode
+                                        ? ppColors.primaryTextColor!
+                                        : Colors.black),
                               ),
                             ),
                             child: Container(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
-                              child: const Text(
-                                'LOG IN',
+                              child: Text(
+                                AppLocalizations.of(context)!.login,
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
-                                    color: Color(0xff0F5B2E)),
+                                    color: ppColors.primaryTextColor),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -84,13 +101,14 @@ class SignInPageState extends State<SignInPage> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'E-mail',
+                                    AppLocalizations.of(context)!.email,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                        fontSize: 18, color: Color(0xff0F5B2E)),
+                                        fontSize: 18,
+                                        color: ppColors.primaryTextColor),
                                   ),
                                 ),
                                 SizedBox(
@@ -103,15 +121,17 @@ class SignInPageState extends State<SignInPage> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                     ),
@@ -120,13 +140,14 @@ class SignInPageState extends State<SignInPage> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    'Password',
+                                    AppLocalizations.of(context)!.password,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
-                                        fontSize: 18, color: Color(0xff0F5B2E)),
+                                        fontSize: 18,
+                                        color: ppColors.primaryTextColor),
                                   ),
                                 ),
                                 SizedBox(
@@ -139,15 +160,17 @@ class SignInPageState extends State<SignInPage> {
                                       filled: true,
                                       fillColor: Colors.white,
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 1,
-                                              color: Color(0xff0F5B2E)),
+                                              color:
+                                                  ppColors.primaryTextColor!),
                                           borderRadius:
                                               BorderRadius.circular(30.0)),
                                     ),
@@ -188,22 +211,28 @@ class SignInPageState extends State<SignInPage> {
                                 }
                               }
 
-                              const snackBar =
-                                  SnackBar(content: Text('Signing in'));
+                              var snackBar = SnackBar(
+                                  content: Text(
+                                      AppLocalizations.of(context)!.signingIn));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                              Navigator.pushReplacement(
+                              Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const HomePage()));
+                                      builder: (context) => HomePage()),
+                                  (Route<dynamic> route) => false);
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
-                              backgroundColor: const Color(0xffaf6363),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6.0)),
+                              backgroundColor: ppColors.isDarkMode
+                                  ? ppColors.primaryTextColor
+                                  : Theme.of(context).colorScheme.primary,
+                              foregroundColor: ppColors.isDarkMode
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
-                            child: const Text('SIGN IN'),
+                            child:
+                                Text(AppLocalizations.of(context)!.loginButton),
                           ),
                         ],
                       ),
@@ -219,17 +248,24 @@ class SignInPageState extends State<SignInPage> {
                           Container(
                             width: double.infinity,
                             margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1, color: Colors.black),
+                                bottom: BorderSide(
+                                    width: 1,
+                                    color: ppColors.isDarkMode
+                                        ? ppColors.primaryTextColor!
+                                        : Colors.black),
                               ),
                             ),
-                            child: const Text(
-                              'OR CONTINUE WITH SOCIAL MEDIA',
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .continueWithSocialMedia,
                               style: TextStyle(
                                 fontFamily: 'Hind Siliguri',
                                 fontSize: 12,
+                                color: ppColors.isDarkMode
+                                    ? ppColors.primaryTextColor
+                                    : Colors.black,
                               ),
                               textAlign: TextAlign.center,
                             ),

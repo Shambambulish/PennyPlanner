@@ -4,16 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
+import 'package:pennyplanner/utils/theme_provider.dart';
 import 'package:pennyplanner/widgets/manage_expenses.dart';
+import 'package:pennyplanner/widgets/manage_goals.dart';
 import '../widgets/pp_appbar.dart';
 import 'history_page.dart';
 import 'package:pennyplanner/notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, User? user});
+  HomePage({super.key, User? user});
 
+  bool isPremium = false;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -32,10 +36,21 @@ class _HomePageState extends State<HomePage> {
     notificationService = Notifications();
     notificationService.initialize();
     listenToNotification();
-    waitForPremiumNoti(); //JOS ALKAA ÄRSYTTÄÄ NIIN KOMMENTOI POIS
-    _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
-      showInterAd();
-    });
+
+    // async database query
+    //  widget.isPremium = if (user doesn't have premium)
+    // end premium checker
+
+    //SHOW ADS AND NOTI IF NOT PREMIUM
+    if (!widget.isPremium) {
+      waitForPremiumNoti();
+
+      _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
+        showInterAd();
+      });
+    }
+    /////////////////////////
+
     super.initState();
   }
 
@@ -52,9 +67,13 @@ class _HomePageState extends State<HomePage> {
             },
           );
 
-          setState(() {
-            _interstitialAd = ad;
-          });
+          if (this.mounted) {
+            print("ismoutned");
+            setState(() {
+              print("here");
+              _interstitialAd = ad;
+            });
+          }
         },
         onAdFailedToLoad: (err) {
           debugPrint('Failed to load an interstitial ad: ${err.message}');
@@ -67,13 +86,14 @@ class _HomePageState extends State<HomePage> {
   void waitForPremiumNoti() async {
     await notificationService.showScheduledNotification(
         id: 0,
-        title: "scheduled",
-        body: "noni ostappa se premium jo painamalla tästä",
-        seconds: 4);
+        title: "Unlock additional features and remove ads",
+        body: "Tap here to purchase PennyPlanner Premium now for 6,90!",
+        seconds: 10);
   }
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -84,49 +104,34 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
-            const TabBar(
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(
-                  text: 'MANAGE',
-                ),
-                Tab(
-                  text: 'HISTORY',
-                ),
-                Tab(
-                  text: 'GOALS',
-                ),
-              ],
+            Container(
+              color:
+                  ppColors.isDarkMode ? const Color(0xff141414) : Colors.white,
+              child: TabBar(
+                labelColor: ppColors.primaryTextColor,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    text: AppLocalizations.of(context)!.manage,
+                  ),
+                  Tab(
+                    text: AppLocalizations.of(context)!.history,
+                  ),
+                  Tab(
+                    text: AppLocalizations.of(context)!.goals,
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: TabBarView(children: [
                 // 1st tab
-                const ManageExpenses(),
+                ManageExpenses(isPremium: widget.isPremium),
                 // 2nd tab
-                const HistoryPage(),
+                HistoryPage(isPremium: widget.isPremium),
                 // 3rd tab
-                Column(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 3,
-                                offset: const Offset(0, 5))
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(flex: 7, child: Container()),
-                  ],
-                ),
+                ManageGoals(isPremium: widget.isPremium),
               ]),
             ),
           ],

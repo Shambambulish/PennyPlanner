@@ -3,14 +3,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/home_page.dart';
 import 'package:pennyplanner/utils/auth_service.dart';
+import '../utils/theme_provider.dart';
 import 'signin_page.dart';
 import 'signup_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
       body: Center(
         child: Column(children: [
@@ -18,7 +21,10 @@ class WelcomePage extends StatelessWidget {
             flex: 4,
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xffaf6363)),
+              decoration: BoxDecoration(
+                  color: ppColors.isDarkMode
+                      ? Color(0xff111111)
+                      : Color(0xffaf6363)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -26,14 +32,18 @@ class WelcomePage extends StatelessWidget {
                     margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                     width: 230,
                     height: 230,
-                    child: const Image(
-                      image: AssetImage('assets/pplogo.png'),
+                    child: Image(
+                      image: ppColors.isDarkMode
+                          ? AssetImage('assets/pplogo_red.png')
+                          : AssetImage('assets/pplogo.png'),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: const Image(
-                        image: AssetImage('assets/pplogo_bold_yellow.png')),
+                    child: Image(
+                        image: ppColors.isDarkMode
+                            ? AssetImage('assets/pplogo_bold_red.png')
+                            : AssetImage('assets/pplogo_bold_yellow.png')),
                   ),
                 ],
               ),
@@ -43,13 +53,17 @@ class WelcomePage extends StatelessWidget {
             flex: 6,
             child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xffffe380)),
+              decoration: BoxDecoration(
+                  color: ppColors.isDarkMode
+                      ? Color(0xff333333)
+                      : Color(0xffffe380)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     flex: 7,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
                           onPressed: () {
@@ -66,11 +80,17 @@ class WelcomePage extends StatelessWidget {
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(150, 35),
-                            backgroundColor: const Color(0xffaf6363),
+                            backgroundColor: ppColors.isDarkMode
+                                ? ppColors.primaryTextColor
+                                : Theme.of(context).colorScheme.primary,
+                            foregroundColor: ppColors.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6.0)),
                           ),
-                          child: const Text('LOG IN'),
+                          child:
+                              Text(AppLocalizations.of(context)!.loginButton),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -87,11 +107,17 @@ class WelcomePage extends StatelessWidget {
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(150, 35),
-                            backgroundColor: const Color(0xffaf6363),
+                            backgroundColor: ppColors.isDarkMode
+                                ? ppColors.primaryTextColor
+                                : Theme.of(context).colorScheme.primary,
+                            foregroundColor: ppColors.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(6.0)),
                           ),
-                          child: const Text('SIGN UP'),
+                          child:
+                              Text(AppLocalizations.of(context)!.signupButton),
                         ),
                       ],
                     ),
@@ -107,36 +133,29 @@ class WelcomePage extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             border: Border(
-                              bottom: BorderSide(width: 1, color: Colors.black),
+                              bottom: BorderSide(
+                                  width: 1,
+                                  color: ppColors.isDarkMode
+                                      ? ppColors.primaryTextColor!
+                                      : Colors.black),
                             ),
                           ),
-                          child: const Text(
-                            'OR CONTINUE WITH SOCIAL MEDIA',
+                          child: Text(
+                            AppLocalizations.of(context)!
+                                .continueWithSocialMedia,
                             style: TextStyle(
-                              fontFamily: 'Hind Siliguri',
-                              fontSize: 12,
-                            ),
+                                fontFamily: 'Hind Siliguri',
+                                fontSize: 12,
+                                color: ppColors.isDarkMode
+                                    ? ppColors.primaryTextColor
+                                    : Colors.black),
                             textAlign: TextAlign.center,
                           ),
                         ),
                         IconButton(
-                          onPressed: () async {
-                            //odottaa käyttäjän todennuksen
-                            User? user = await Authentication.signInWithGoogle(
-                                context: context);
-
-                            if (user != null) {
-                              if (!context.mounted) return;
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => HomePage(
-                                            //siirtää etusivulle kirjautumisen onnistuessa
-                                            user: user,
-                                          )));
-                            }
-                          },
+                          onPressed: () {},
                           icon: const Image(
                               image: AssetImage('assets/google_logo.png')),
                           iconSize: 30,

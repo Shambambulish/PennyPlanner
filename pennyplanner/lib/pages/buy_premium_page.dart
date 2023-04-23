@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../utils/theme_provider.dart';
 import '../widgets/pp_appbar.dart';
 import 'package:pennyplanner/notifications.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuyPremiumPage extends StatefulWidget {
   BuyPremiumPage({super.key, required payload});
@@ -23,6 +25,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
 
   @override
   Widget build(BuildContext context) {
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
       appBar: const PPAppBar(
         title: 'Settings',
@@ -34,7 +37,6 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
             width: 422,
             height: 500,
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Stack(children: [
@@ -43,39 +45,50 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Moi,",
+                      Text(AppLocalizations.of(context)!.premiumPageString1,
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontSize: 25,
-                          )),
-                      Text("Osta premium",
+                              fontSize: 25,
+                              color: ppColors.secondaryTextColor)),
+                      Text(AppLocalizations.of(context)!.premiumPageString2,
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)),
-                      Text("Tämmösiä hienoja ominaisuuksia mm. saat",
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: ppColors.secondaryTextColor)),
+                      Text(AppLocalizations.of(context)!.premiumPageString3,
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontSize: 25,
-                          )),
+                              fontSize: 25,
+                              color: ppColors.secondaryTextColor)),
                       SizedBox(
                         height: 50,
                       ),
-                      Text("- Ei mainoksia",
+                      Text(AppLocalizations.of(context)!.premiumPageString4,
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontSize: 25,
-                          )),
+                              fontSize: 25,
+                              color: ppColors.secondaryTextColor)),
                       SizedBox(
                         height: 50,
                       ),
                       ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary),
                           onPressed: () async {
+                            /* hasu vitsi mutta ei ehkä demoon
                             await notificationService.showNotification(
                                 id: 0,
                                 title: "sike",
                                 body: "ei olis kannattanu");
+                          */
                           },
-                          child: const Text("Osta heti")),
+                          child: Text(
+                            AppLocalizations.of(context)!.premiumPageButton,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary),
+                          )),
                     ]),
               ),
             ]),

@@ -1,25 +1,57 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
+import '../utils/theme_provider.dart';
+import '../pages/signup_page.dart';
 import 'styled_dialog_popup.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+final descriptionController = TextEditingController();
+final amountController = TextEditingController();
+final duedateController = TextEditingController();
+final repeatEveryController = TextEditingController();
+
+@override
+void dispose() {
+  // Clean up the controller when the widget is disposed.
+  descriptionController.dispose();
+  amountController.dispose();
+  duedateController.dispose();
+}
+
+final userid = FirebaseAuth.instance.currentUser!.uid;
 
 class AddExpenseDialog {
   static void run(BuildContext context) {
     bool dueDateCheckBoxValue = false;
-    bool repeatEveryCheckBoxValue = false;
+    bool repeatEveryMonthCheckBoxValue = false;
+
+    final dueDateTextController = TextEditingController();
+    final descriptionTextController = TextEditingController();
+    final amountTextController = TextEditingController();
+
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
+              final PPColors ppColors =
+                  Theme.of(context).extension<PPColors>()!;
               return StyledDialogPopup(
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(width: 1))),
-                    child: Text('ADD EXPENSE',
+                    decoration: BoxDecoration(
+                        border: Border(
+                      bottom: BorderSide(
+                          width: 1, color: ppColors.secondaryTextColor!),
+                    )),
+                    child: Text(AppLocalizations.of(context)!.addExpense,
                         textAlign: TextAlign.left,
                         style: StyledDialogPopup
-                            .customDialogTheme.textTheme.displayLarge),
+                            .customDialogTheme.textTheme.displayLarge
+                            ?.apply(color: ppColors.secondaryTextColor)),
                   ),
                   const SizedBox(
                     height: 12,
@@ -27,27 +59,29 @@ class AddExpenseDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Description',
+                      AppLocalizations.of(context)!.description,
                       style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium,
+                          .customDialogTheme.textTheme.displayMedium
+                          ?.apply(color: ppColors.primaryTextColor),
                       textAlign: TextAlign.left,
                     ),
                   ),
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: descriptionController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -58,27 +92,29 @@ class AddExpenseDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Amount',
+                      AppLocalizations.of(context)!.amount,
                       style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium,
+                          .customDialogTheme.textTheme.displayMedium
+                          ?.apply(color: ppColors.primaryTextColor),
                       textAlign: TextAlign.left,
                     ),
                   ),
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: amountController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                         focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
+                            borderSide: BorderSide(
+                                width: 1, color: ppColors.primaryTextColor!),
                             borderRadius: BorderRadius.circular(30.0)),
                       ),
                     ),
@@ -91,9 +127,15 @@ class AddExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Due date',
-                          style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                          AppLocalizations.of(context)!.dueDate,
+                          style: dueDateCheckBoxValue
+                              ? StyledDialogPopup
+                                  .customDialogTheme.textTheme.displayMedium
+                                  ?.apply(color: ppColors.primaryTextColor)
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -103,8 +145,16 @@ class AddExpenseDialog {
                           height: 12,
                           width: 12,
                           child: Checkbox(
+                              checkColor: ppColors.isDarkMode
+                                  ? Colors.black
+                                  : Colors.white,
+                              fillColor: MaterialStateProperty.all(
+                                  dueDateCheckBoxValue
+                                      ? ppColors.primaryTextColor
+                                      : Colors.grey),
                               value: dueDateCheckBoxValue,
                               onChanged: (bool? newValue) {
+                                dueDateTextController.text = "";
                                 setState(() {
                                   dueDateCheckBoxValue = newValue!;
                                 });
@@ -115,20 +165,53 @@ class AddExpenseDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
+                    child: InkWell(
+                      onTap: dueDateCheckBoxValue
+                          ? () async {
+                              await showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                          DateTime.now(), //get today's date
+                                      firstDate: DateTime(
+                                          2000), //DateTime.now() - not to allow to choose before today.
+                                      lastDate: DateTime(2101))
+                                  .then((value) {
+                                if (value != null) {
+                                  dueDateTextController.text =
+                                      DateFormat('dd.MM.yyyy')
+                                          .format(value)
+                                          .toString();
+                                }
+                                return value;
+                              });
+                            }
+                          : () {},
+                      child: AbsorbPointer(
+                        child: TextField(
+                          controller: dueDateTextController,
+                          cursorColor: Colors.black,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: dueDateCheckBoxValue
+                                ? Colors.white
+                                : Colors.grey.shade300,
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: dueDateCheckBoxValue
+                                        ? ppColors.primaryTextColor!
+                                        : Colors.grey),
+                                borderRadius: BorderRadius.circular(30.0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: dueDateCheckBoxValue
+                                        ? ppColors.primaryTextColor!
+                                        : Colors.grey),
+                                borderRadius: BorderRadius.circular(30.0)),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -140,9 +223,15 @@ class AddExpenseDialog {
                     child: Row(
                       children: [
                         Text(
-                          'Repeat every',
-                          style: StyledDialogPopup
-                              .customDialogTheme.textTheme.displayMedium,
+                          AppLocalizations.of(context)!.repeatEveryMonth,
+                          style: repeatEveryMonthCheckBoxValue
+                              ? StyledDialogPopup
+                                  .customDialogTheme.textTheme.displayMedium
+                                  ?.apply(color: ppColors.primaryTextColor)
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey),
                           textAlign: TextAlign.left,
                         ),
                         const SizedBox(
@@ -152,40 +241,49 @@ class AddExpenseDialog {
                           height: 12,
                           width: 12,
                           child: Checkbox(
-                              value: repeatEveryCheckBoxValue,
+                              checkColor: ppColors.isDarkMode
+                                  ? Colors.black
+                                  : Colors.white,
+                              fillColor: MaterialStateProperty.all(
+                                  repeatEveryMonthCheckBoxValue
+                                      ? ppColors.primaryTextColor
+                                      : Colors.grey),
+                              value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  repeatEveryCheckBoxValue = newValue!;
+                                  repeatEveryMonthCheckBoxValue = newValue!;
                                 });
                               }),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Color(0xff0F5B2E)),
-                            borderRadius: BorderRadius.circular(30.0)),
-                      ),
-                    ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        final expensedata = <String, dynamic>{
+                          'title': descriptionController.text.trim(),
+                          'amount': amountController.text.trim(),
+                          'date': duedateController.text.trim(),
+                          'repeating': repeatEveryMonthCheckBoxValue.toString(),
+                        };
+                        final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
+                        firebase.child(userid + '/budgetdata/' + newPostKey!).set(expensedata);
+                        Navigator.of(context).pop();
+                        descriptionController.clear();
+                        amountController.clear();
+                        duedateController.clear();
+                      },
                       style: StyledDialogPopup
-                          .customDialogTheme.elevatedButtonTheme.style,
-                      child: const Text('Add'))
+                          .customDialogTheme.elevatedButtonTheme.style
+                          ?.copyWith(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
+                              foregroundColor: MaterialStatePropertyAll(
+                                  Theme.of(context).colorScheme.onPrimary)),
+                      child: Text(AppLocalizations.of(context)!.add))
                 ],
               );
             }));

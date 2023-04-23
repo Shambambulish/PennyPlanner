@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pennyplanner.pennyplanner">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
    <application
         android:label="pennyplanner"
         android:name="${applicationName}"

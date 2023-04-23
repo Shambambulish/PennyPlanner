@@ -4,10 +4,10 @@ import '../utils/theme_provider.dart';
 import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddCategoryDialog {
-  static void run(BuildContext context) {
-    final descriptionTextController = TextEditingController();
-    final budgetTextController = TextEditingController();
+class EditIncomeDialog {
+  static void run(BuildContext context, double income) {
+    final incomeTextController = TextEditingController();
+    incomeTextController.text = income.toString();
 
     showDialog(
         context: context,
@@ -24,11 +24,16 @@ class AddCategoryDialog {
                             bottom: BorderSide(
                                 width: 1,
                                 color: ppColors.secondaryTextColor!))),
-                    child: Text(AppLocalizations.of(context)!.addCategory,
-                        textAlign: TextAlign.left,
-                        style: StyledDialogPopup
-                            .customDialogTheme.textTheme.displayLarge
-                            ?.apply(color: ppColors.secondaryTextColor)),
+                    child: Row(
+                      children: [
+                        Text(AppLocalizations.of(context)!.editIncome,
+                            textAlign: TextAlign.left,
+                            style: StyledDialogPopup
+                                .customDialogTheme.textTheme.displayLarge
+                                ?.apply(color: ppColors.secondaryTextColor)),
+                        const Spacer(),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 12,
@@ -36,7 +41,7 @@ class AddCategoryDialog {
                   SizedBox(
                     width: double.infinity,
                     child: Text(
-                      AppLocalizations.of(context)!.description,
+                      AppLocalizations.of(context)!.income,
                       style: StyledDialogPopup
                           .customDialogTheme.textTheme.displayMedium
                           ?.apply(color: ppColors.primaryTextColor),
@@ -46,40 +51,7 @@ class AddCategoryDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
-                      controller: descriptionTextController,
-                      cursorColor: Colors.black,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1, color: ppColors.primaryTextColor!),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1, color: ppColors.primaryTextColor!),
-                            borderRadius: BorderRadius.circular(30.0)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      AppLocalizations.of(context)!.budget,
-                      style: StyledDialogPopup
-                          .customDialogTheme.textTheme.displayMedium
-                          ?.apply(color: ppColors.primaryTextColor),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 35,
-                    child: TextField(
-                      controller: budgetTextController,
+                      controller: incomeTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -104,12 +76,11 @@ class AddCategoryDialog {
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style
                           ?.copyWith(
-                        backgroundColor: MaterialStatePropertyAll(
-                            Theme.of(context).colorScheme.primary),
-                        foregroundColor: MaterialStatePropertyAll(
-                            Theme.of(context).colorScheme.onPrimary),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.add))
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.primary),
+                              foregroundColor: MaterialStatePropertyAll(
+                                  Theme.of(context).colorScheme.onPrimary)),
+                      child: Text(AppLocalizations.of(context)!.save))
                 ],
               );
             }));
