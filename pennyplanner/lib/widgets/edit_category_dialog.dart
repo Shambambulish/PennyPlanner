@@ -118,7 +118,7 @@ class EditCategoryDialog {
                                   .ref('budgets')
                                   .child(FirebaseAuth.instance.currentUser!.uid)
                                   .child('expenseCategories')
-                                  .child(title);
+                                  .child(categoryId);
                               await ref.remove().then((value) {
                                 var snackBar = SnackBar(
                                     content: Text(AppLocalizations.of(context)!
