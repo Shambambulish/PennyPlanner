@@ -15,9 +15,8 @@ import '../ad_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key, User? user});
-
-  bool isPremium = false;
+  HomePage({super.key, User? user, required this.isPremium});
+  bool isPremium;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -97,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: const PPAppBar(
+        appBar: PPAppBar(
           title: 'Home Page',
           returnToHomePage: false,
           showSettingsBtn: true,
@@ -148,7 +147,9 @@ class _HomePageState extends State<HomePage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => BuyPremiumPage(payload: payload)));
+              builder: (context) => BuyPremiumPage(
+                    payload: payload,
+                  )));
     }
   }
 }

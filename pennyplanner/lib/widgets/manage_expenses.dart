@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:expandable/expandable.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -29,95 +31,17 @@ class ManageExpenses extends StatefulWidget {
   State<ManageExpenses> createState() => _ManageExpensesState();
 }
 
-final budgetdata = <String, dynamic>{
-  'title': getRandomExpense(),
-  'amount': Random().nextInt(25),
-  'date': DateTime.now().millisecondsSinceEpoch,
-};
-
-// random datan settausta alla älä välitä, poista jos alkaa risomaan
-String getRandomExpense() {
-  final expenses = [
-    'Groceries',
-    'Bills',
-    'Entertainment',
-    'Clothes',
-    'Transportation',
-    'Bottle of soda',
-    'Bacon',
-    'Electricity',
-    'Car payment',
-    'Movie ticket',
-    'T-shirt',
-    'Bus ticket',
-    'Other'
-  ];
-  return expenses[Random().nextInt(expenses.length)];
-}
-
-final userid = FirebaseAuth.instance.currentUser!.uid;
-FirebaseDatabase database = FirebaseDatabase.instance;
-DatabaseReference ref = FirebaseDatabase.instance.ref('expenses').child(userid);
-// final dataget =await ref.child(userid + '/budgetdata/').get();
-
-getexpensesfromDB() async {
-  final dataget = await ref.child(userid + '/budgetdata/').get();
-  print(dataget.value);
-  return dataget.value;
-}
+DatabaseReference ref = FirebaseDatabase.instance.ref();
 
 class _ManageExpensesState extends State<ManageExpenses> {
   BannerAd? _bannerAd;
 
-  Future<SharedPreferences>? prefsFuture;
+  Stream<DatabaseEvent> readStream = ref
+      .child('budgets')
+      .child(FirebaseAuth.instance.currentUser!.uid)
+      .onValue;
 
-  //init dummy data
-  Budget budget = Budget(
-      id: 0,
-      startDate: DateTime.now(),
-      endDate: DateTime(2023, 4, 30),
-      budget: 2000,
-      expenseCategories: [
-        ExpenseCategory(
-          id: 0,
-          title: 'Groceries',
-          allottedMaximum: 350.00,
-          expenses: [
-            Expense(
-              id: 0,
-              title: 'Bottle of soda',
-              amount: 1.72,
-              date: DateTime.now(),
-            ),
-            Expense(
-              id: 1,
-              title: 'Bacon',
-              amount: 2.89,
-              date: DateTime.now(),
-            ),
-          ],
-        ),
-        ExpenseCategory(
-          id: 1,
-          title: 'Bills',
-          allottedMaximum: 500.00,
-          expenses: [
-            Expense(
-              id: 0,
-              title: 'Electricity',
-              amount: 100.00,
-              date: DateTime.now(),
-            ),
-            Expense(
-              id: 1,
-              title: 'Car payment',
-              amount: 400.00,
-              date: DateTime.now(),
-            ),
-          ],
-        ),
-      ]);
-  //init dummy data end
+  Future<SharedPreferences>? prefsFuture;
 
   @override
   void initState() {
@@ -152,174 +76,148 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
   @override
   Widget build(BuildContext context) {
-    double totalCost = 0;
-    for (final i in budget.expenseCategories) {
-      for (final e in i.expenses) {
-        totalCost += e.amount;
-      }
-    }
     final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
-    return FutureBuilder(
-        future: prefsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            SharedPreferences prefs = snapshot.data!;
-            return Column(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: ppColors.isDarkMode
-                            ? const Color(0xff141414)
-                            : Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: ppColors.isDarkMode
-                                  ? Colors.black.withOpacity(0.5)
-                                  : Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 3,
-                              offset: const Offset(0, 5))
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              width: double.infinity,
+    return StreamBuilder(
+      stream: readStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          Map<dynamic, dynamic> dbData = {};
+          for (DataSnapshot data in snapshot.data!.snapshot.children) {
+            dbData[data.key] = data.value;
+          }
+
+          double totalCost = 0;
+          if (dbData['expenseCategories'] != null) {
+            dbData['expenseCategories'].forEach((k, category) {
+              if (category['expenses'] != null) {
+                category['expenses'].forEach((k, expense) {
+                  totalCost += expense['amount'].toDouble();
+                });
+              }
+            });
+          }
+
+          return FutureBuilder(
+              future: prefsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  SharedPreferences prefs = snapshot.data!;
+
+                  List<Widget> categoriesIntoCards = [];
+
+                  List<Widget> expensesIntoList = [];
+
+                  if (dbData['expenseCategories'] != null) {
+                    categoriesIntoCards = [];
+                    dbData['expenseCategories']
+                        .forEach((expenseCategoryKey, expenseCategoryValue) {
+                      double expenseTotal = 0;
+                      if (expenseCategoryValue['expenses'] != null) {
+                        expenseCategoryValue['expenses'].forEach((k, v) {
+                          expenseTotal += v['amount'];
+                        });
+                      }
+                      double indicatorValueCalc = 1 -
+                          (expenseCategoryValue['budget'] - expenseTotal) /
+                              expenseCategoryValue['budget'] as double;
+
+                      expensesIntoList = [];
+                      if (expenseCategoryValue['expenses'] != null) {
+                        expenseCategoryValue['expenses']
+                            .forEach((expenseKey, expenseValue) {
+                          expensesIntoList.add(Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: 1,
+                                        color: ppColors.secondaryTextColor!))),
+                            child: InkWell(
+                              onTap: () {
+                                EditExpenseDialog.run(
+                                    context,
+                                    expenseValue['description'],
+                                    expenseValue['amount'].toDouble(),
+                                    expenseValue['dueDate'],
+                                    expenseCategoryKey,
+                                    expenseKey);
+                              },
                               child: Row(
                                 children: [
-                                  Text(
-                                    '${DateFormat('dd.MM.').format(budget.getStartDate)} - ${DateFormat('dd.MM.').format(budget.getEndDate)}',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      color: ppColors.primaryTextColor,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  InkWell(
-                                    onTap: () {
-                                      EditBudgetDialog.run(
-                                          context, budget.getBudget);
-                                    },
-                                    child: Icon(Icons.edit),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 6,
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      '${(budget.getBudget - totalCost).toStringAsFixed(2)}${prefs.getString('currency')}',
-                                      style: TextStyle(
-                                        fontSize: 70,
-                                        color: ppColors.isDarkMode
-                                            ? ppColors.secondaryTextColor
-                                            : ppColors.primaryTextColor,
+                                  Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      child: Row(
+                                        children: [
+                                          expenseValue['reoccurring']
+                                              ? Icon(
+                                                  Icons.repeat,
+                                                  size: 16,
+                                                )
+                                              : Container(),
+                                          expenseValue['isDue'] != null
+                                              ? Icon(Icons.lock_clock, size: 16)
+                                              : Container(),
+                                          Text(expenseValue['description'])
+                                        ],
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(7, 0, 0, 8),
-                                    child: Align(
-                                      alignment: Alignment.bottomLeft,
+                                  Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      alignment: Alignment.center,
                                       child: Text(
-                                        AppLocalizations.of(context)!.left,
+                                        DateFormat('dd.MM.yyyy').format(
+                                            expenseValue['isDue'] == null
+                                                ? DateTime.parse(
+                                                    expenseValue['date'])
+                                                : DateTime.parse(
+                                                    expenseValue['isDue'])),
                                         style: TextStyle(
-                                          fontSize: 24,
-                                          color: ppColors.isDarkMode
-                                              ? ppColors.secondaryTextColor
-                                              : ppColors.primaryTextColor,
-                                        ),
+                                            color: expenseValue['isDue'] == null
+                                                ? ppColors.secondaryTextColor
+                                                : DateTime.parse(expenseValue[
+                                                                'isDue'])
+                                                            .isBefore(DateTime
+                                                                .now()) &&
+                                                        expenseValue['isDue'] !=
+                                                            null
+                                                    ? Colors.red
+                                                    : ppColors
+                                                        .secondaryTextColor),
                                       ),
                                     ),
                                   ),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                              '${expenseValue['amount']}${prefs.getString("currency")}')))
                                 ],
                               ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              width: double.infinity,
-                              child: Text(
-                                '${budget.getBudget}${prefs.getString("currency")} ${AppLocalizations.of(context)!.budgetedForPeriod}',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: ppColors.primaryTextColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ),
-                Expanded(
-                  flex: 8,
-                  child: SingleChildScrollView(
-                    child: Container(
-                      color: ppColors.isDarkMode ? Colors.black : null,
-                      padding: const EdgeInsets.fromLTRB(8, 15, 8, 0),
-                      width: double.infinity,
-                      child: Center(
-                        child: Column(children: [
-                          //BANNER AD
+                          ));
+                        });
+                      }
 
-                          if (_bannerAd != null)
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: SizedBox(
-                                width: _bannerAd!.size.width.toDouble(),
-                                height: _bannerAd!.size.height.toDouble(),
-                                child: AdWidget(ad: _bannerAd!),
-                              ),
-                            ),
-                          if (!widget.isPremium!) const SizedBox(height: 15),
-                          //AD END
-                          ...budget.expenseCategories.map((e) {
-                            double expenseTotal = 0;
-                            for (final i in e.expenses) {
-                              expenseTotal += i.amount;
-                            }
-
-                            double indicatorValueCalc = 1 -
-                                (e.allottedMaximum - expenseTotal) /
-                                    e.allottedMaximum;
-                            return Card(
-                                color: ppColors.isDarkMode
-                                    ? const Color(0xff141414)
-                                    : Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                elevation: 3,
-                                child: Container(
-                                  margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
-                                  child: ExpandableTheme(
-                                    data: const ExpandableThemeData(
-                                        hasIcon: false),
-                                    child: ExpandablePanel(
+                      categoriesIntoCards.add(Card(
+                          color: ppColors.isDarkMode
+                              ? const Color(0xff141414)
+                              : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 3,
+                          child: Container(
+                              margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
+                              child: ExpandableTheme(
+                                  data:
+                                      const ExpandableThemeData(hasIcon: false),
+                                  child: ExpandablePanel(
                                       header: Row(children: [
                                         Expanded(
                                           flex: 8,
@@ -334,7 +232,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                           0, 5, 0, 0),
                                                   width: double.infinity,
                                                   child: Text(
-                                                    e.title,
+                                                    expenseCategoryValue[
+                                                            'description'] ??
+                                                        "null",
                                                     style: TextStyle(
                                                         color: ppColors
                                                             .primaryTextColor,
@@ -351,15 +251,12 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                         Colors.grey,
                                                     valueColor:
                                                         AlwaysStoppedAnimation(
-                                                            indicatorValueCalc <
-                                                                    0
+                                                            indicatorValueCalc >=
+                                                                    1
                                                                 ? Colors.red
                                                                 : Color(
                                                                     0xff7BE116)),
-                                                    value: 1 -
-                                                        (e.allottedMaximum -
-                                                                expenseTotal) /
-                                                            e.allottedMaximum),
+                                                    value: indicatorValueCalc),
                                               ],
                                             ),
                                           ),
@@ -380,7 +277,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                           FontWeight.bold),
                                                 ),
                                                 Text(
-                                                  '${e.allottedMaximum}${prefs.getString("currency")}',
+                                                  '${expenseCategoryValue['budget']}${prefs.getString("currency")}',
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 16,
@@ -393,94 +290,44 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                         margin: const EdgeInsets.fromLTRB(
                                             0, 0, 0, 5),
                                         child: Text(
-                                          '${e.expenses.length.toString()} ${AppLocalizations.of(context)!.transactions}',
+                                          '${expenseCategoryValue['expenses'] == null ? '0' : expenseCategoryValue['expenses'].length.toString()} ${AppLocalizations.of(context)!.transactions}',
                                           style: TextStyle(
                                               fontSize: 12,
                                               color:
                                                   ppColors.secondaryTextColor),
                                         ),
                                       ),
-                                      expanded: Column(
-                                        children: [
-                                          ...e.expenses.map((e) {
-                                            return Container(
-                                              width: double.infinity,
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 10, 0, 5),
-                                              decoration: BoxDecoration(
-                                                  border: Border(
-                                                      bottom: BorderSide(
-                                                          width: 1,
-                                                          color: ppColors
-                                                              .secondaryTextColor!))),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  EditExpenseDialog.run(context,
-                                                      e.title, e.amount);
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                        flex: 3,
-                                                        child: Container(
-                                                            child: e.reoccurring
-                                                                ? Row(
-                                                                    children: [
-                                                                      const Icon(
-                                                                        Icons
-                                                                            .repeat,
-                                                                        size:
-                                                                            16,
-                                                                      ),
-                                                                      Text(e
-                                                                          .title)
-                                                                    ],
-                                                                  )
-                                                                : Text(
-                                                                    e.title))),
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          DateFormat(
-                                                                  'dd.MM.yyyy')
-                                                              .format(e.date),
-                                                          style: TextStyle(
-                                                              color: e.date.isBefore(
-                                                                          DateTime
-                                                                              .now()) &&
-                                                                      e.dueDate !=
-                                                                          null
-                                                                  ? Colors.red
-                                                                  : ppColors
-                                                                      .secondaryTextColor),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                        flex: 3,
-                                                        child: Container(
-                                                            alignment: Alignment
-                                                                .centerRight,
-                                                            child: Text(
-                                                                '${e.amount}${prefs.getString("currency")}')))
-                                                  ],
-                                                ),
+                                      expanded: Column(children: [
+                                        ...expensesIntoList,
+                                        Row(
+                                          children: [
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 219, 211, 211),
+                                                  foregroundColor: Colors.black,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18))),
+                                              onPressed: () {
+                                                AddExpenseDialog.run(context,
+                                                    expenseCategoryKey);
+                                              },
+                                              child: const Icon(
+                                                Icons.add,
+                                                size: 16,
+                                                color: Colors.black,
                                               ),
-                                            );
-                                          }).toList(),
-                                          Row(
-                                            children: [
-                                              ElevatedButton(
+                                            ),
+                                            const Spacer(),
+                                            ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
                                                     backgroundColor:
-                                                        const Color.fromARGB(
-                                                            255, 219, 211, 211),
+                                                        const Color(0xff0F5B2E),
                                                     foregroundColor:
-                                                        Colors.black,
+                                                        Colors.white,
                                                     shape:
                                                         RoundedRectangleBorder(
                                                             borderRadius:
@@ -488,76 +335,452 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                                     .circular(
                                                                         18))),
                                                 onPressed: () {
-                                                  AddExpenseDialog.run(context);
+                                                  EditCategoryDialog.run(
+                                                      context,
+                                                      expenseCategoryValue[
+                                                          'description'],
+                                                      expenseCategoryValue[
+                                                              'budget']
+                                                          .toDouble(),
+                                                      expenseCategoryKey);
                                                 },
-                                                child: const Icon(
-                                                  Icons.add,
-                                                  size: 16,
-                                                  color: Colors.black,
-                                                ),
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .edit))
+                                          ],
+                                        )
+                                      ]))))));
+                    });
+                  }
+
+                  return Column(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: ppColors.isDarkMode
+                                  ? const Color(0xff141414)
+                                  : Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: ppColors.isDarkMode
+                                        ? Colors.black.withOpacity(0.5)
+                                        : Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 3,
+                                    offset: const Offset(0, 5))
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          DateFormat('MMMM y')
+                                              .format(DateTime.now()),
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: ppColors.primaryTextColor,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        InkWell(
+                                          onTap: () {
+                                            EditBudgetDialog.run(context,
+                                                dbData['budget'].toDouble());
+                                          },
+                                          child: Icon(Icons.edit),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 6,
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text(
+                                            '${(dbData['budget'] - totalCost).toStringAsFixed(2)}${prefs.getString('currency')}',
+                                            style: TextStyle(
+                                              fontSize: 70,
+                                              color: ppColors.isDarkMode
+                                                  ? ppColors.secondaryTextColor
+                                                  : ppColors.primaryTextColor,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              7, 0, 0, 8),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .left,
+                                              style: TextStyle(
+                                                fontSize: 24,
+                                                color: ppColors.isDarkMode
+                                                    ? ppColors
+                                                        .secondaryTextColor
+                                                    : ppColors.primaryTextColor,
                                               ),
-                                              const Spacer(),
-                                              ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xff0F5B2E),
-                                                      foregroundColor:
-                                                          Colors.white,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          18))),
-                                                  onPressed: () {
-                                                    EditCategoryDialog.run(
-                                                        context,
-                                                        e.title,
-                                                        e.allottedMaximum);
-                                                  },
-                                                  child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .edit))
-                                            ],
-                                          )
-                                        ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    width: double.infinity,
+                                    child: Text(
+                                      '${dbData['budget']}${prefs.getString("currency")} ${AppLocalizations.of(context)!.budgetedForPeriod}',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: ppColors.primaryTextColor,
                                       ),
                                     ),
                                   ),
-                                ));
-                          }).toList(),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(5, 0, 4, 0),
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                AddCategoryDialog.run(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  elevation: 3,
-                                  backgroundColor: ppColors.isDarkMode
-                                      ? const Color(0xff141414)
-                                      : Colors.white,
-                                  foregroundColor: ppColors.primaryTextColor),
-                              child: Text(
-                                  "+ ${AppLocalizations.of(context)!.newCategory}"),
-                            ),
-                          )
-                        ]),
+                                ),
+                              ],
+                            )),
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return const CircularProgressIndicator();
-          }
-        });
+                      Expanded(
+                        flex: 8,
+                        child: SingleChildScrollView(
+                          child: Container(
+                            color: ppColors.isDarkMode ? Colors.black : null,
+                            padding: const EdgeInsets.fromLTRB(8, 15, 8, 0),
+                            width: double.infinity,
+                            child: Center(
+                              child: Column(children: [
+                                //BANNER AD
+
+                                if (_bannerAd != null)
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: SizedBox(
+                                      width: _bannerAd!.size.width.toDouble(),
+                                      height: _bannerAd!.size.height.toDouble(),
+                                      child: AdWidget(ad: _bannerAd!),
+                                    ),
+                                  ),
+                                if (!widget.isPremium!)
+                                  const SizedBox(height: 15),
+                                //AD END
+                                ...categoriesIntoCards,
+                                // ...budget.expenseCategories.map((expense) {
+                                //   double expenseTotal = 0;
+                                //   // for (final expenseInstance in expense) {
+                                //   //   if (expenseInstance['amount'] != null)
+                                //   //     expenseTotal += expenseInstance['amount'];
+                                //   // }
+
+                                //   double totalCost = 0;
+                                //   // if (dbData['expenses']['expenses'] != null) {
+                                //   //   for (final i in dbData['expenses']
+                                //   //       ['expenses']) {}
+                                //   // }
+
+                                //   double indicatorValueCalc = 1 -
+                                //       (expense.allottedMaximum - expenseTotal) /
+                                //           expense.allottedMaximum;
+                                //   return Card(
+                                //       color: ppColors.isDarkMode
+                                //           ? const Color(0xff141414)
+                                //           : Colors.white,
+                                //       shape: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(8),
+                                //       ),
+                                //       elevation: 3,
+                                //       child: Container(
+                                //         margin: const EdgeInsets.fromLTRB(
+                                //             8, 5, 4, 5),
+                                //         child: ExpandableTheme(
+                                //           data: const ExpandableThemeData(
+                                //               hasIcon: false),
+                                //           child: ExpandablePanel(
+                                //             header: Row(children: [
+                                //               Expanded(
+                                //                 flex: 8,
+                                //                 child: Container(
+                                //                   padding:
+                                //                       const EdgeInsets.fromLTRB(
+                                //                           0, 0, 0, 10),
+                                //                   child: Column(
+                                //                     children: [
+                                //                       Container(
+                                //                         margin: const EdgeInsets
+                                //                                 .fromLTRB(
+                                //                             0, 5, 0, 0),
+                                //                         width: double.infinity,
+                                //                         child: Text(
+                                //                           expense.title,
+                                //                           style: TextStyle(
+                                //                               color: ppColors
+                                //                                   .primaryTextColor,
+                                //                               fontWeight:
+                                //                                   FontWeight
+                                //                                       .bold,
+                                //                               fontSize: 18),
+                                //                         ),
+                                //                       ),
+                                //                       const SizedBox(
+                                //                         height: 10,
+                                //                       ),
+                                //                       LinearProgressIndicator(
+                                //                           backgroundColor:
+                                //                               Colors.grey,
+                                //                           valueColor: AlwaysStoppedAnimation(
+                                //                               indicatorValueCalc <
+                                //                                       0
+                                //                                   ? Colors.red
+                                //                                   : Color(
+                                //                                       0xff7BE116)),
+                                //                           value: 1 -
+                                //                               (expense.allottedMaximum -
+                                //                                       expenseTotal) /
+                                //                                   expense
+                                //                                       .allottedMaximum),
+                                //                     ],
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //               Expanded(
+                                //                 flex: 2,
+                                //                 child: Column(
+                                //                     crossAxisAlignment:
+                                //                         CrossAxisAlignment.end,
+                                //                     children: [
+                                //                       Text(
+                                //                         '-$expenseTotal${prefs.getString("currency")}',
+                                //                         style: TextStyle(
+                                //                             color: ppColors
+                                //                                 .secondaryTextColor,
+                                //                             fontSize: 16,
+                                //                             fontWeight:
+                                //                                 FontWeight
+                                //                                     .bold),
+                                //                       ),
+                                //                       Text(
+                                //                         '${expense.allottedMaximum}${prefs.getString("currency")}',
+                                //                         style: const TextStyle(
+                                //                           color: Colors.grey,
+                                //                           fontSize: 16,
+                                //                         ),
+                                //                       ),
+                                //                     ]),
+                                //               ),
+                                //             ]),
+                                //             collapsed: Container(
+                                //               margin: const EdgeInsets.fromLTRB(
+                                //                   0, 0, 0, 5),
+                                //               child: Text(
+                                //                 '${expense.expenses.length.toString()} ${AppLocalizations.of(context)!.transactions}',
+                                //                 style: TextStyle(
+                                //                     fontSize: 12,
+                                //                     color: ppColors
+                                //                         .secondaryTextColor),
+                                //               ),
+                                //             ),
+                                //             expanded: Column(
+                                //               children: [
+                                //                 ...expense.expenses.map((e) {
+                                //                   return Container(
+                                //                     width: double.infinity,
+                                //                     padding: const EdgeInsets
+                                //                         .fromLTRB(0, 10, 0, 5),
+                                //                     decoration: BoxDecoration(
+                                //                         border: Border(
+                                //                             bottom: BorderSide(
+                                //                                 width: 1,
+                                //                                 color: ppColors
+                                //                                     .secondaryTextColor!))),
+                                //                     child: InkWell(
+                                //                       onTap: () {
+                                //                         EditExpenseDialog.run(
+                                //                             context,
+                                //                             e.title,
+                                //                             e.amount,
+                                //                             DateTime.now(),
+                                //                             "ho",
+                                //                             "ha");
+                                //                       },
+                                //                       child: Row(
+                                //                         children: [
+                                //                           Expanded(
+                                //                               flex: 3,
+                                //                               child: Container(
+                                //                                   child: e
+                                //                                           .reoccurring
+                                //                                       ? Row(
+                                //                                           children: [
+                                //                                             const Icon(
+                                //                                               Icons.repeat,
+                                //                                               size: 16,
+                                //                                             ),
+                                //                                             Text(e.title)
+                                //                                           ],
+                                //                                         )
+                                //                                       : Text(e
+                                //                                           .title))),
+                                //                           Expanded(
+                                //                             flex: 3,
+                                //                             child: Container(
+                                //                               alignment:
+                                //                                   Alignment
+                                //                                       .center,
+                                //                               child: Text(
+                                //                                 DateFormat(
+                                //                                         'dd.MM.yyyy')
+                                //                                     .format(
+                                //                                         e.date),
+                                //                                 style: TextStyle(
+                                //                                     color: e.date.isBefore(DateTime.now()) &&
+                                //                                             e.dueDate !=
+                                //                                                 null
+                                //                                         ? Colors
+                                //                                             .red
+                                //                                         : ppColors
+                                //                                             .secondaryTextColor),
+                                //                               ),
+                                //                             ),
+                                //                           ),
+                                //                           Expanded(
+                                //                               flex: 3,
+                                //                               child: Container(
+                                //                                   alignment:
+                                //                                       Alignment
+                                //                                           .centerRight,
+                                //                                   child: Text(
+                                //                                       '${e.amount}${prefs.getString("currency")}')))
+                                //                         ],
+                                //                       ),
+                                //                     ),
+                                //                   );
+                                //                 }).toList(),
+                                //                 Row(
+                                //                   children: [
+                                //                     ElevatedButton(
+                                //                       style: ElevatedButton.styleFrom(
+                                //                           backgroundColor:
+                                //                               const Color
+                                //                                       .fromARGB(
+                                //                                   255,
+                                //                                   219,
+                                //                                   211,
+                                //                                   211),
+                                //                           foregroundColor:
+                                //                               Colors.black,
+                                //                           shape: RoundedRectangleBorder(
+                                //                               borderRadius:
+                                //                                   BorderRadius
+                                //                                       .circular(
+                                //                                           18))),
+                                //                       onPressed: () {
+                                //                         AddExpenseDialog.run(
+                                //                             context, "NotFun");
+                                //                       },
+                                //                       child: const Icon(
+                                //                         Icons.add,
+                                //                         size: 16,
+                                //                         color: Colors.black,
+                                //                       ),
+                                //                     ),
+                                //                     const Spacer(),
+                                //                     ElevatedButton(
+                                //                         style: ElevatedButton.styleFrom(
+                                //                             backgroundColor:
+                                //                                 const Color(
+                                //                                     0xff0F5B2E),
+                                //                             foregroundColor:
+                                //                                 Colors.white,
+                                //                             shape: RoundedRectangleBorder(
+                                //                                 borderRadius:
+                                //                                     BorderRadius
+                                //                                         .circular(
+                                //                                             18))),
+                                //                         onPressed: () {
+                                //                           EditCategoryDialog.run(
+                                //                               context,
+                                //                               expense.title,
+                                //                               expense
+                                //                                   .allottedMaximum);
+                                //                         },
+                                //                         child: Text(
+                                //                             AppLocalizations.of(
+                                //                                     context)!
+                                //                                 .edit))
+                                //                   ],
+                                //                 )
+                                //               ],
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       ));
+                                // }).toList(),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5, 0, 4, 0),
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      AddCategoryDialog.run(context);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        elevation: 3,
+                                        backgroundColor: ppColors.isDarkMode
+                                            ? const Color(0xff141414)
+                                            : Colors.white,
+                                        foregroundColor:
+                                            ppColors.primaryTextColor),
+                                    child: Text(
+                                        "+ ${AppLocalizations.of(context)!.newCategory}"),
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              });
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
   }
 
   Future<InitializationStatus> _initGoogleMobileAds() {

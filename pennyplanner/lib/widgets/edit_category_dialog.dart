@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/theme_provider.dart';
@@ -5,9 +7,8 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditCategoryDialog {
-  void deleteCategory(String title) {}
-
-  static void run(BuildContext context, String title, double budget) {
+  static void run(
+      BuildContext context, String title, double budget, String categoryId) {
     final descriptionTextController = TextEditingController();
     descriptionTextController.text = title;
     final budgetTextController = TextEditingController();
@@ -113,14 +114,20 @@ class EditCategoryDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              var snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)!
-                                      .deletingCategory));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              int count = 0;
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
+                              DatabaseReference ref = FirebaseDatabase.instance
+                                  .ref('budgets')
+                                  .child(FirebaseAuth.instance.currentUser!.uid)
+                                  .child('expenseCategories')
+                                  .child(title);
+                              await ref.remove().then((value) {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .deletingCategory));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                              });
                             }
                           },
                           child: Icon(
@@ -201,7 +208,25 @@ class EditCategoryDialog {
                     height: 12,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        DatabaseReference ref = FirebaseDatabase.instance
+                            .ref('budgets')
+                            .child(FirebaseAuth.instance.currentUser!.uid)
+                            .child('expenseCategories')
+                            .child(categoryId);
+                        await ref.update({
+                          'date': DateTime.now().toIso8601String(),
+                          'description': descriptionTextController.text.trim(),
+                          'budget':
+                              double.parse(budgetTextController.text.trim()),
+                        }).then((value) {
+                          var snackBar = SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .updatedCategory));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        });
+                      },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style
                           ?.copyWith(

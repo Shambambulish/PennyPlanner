@@ -61,5 +61,19 @@
     "premiumPageString2": "Osta premium",
     "premiumPageString3": "Tämmösiä hienoja ominaisuuksia mm. saat",
     "premiumPageString4": "- Ei mainoksia",
-    "premiumPageButton": "Osta heti"
+    "premiumPageButton": "Osta heti",
+    "signingUp": "Luodaan tili...",
+    "userOrPassIncorrect": "Väärä salasana tai tiliä ei ole olemassa.",
+    "emailFormatIncorrect": "Sähköposti on väärässä muodossa.",
+    "allFieldsRequired": "Kaikki kentät tarvitaan.",
+    "passwordTooWeak": "Salasana on liian heikko.",
+    "emailAlreadyExists": "Sähköposti on jo käytössä.",
+    "welcome": "Tervetuloa",
+    "loggingOut": "Kirjaudutaan ulos...",
+    "accountDeleted": "Tili poistettu.",
+    "addedCategory": "Kategoria lisätty.",
+    "updatedBudget": "Budjetti päivitetty.",
+    "addedExpense": "Kustannus lisätty.",
+    "updatedExpense": "Kustannus päivitetty.",
+    "updatedCategory": "Kategoria päivitetty."
 }

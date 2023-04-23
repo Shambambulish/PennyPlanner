@@ -73,5 +73,19 @@
     "premiumPageString2": "Buy premium",
     "premiumPageString3": "You'll get amazing features such as",
     "premiumPageString4": "- No ads",
-    "premiumPageButton": "Buy now"
+    "premiumPageButton": "Buy now",
+    "signingUp": "Signing up...",
+    "userOrPassIncorrect": "Wrong password or user does not exist.",
+    "emailFormatIncorrect": "Email format incorrect.",
+    "allFieldsRequired": "All fields are required.",
+    "passwordTooWeak": "Password is too weak.",
+    "emailAlreadyExists": "An account for this email already exists.",
+    "welcome": "Welcome",
+    "loggingOut": "Logging out...",
+    "accountDeleted": "Account deleted.",
+    "addedCategory": "Category added.",
+    "updatedBudget": "Updated budget.",
+    "addedExpense": "Expense added.",
+    "updatedExpense": "Expense updated.",
+    "updatedCategory": "Category updated."
 }

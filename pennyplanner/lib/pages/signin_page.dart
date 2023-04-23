@@ -1,9 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:pennyplanner/pages/signup_page.dart';
 import '../utils/theme_provider.dart';
 import 'home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignInPage extends StatefulWidget {
@@ -14,6 +15,9 @@ class SignInPage extends StatefulWidget {
 }
 
 class SignInPageState extends State<SignInPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
@@ -113,6 +117,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    style: TextStyle(color: Colors.black),
                                     controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
@@ -152,6 +157,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    style: TextStyle(color: Colors.black),
                                     controller: passwordController,
                                     cursorColor: Colors.black,
                                     obscureText: true,
@@ -185,11 +191,60 @@ class SignInPageState extends State<SignInPage> {
                             onPressed: () async {
                               {
                                 try {
-                                  final credential = await FirebaseAuth.instance
+                                  //check if all fields are filled
+                                  if (emailController.text == "" ||
+                                      passwordController.text == "") {
+                                    var snackBar = SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .allFieldsRequired));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                    return;
+                                  }
+                                  //check email format
+                                  if (EmailValidator.validate(
+                                          emailController.text.trim()) ==
+                                      false) {
+                                    var snackBar = SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .emailFormatIncorrect));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                    return;
+                                  }
+                                  await FirebaseAuth.instance
                                       .signInWithEmailAndPassword(
                                           email: emailController.text.trim(),
                                           password:
-                                              passwordController.text.trim());
+                                              passwordController.text.trim())
+                                      .then((value) async {
+                                    FirebaseDatabase db =
+                                        FirebaseDatabase.instance;
+                                    DatabaseReference ref =
+                                        FirebaseDatabase.instance.ref();
+                                    await ref
+                                        .child("users")
+                                        .child(value.user!.uid)
+                                        .child('isPremium')
+                                        .once()
+                                        .then((event) {
+                                      var snackBar = SnackBar(
+                                          content: Text(
+                                              AppLocalizations.of(context)!
+                                                  .signingIn));
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomePage(
+                                                  isPremium: event
+                                                      .snapshot.value as bool)),
+                                          (Route<dynamic> route) => false);
+                                    });
+                                  });
                                   FirebaseAuth.instance
                                       .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
                                       .listen((User? user) {
@@ -201,25 +256,19 @@ class SignInPageState extends State<SignInPage> {
                                     }
                                   });
                                 } on FirebaseAuthException catch (e) {
-                                  if (e.code == 'user-not-found') {
-                                    print('No user found for that email.');
-                                  } else if (e.code == 'wrong-password') {
+                                  if (e.code == 'user-not-found' ||
+                                      e.code == 'wrong-password') {
+                                    var snackBar = SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .userOrPassIncorrect));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
                                     print(
-                                        'Wrong password provided for that user.');
+                                        'No user found for that email or password is incorrect');
                                   }
                                 }
                               }
-
-                              var snackBar = SnackBar(
-                                  content: Text(
-                                      AppLocalizations.of(context)!.signingIn));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage()),
-                                  (Route<dynamic> route) => false);
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),
