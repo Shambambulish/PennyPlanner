@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../utils/auth_service.dart';
-import 'home_page.dart';
+
 import '../utils/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -309,22 +308,7 @@ class SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () async {
-                              //odottaa käyttäjän todennuksen
-                              User? user =
-                                  await Authentication.signInWithGoogle(
-                                      context: context);
-
-                              if (user != null) {
-                                if (!context.mounted) return;
-                                Navigator.of(context)
-                                    .pushReplacement(MaterialPageRoute(
-                                        builder: (context) => HomePage(
-                                              //siirtää etusivulle kirjautumisen onnistuessa
-                                              user: user,
-                                            )));
-                              }
-                            },
+                            onPressed: () {},
                             icon: const Image(
                                 image: AssetImage('assets/google_logo.png')),
                             iconSize: 30,
