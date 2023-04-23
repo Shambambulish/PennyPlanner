@@ -53,7 +53,7 @@ class _HistoryPageState extends State<HistoryPage> {
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
-              _bannerAd = ad as BannerAd;
+              if (_bannerAd!.adUnitId.isEmpty) _bannerAd = ad as BannerAd;
             });
           },
           onAdFailedToLoad: (ad, err) {

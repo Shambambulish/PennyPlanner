@@ -49,6 +49,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
     // async database query
     // if (user doesn't have premium)
+    print(widget.isPremium);
     if (!widget.isPremium!) {
       MobileAds.instance.initialize();
       BannerAd(
@@ -57,11 +58,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
-            if (this.mounted) {
-              (() {
-                _bannerAd = ad as BannerAd;
-              });
-            }
+            if (this.mounted) _bannerAd = ad as BannerAd;
           },
           onAdFailedToLoad: (ad, err) {
             debugPrint('Failed to load a banner ad: ${err.message}');
@@ -201,9 +198,11 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                 ],
                               ),
                             ),
+
                           ));
                         });
                       }
+
 
                       categoriesIntoCards.add(Card(
                           color: ppColors.isDarkMode

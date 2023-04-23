@@ -45,9 +45,12 @@ class _HomePageState extends State<HomePage> {
     if (!widget.isPremium) {
       waitForPremiumNoti();
 
-      _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
-        showInterAd();
-      });
+      if (_interstitialAd != null && _interstitialAd!.adUnitId.isEmpty) {
+        _interstitialAd!.dispose();
+        _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
+          //showInterAd();
+        });
+      }
     }
     /////////////////////////
     checkAndUpdateBudget();
@@ -203,6 +206,7 @@ class _HomePageState extends State<HomePage> {
           title: 'Home Page',
           returnToHomePage: false,
           showSettingsBtn: true,
+          isPremium: widget.isPremium,
         ),
         body: Column(
           children: [

@@ -120,6 +120,7 @@ class SignInPageState extends State<SignInPage> {
                                     style: TextStyle(color: Colors.black),
                                     controller: emailController,
                                     cursorColor: Colors.black,
+                                    style: TextStyle(color: Colors.black),
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       filled: true,
@@ -161,6 +162,7 @@ class SignInPageState extends State<SignInPage> {
                                     controller: passwordController,
                                     cursorColor: Colors.black,
                                     obscureText: true,
+                                    style: TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Colors.white,

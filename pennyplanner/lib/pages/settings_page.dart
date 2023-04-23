@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:pennyplanner/pages/buy_premium_page.dart';
 import 'package:pennyplanner/pages/welcome_page.dart';
 import 'package:pennyplanner/utils/locale_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,8 @@ const List<String> currencyValues = <String>['€', "\$", '£', '¥'];
 const List<String> languageValues = <String>["English", "Suomi"];
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  bool? isPremium = false;
+  SettingsPage({super.key, this.isPremium});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -102,6 +104,32 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (widget.isPremium == false) ...{
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BuyPremiumPage(
+                                            payload: "payload")));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(150, 35),
+                                backgroundColor:
+                                    Color.fromARGB(255, 59, 128, 255),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.0)),
+                              ),
+                              child: Text("Buy Premium"),
+                            )
+                          },
+                        ],
+                      ),
+                    ),
+                    Container(
                       padding: EdgeInsets.only(top: 20, bottom: 40),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -167,6 +195,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         ],
                       ),
                     ),
+                    //  if()
+
                     Container(
                       padding: const EdgeInsets.only(left: 30),
                       alignment: Alignment.centerLeft,
