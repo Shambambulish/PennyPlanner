@@ -123,7 +123,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6.0)),
                               ),
-                              child: Text("Buy Premium"),
+                              child: Text(
+                                  AppLocalizations.of(context)!.buyPremium),
                             )
                           },
                         ],

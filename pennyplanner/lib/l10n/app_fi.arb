@@ -82,5 +82,6 @@
     "max": "maks",
     "intoSavings": "säästöön kulujen jälkeen",
     "savingsExceeded": "Säästöraja ylitetty",
-    "updatedGoal": "Tavoite päivitetty."
+    "updatedGoal": "Tavoite päivitetty.",
+    "buyPremium": "Osta Premium"
 }

@@ -94,5 +94,6 @@
     "max": "max",
     "intoSavings": "into savings after expenses",
     "savingsExceeded": "Savings exceeded",
-    "updatedGoal": "Goal updated."
+    "updatedGoal": "Goal updated.",
+    "buyPremium": "Buy Premium"
 }
