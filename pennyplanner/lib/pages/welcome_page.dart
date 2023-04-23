@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/home_page.dart';
 import 'package:pennyplanner/utils/auth_service.dart';
@@ -155,7 +157,92 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await Authentication.signInWithGoogle(
+                                      context: context)
+                                  .then((value) async {
+                                FirebaseDatabase db = FirebaseDatabase.instance;
+                                DatabaseReference ref =
+                                    FirebaseDatabase.instance.ref();
+                                bool userExists = (await ref
+                                        .child('users')
+                                        .child(value!.uid)
+                                        .get())
+                                    .exists;
+
+                                if (userExists == true) {
+                                  print("user found, no need to create");
+                                  await ref
+                                      .child("users")
+                                      .child(value!.uid)
+                                      .child('isPremium')
+                                      .once()
+                                      .then((event) {
+                                    var snackBar = SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .signingIn));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomePage(
+                                                isPremium:
+                                                    (event.snapshot.value ??
+                                                        false) as bool)),
+                                        (Route<dynamic> route) => false);
+                                  });
+                                } else {
+                                  print("No user found, creating");
+                                  DatabaseReference ref = FirebaseDatabase
+                                      .instance
+                                      .ref('/users')
+                                      .child(value!.uid);
+                                  ref.set({
+                                    "username": value.displayName,
+                                    "signUpDate":
+                                        DateTime.now().toIso8601String(),
+                                    "isPremium": false,
+                                  });
+                                  var snackBar = SnackBar(
+                                      content: Text(
+                                          "${AppLocalizations.of(context)!.welcome}, ${usernameController.text}"));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage(
+                                                isPremium: false,
+                                              )),
+                                      (Route<dynamic> route) => false);
+                                }
+                              });
+                              FirebaseAuth.instance
+                                  .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
+                                  .listen((User? user) {
+                                if (user == null) {
+                                  print('User is currently signed out!');
+                                } else {
+                                  print('User is signed in!');
+                                  print('User id is:' + user.uid);
+                                }
+                              });
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'user-not-found' ||
+                                  e.code == 'wrong-password') {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .userOrPassIncorrect));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                print(
+                                    'No user found for that email or password is incorrect');
+                              }
+                            }
+                          },
                           icon: const Image(
                               image: AssetImage('assets/google_logo.png')),
                           iconSize: 30,
