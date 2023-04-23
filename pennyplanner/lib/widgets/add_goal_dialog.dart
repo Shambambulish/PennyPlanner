@@ -149,10 +149,10 @@ class AddGoalDialog {
                   ),
                   ElevatedButton(
                       onPressed: () async {
-                        if (double.parse(percentOfSavingsTextController.text
-                                    .trim()) +
-                                percentLeft >
-                            100) {
+                        if (percentLeft -
+                                double.parse(percentOfSavingsTextController.text
+                                    .trim()) <
+                            0) {
                           var snackBar = SnackBar(
                               content: Text(AppLocalizations.of(context)!
                                   .savingsExceeded));
@@ -170,7 +170,8 @@ class AddGoalDialog {
                               double.parse(priceTextController.text.trim()),
                           "percentOfSavings": double.parse(
                               percentOfSavingsTextController.text.trim()),
-                          "amountSaved": 0
+                          "amountSaved": 0,
+                          "date": DateTime.now().toIso8601String()
                         }).then((value) {
                           var snackBar = SnackBar(
                               content: Text(

@@ -240,8 +240,9 @@ class SignInPageState extends State<SignInPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => HomePage(
-                                                  isPremium: event
-                                                      .snapshot.value as bool)),
+                                                  isPremium:
+                                                      (event.snapshot.value ??
+                                                          false) as bool)),
                                           (Route<dynamic> route) => false);
                                     });
                                   });

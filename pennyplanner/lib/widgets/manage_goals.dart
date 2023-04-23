@@ -38,29 +38,6 @@ class _ManageGoalsState extends State<ManageGoals> {
       .onValue;
 
   Future<SharedPreferences>? prefsFuture;
-  //init dummy data
-  savedBudget savedbudget = savedBudget(
-      id: 0,
-      startDate: DateTime(2023, 2, 1),
-      endDate: DateTime.now(),
-      incomebudget: 2480,
-      goalCategories: [
-        GoalCategory(
-          savedAmount: 200,
-          id: 0,
-          title: 'Uusi jääkaappi',
-          goalAmount: 600,
-          savingGoal: [],
-        ),
-        GoalCategory(
-          savedAmount: 1000,
-          id: 1,
-          title: 'Autolaina',
-          goalAmount: 3000,
-          savingGoal: [],
-        ),
-      ]);
-  //init dummy data end
 
   @override
   void initState() {
@@ -189,7 +166,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                   Row(
                                     children: [
                                       Text(
-                                        '${goalValue['amountSaved']}${prefs.getString("currency")} ${AppLocalizations.of(context)!.savedSince} ${DateFormat('dd.MM.').format(savedbudget.getStartDate)}',
+                                        '${goalValue['amountSaved']}${prefs.getString("currency")} ${AppLocalizations.of(context)!.savedSince} ${DateFormat('dd.MM.').format(DateTime.parse(goalValue['date'] ?? DateTime.now().toIso8601String()))}',
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                       const Spacer(),
@@ -277,7 +254,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                             onTap: () {
                                               EditIncomeDialog.run(
                                                   context,
-                                                  savedbudget.getincomeBudget,
+                                                  dbData['income'].toDouble(),
                                                   dbData['percentToSave']
                                                       .toDouble());
                                             },
@@ -299,7 +276,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                           Align(
                                             alignment: Alignment.topLeft,
                                             child: Text(
-                                              '${savedbudget.getincomeBudget}${prefs.getString("currency")}',
+                                              '${dbData['income']}${prefs.getString("currency")}',
                                               style: TextStyle(
                                                 fontSize: 70,
                                                 color:
