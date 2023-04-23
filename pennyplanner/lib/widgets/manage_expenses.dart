@@ -118,7 +118,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                           expenseTotal += v['amount'];
                         });
                       }
-                      double indicatorValueCalc = 1 -
+                      double indicatorValueCalc = 1 -                 // NULL CHECK PITÄÄ LISÄTÄ
                           (expenseCategoryValue['budget'] - expenseTotal) /
                               expenseCategoryValue['budget'] as double;
 
@@ -142,7 +142,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                     expenseValue['amount'].toDouble(),
                                     expenseValue['dueDate'],
                                     expenseCategoryKey,
-                                    expenseKey);
+                                    expenseKey,
+                                    widget.isPremium);
                               },
                               child: Row(
                                 children: [
@@ -313,7 +314,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                               18))),
                                               onPressed: () {
                                                 AddExpenseDialog.run(context,
-                                                    expenseCategoryKey);
+                                                    expenseCategoryKey,widget.isPremium);
                                               },
                                               child: const Icon(
                                                 Icons.add,
@@ -417,7 +418,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                     child: Row(
                                       children: [
                                         Align(
-                                          alignment: Alignment.topLeft,
+                                          alignment: Alignment.topLeft,       // NULLCHECK TARVITAAN
                                           child: Text(
                                             '${(dbData['budget'] - totalCost).toStringAsFixed(2)}${prefs.getString('currency')}',
                                             style: TextStyle(
