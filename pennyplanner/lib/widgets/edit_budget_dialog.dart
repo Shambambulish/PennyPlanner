@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/theme_provider.dart';
@@ -72,7 +74,22 @@ class EditBudgetDialog {
                     height: 12,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        DatabaseReference ref =
+                            FirebaseDatabase.instance.ref('budgets');
+                        ref
+                            .child(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          "budget":
+                              double.parse(budgetTextController.text.trim())
+                        }).then((value) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  AppLocalizations.of(context)!.addedCategory));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        });
+                      },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style
                           ?.copyWith(

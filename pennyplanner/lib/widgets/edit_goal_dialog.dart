@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/theme_provider.dart';
@@ -5,8 +7,15 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditGoalDialog {
-  static void run(
-      BuildContext context, String title, double amount, double savedAmount) {
+  static void run(BuildContext context, String description, double price,
+      double percentOfSavings, double percentLeft, String goalId) {
+    final initialPercent = percentOfSavings;
+    final descriptionTextController = TextEditingController();
+    descriptionTextController.text = description;
+    final priceTextController = TextEditingController();
+    priceTextController.text = price.toString();
+    final percentOfSavingsTextController = TextEditingController();
+    percentOfSavingsTextController.text = percentOfSavings.toString();
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -107,14 +116,20 @@ class EditGoalDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              var snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)!
-                                      .deletingGoal));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              int count = 0;
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
+                              DatabaseReference ref = FirebaseDatabase.instance
+                                  .ref('budgets')
+                                  .child(FirebaseAuth.instance.currentUser!.uid)
+                                  .child('goals')
+                                  .child(goalId);
+                              await ref.remove().then((value) {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .deletingGoal));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                              });
                             }
                           },
                           child: Icon(
@@ -140,8 +155,8 @@ class EditGoalDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextFormField(
-                      initialValue: title,
+                    child: TextField(
+                      controller: descriptionTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -173,8 +188,8 @@ class EditGoalDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextFormField(
-                      initialValue: amount.toString(),
+                    child: TextField(
+                      controller: priceTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -199,7 +214,7 @@ class EditGoalDialog {
                     child: Row(
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.amountToSaveInPeriod,
+                          AppLocalizations.of(context)!.percentOfSavings,
                           style: StyledDialogPopup
                               .customDialogTheme.textTheme.displayMedium
                               ?.apply(color: ppColors.primaryTextColor),
@@ -217,8 +232,8 @@ class EditGoalDialog {
                   ),
                   SizedBox(
                     height: 35,
-                    child: TextFormField(
-                      initialValue: savedAmount.toString(),
+                    child: TextField(
+                      controller: percentOfSavingsTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -239,7 +254,37 @@ class EditGoalDialog {
                     height: 12,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (percentLeft +
+                                initialPercent -
+                                double.parse(percentOfSavingsTextController.text
+                                    .trim()) <
+                            0.0) {
+                          var snackBar = SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .savingsExceeded));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          return;
+                        }
+                        DatabaseReference ref = FirebaseDatabase.instance
+                            .ref('budgets')
+                            .child(FirebaseAuth.instance.currentUser!.uid)
+                            .child('goals')
+                            .child(goalId);
+                        ref.update({
+                          "description": descriptionTextController.text.trim(),
+                          "price":
+                              double.parse(priceTextController.text.trim()),
+                          "percentOfSavings": double.parse(
+                              percentOfSavingsTextController.text.trim()),
+                        }).then((value) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  AppLocalizations.of(context)!.updatedGoal));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        });
+                      },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style
                           ?.copyWith(

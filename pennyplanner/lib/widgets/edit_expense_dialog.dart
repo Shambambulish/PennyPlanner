@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,15 +8,34 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditExpenseDialog {
-  static void run(BuildContext context, String title, double amount) {
+  static void run(
+      BuildContext context,
+      String title,
+      double amount,
+      String? dbDueDate,
+      String categoryName,
+      String expenseId,
+      bool reoccurring) {
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
+    DateTime dueDate =
+        DateTime.parse(dbDueDate ?? DateTime.now().toIso8601String());
+    reoccurring
+        ? repeatEveryMonthCheckBoxValue = true
+        : repeatEveryMonthCheckBoxValue = false;
 
+    dbDueDate == null
+        ? dueDateCheckBoxValue = false
+        : dueDateCheckBoxValue = true;
     final descriptionTextController = TextEditingController();
     descriptionTextController.text = title;
     final amountTextController = TextEditingController();
     amountTextController.text = amount.toString();
     final dueDateTextController = TextEditingController();
+    if (dbDueDate != null) {
+      dueDateTextController.text =
+          DateFormat('dd.MM.yyyy').format(DateTime.parse(dbDueDate)).toString();
+    }
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -115,14 +136,22 @@ class EditExpenseDialog {
                                   ]);
                                 });
                             if (deleteConfirm) {
-                              var snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)!
-                                      .deletingExpense));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              int count = 0;
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
+                              DatabaseReference ref = FirebaseDatabase.instance
+                                  .ref('budgets')
+                                  .child(FirebaseAuth.instance.currentUser!.uid)
+                                  .child('expenseCategories')
+                                  .child(categoryName)
+                                  .child('expenses')
+                                  .child(expenseId);
+                              await ref.remove().then((value) {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .deletingExpense));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                              });
                             }
                           },
                           child: Icon(
@@ -256,6 +285,8 @@ class EditExpenseDialog {
                                       DateFormat('dd.MM.yyyy')
                                           .format(value)
                                           .toString();
+
+                                  dueDate = value;
                                 }
                                 return value;
                               });
@@ -337,7 +368,29 @@ class EditExpenseDialog {
                     height: 10,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        DatabaseReference ref = FirebaseDatabase.instance
+                            .ref('budgets')
+                            .child(FirebaseAuth.instance.currentUser!.uid)
+                            .child('expenseCategories')
+                            .child(categoryName)
+                            .child('expenses')
+                            .child(expenseId);
+                        await ref.update({
+                          'date': DateTime.now().toIso8601String(),
+                          'description': descriptionTextController.text.trim(),
+                          'amount':
+                              double.parse(amountTextController.text.trim()),
+                          'isDue': dueDate,
+                          'reoccurring': repeatEveryMonthCheckBoxValue
+                        }).then((value) {
+                          var snackBar = SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .updatedExpense));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        });
+                      },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style
                           ?.copyWith(

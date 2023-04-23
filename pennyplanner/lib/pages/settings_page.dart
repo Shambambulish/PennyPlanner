@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
 import 'package:pennyplanner/pages/welcome_page.dart';
@@ -28,11 +30,20 @@ class _SettingsPageState extends State<SettingsPage> {
   late bool darkModeCheckBoxValue; //set system default
   bool toinenAsetus = false;
   bool kolmasAsetus = false;
-  Future<SharedPreferences>? prefsFuture;
+  late Future<SharedPreferences> prefsFuture;
+  late Future<DatabaseEvent> userNameFromDB;
+
+  FirebaseDatabase db = FirebaseDatabase.instance;
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   @override
   void initState() {
     prefsFuture = SharedPreferences.getInstance();
+    userNameFromDB = ref
+        .child("users")
+        .child(FirebaseAuth.instance.currentUser!.uid)
+        .child('username')
+        .once();
     super.initState();
   }
 
@@ -42,16 +53,16 @@ class _SettingsPageState extends State<SettingsPage> {
     darkModeCheckBoxValue = ppColors.isDarkMode;
 
     return FutureBuilder(
-        future: prefsFuture,
-        builder: (context, snapshot) {
+        future: Future.wait([prefsFuture, userNameFromDB]),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
-            SharedPreferences prefs = snapshot.data!;
+            SharedPreferences prefs = snapshot.data![0];
             var prefCurrency = prefs.get("currency");
             currencySetting = (prefCurrency ?? currencyValues.first) as String;
             var prefLanguage = prefs.get("language");
             languageSetting = (prefLanguage ?? languageValues.first) as String;
             return Scaffold(
-              appBar: const PPAppBar(
+              appBar: PPAppBar(
                 title: 'Home Page',
                 returnToHomePage: true,
                 showSettingsBtn: false,
@@ -79,11 +90,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                     fontSize: 25,
                                   ),
                                 ),
-                                const Text(
-                                  "Yourname Here",
+                                Text(
+                                  snapshot.data![1].snapshot.value,
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
-                                      fontSize: 30,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -149,8 +160,27 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           const SizedBox(width: 20),
                           ElevatedButton(
-                            onPressed: () {
-                              // ***** DELETE ACCOUNT *********
+                            onPressed: () async {
+                              await ref
+                                  .child('users')
+                                  .child(FirebaseAuth.instance.currentUser!.uid)
+                                  .remove()
+                                  .then((value) => FirebaseAuth
+                                          .instance.currentUser!
+                                          .delete()
+                                          .then((value) {
+                                        var snackBar = SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)!
+                                                    .accountDeleted));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const WelcomePage()));
+                                      }));
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(150, 35),

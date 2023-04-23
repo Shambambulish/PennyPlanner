@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/theme_provider.dart';
@@ -5,9 +7,10 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddGoalDialog {
-  static void run(BuildContext context) {
-    bool dueDateCheckBoxValue = false;
-    bool repeatEveryCheckBoxValue = false;
+  static void run(BuildContext context, double percentLeft) {
+    final descriptionTextController = TextEditingController();
+    final priceTextController = TextEditingController();
+    final percentOfSavingsTextController = TextEditingController();
     showDialog(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -45,6 +48,7 @@ class AddGoalDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: descriptionTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -77,6 +81,7 @@ class AddGoalDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: priceTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -101,18 +106,20 @@ class AddGoalDialog {
                     child: Row(
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.amountToSaveInPeriod,
+                          AppLocalizations.of(context)!.percentOfSavings,
                           style: StyledDialogPopup
                               .customDialogTheme.textTheme.displayMedium
                               ?.apply(color: ppColors.primaryTextColor),
                           textAlign: TextAlign.left,
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                          height: 12,
-                          width: 12,
+                        Text(
+                          ' ($percentLeft% ${AppLocalizations.of(context)!.left})',
+                          style: StyledDialogPopup
+                              .customDialogTheme.textTheme.displayMedium
+                              ?.copyWith(
+                                  color: ppColors.primaryTextColor,
+                                  fontSize: 14),
+                          textAlign: TextAlign.left,
                         ),
                       ],
                     ),
@@ -120,6 +127,7 @@ class AddGoalDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
+                      controller: percentOfSavingsTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -140,7 +148,38 @@ class AddGoalDialog {
                     height: 12,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (percentLeft -
+                                double.parse(percentOfSavingsTextController.text
+                                    .trim()) <
+                            0) {
+                          var snackBar = SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .savingsExceeded));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          return;
+                        }
+                        DatabaseReference ref = FirebaseDatabase.instance
+                            .ref('budgets')
+                            .child(FirebaseAuth.instance.currentUser!.uid)
+                            .child('goals')
+                            .push();
+                        ref.set({
+                          "description": descriptionTextController.text.trim(),
+                          "price":
+                              double.parse(priceTextController.text.trim()),
+                          "percentOfSavings": double.parse(
+                              percentOfSavingsTextController.text.trim()),
+                          "amountSaved": 0,
+                          "date": DateTime.now().toIso8601String()
+                        }).then((value) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  AppLocalizations.of(context)!.addedGoal));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        });
+                      },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style
                           ?.copyWith(

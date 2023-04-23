@@ -1,9 +1,12 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../utils/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,8 +23,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 FirebaseDatabase database = FirebaseDatabase.instance;
-DatabaseReference ref =
-    FirebaseDatabase.instance.ref('/users').child(usernameController.text);
+// DatabaseReference ref =
+//     FirebaseDatabase.instance.ref('/users').child(usernameController.text);
 
 final emailController = TextEditingController();
 final usernameController = TextEditingController();
@@ -128,6 +131,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    style: TextStyle(color: Colors.black),
                                     controller: usernameController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
@@ -167,6 +171,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    style: TextStyle(color: Colors.black),
                                     controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
@@ -206,6 +211,7 @@ class SignUpPageState extends State<SignUpPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
+                                    style: TextStyle(color: Colors.black),
                                     controller: passwordController,
                                     cursorColor: Colors.black,
                                     obscureText: true,
@@ -237,22 +243,78 @@ class SignUpPageState extends State<SignUpPage> {
                           ),
                           ElevatedButton(
                             onPressed: () async {
-                              const snackBar =
-                                  SnackBar(content: Text('Clicked SIGN UP'));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+                              //check if all fields are filled
+                              if (usernameController.text == "" ||
+                                  emailController.text == "" ||
+                                  passwordController.text == "") {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .allFieldsRequired));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                return;
+                              }
+                              //check email format
+                              if (EmailValidator.validate(
+                                      emailController.text.trim()) ==
+                                  false) {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .emailFormatIncorrect));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                return;
+                              }
+
                               try {
-                                final credential = await FirebaseAuth.instance
+                                await FirebaseAuth.instance
                                     .createUserWithEmailAndPassword(
                                   email: emailController.text.trim(),
                                   password: passwordController.text.trim(),
-                                );
+                                )
+                                    .then((value) {
+                                  DatabaseReference ref = FirebaseDatabase
+                                      .instance
+                                      .ref('/users')
+                                      .child(value.user!.uid);
+                                  ref.set({
+                                    "username": usernameController.text,
+                                    "signUpDate":
+                                        DateTime.now().toIso8601String(),
+                                    "isPremium": false,
+                                  });
+                                  var snackBar = SnackBar(
+                                      content: Text(
+                                          "${AppLocalizations.of(context)!.welcome}, ${usernameController.text}"));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                  Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage(
+                                                isPremium: false,
+                                              )),
+                                      (Route<dynamic> route) => false);
+                                });
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'weak-password') {
                                   print('The password provided is too weak.');
+                                  var snackBar = SnackBar(
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .passwordTooWeak));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 } else if (e.code == 'email-already-in-use') {
                                   print(
                                       'The account already exists for that email.');
+
+                                  var snackBar = SnackBar(
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .emailAlreadyExists));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 }
                               } catch (e) {
                                 print(e);

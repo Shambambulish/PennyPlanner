@@ -8,26 +8,13 @@ import '../pages/signup_page.dart';
 import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-final descriptionController = TextEditingController();
-final amountController = TextEditingController();
-final duedateController = TextEditingController();
-final repeatEveryController = TextEditingController();
-
-@override
-void dispose() {
-  // Clean up the controller when the widget is disposed.
-  descriptionController.dispose();
-  amountController.dispose();
-  duedateController.dispose();
-}
-
 final userid = FirebaseAuth.instance.currentUser!.uid;
 
 class AddExpenseDialog {
-  static void run(BuildContext context) {
+  static void run(BuildContext context, categoryName) {
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
-
+    DateTime? dueDate;
     final dueDateTextController = TextEditingController();
     final descriptionTextController = TextEditingController();
     final amountTextController = TextEditingController();
@@ -69,7 +56,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
-                      controller: descriptionController,
+                      controller: descriptionTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -102,7 +89,7 @@ class AddExpenseDialog {
                   SizedBox(
                     height: 35,
                     child: TextField(
-                      controller: amountController,
+                      controller: amountTextController,
                       cursorColor: Colors.black,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -181,6 +168,7 @@ class AddExpenseDialog {
                                       DateFormat('dd.MM.yyyy')
                                           .format(value)
                                           .toString();
+                                  dueDate = value;
                                 }
                                 return value;
                               });
@@ -262,19 +250,29 @@ class AddExpenseDialog {
                     height: 10,
                   ),
                   ElevatedButton(
-                      onPressed: () async{
-                        final expensedata = <String, dynamic>{
-                          'title': descriptionController.text.trim(),
-                          'amount': amountController.text.trim(),
-                          'date': duedateController.text.trim(),
-                          'repeating': repeatEveryMonthCheckBoxValue.toString(),
-                        };
-                        final newPostKey = FirebaseDatabase.instance.ref().child(userid + '/budgetdata/').push().key;
-                        firebase.child(userid + '/budgetdata/' + newPostKey!).set(expensedata);
-                        Navigator.of(context).pop();
-                        descriptionController.clear();
-                        amountController.clear();
-                        duedateController.clear();
+                      onPressed: () async {
+                        DatabaseReference ref =
+                            FirebaseDatabase.instance.ref('budgets');
+                        ref
+                            .child(FirebaseAuth.instance.currentUser!.uid)
+                            .child('expenseCategories')
+                            .child(categoryName)
+                            .child('expenses')
+                            .push()
+                            .set({
+                          'date': DateTime.now().toIso8601String(),
+                          'description': descriptionTextController.text.trim(),
+                          'amount':
+                              double.parse(amountTextController.text.trim()),
+                          'isDue': dueDate?.toIso8601String(),
+                          'reoccurring': repeatEveryMonthCheckBoxValue
+                        }).then((value) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  AppLocalizations.of(context)!.addedCategory));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.pop(context);
+                        });
                       },
                       style: StyledDialogPopup
                           .customDialogTheme.elevatedButtonTheme.style

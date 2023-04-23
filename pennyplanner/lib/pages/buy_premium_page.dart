@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/theme_provider.dart';
@@ -27,7 +28,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
   Widget build(BuildContext context) {
     final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
-      appBar: const PPAppBar(
+      appBar: PPAppBar(
         title: 'Settings',
         returnToHomePage: true,
       ),
