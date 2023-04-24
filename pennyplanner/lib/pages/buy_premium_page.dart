@@ -64,7 +64,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
                       SizedBox(
-                        height: 50,
+                        height: 20,
                       ),
                       Text(AppLocalizations.of(context)!.premiumPageString4,
                           textAlign: TextAlign.left,
