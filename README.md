@@ -37,7 +37,7 @@ Project meeting documents, design documents, etc. were hosted in a team inside M
 
 The graphical design was done by @Raitokomniak.
 Back-end (Setting up firebase, and linking it to the app, and the functions related to the backend) was handled by @Tinosaurus and @pahvone and @Shambambulish.
-@t1rima00 and @Shambambulish were in charge of designing page layouts and the functionality therein.
+@t1rima00, @Shambambulish and @Raitokomniak were in charge of designing page layouts and the functionality therein.
 
 
 
