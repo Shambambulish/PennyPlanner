@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 class Authentication {
   static Future<void> signOut({required BuildContext context}) async {
@@ -28,9 +27,13 @@ class Authentication {
 
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        print('User is currently signed out!');
+        if (kDebugMode) {
+          print('User is currently signed out!');
+        }
       } else {
-        print('User is signed in!');
+        if (kDebugMode) {
+          print('User is signed in!');
+        }
       }
     });
 
@@ -45,7 +48,9 @@ class Authentication {
 
         user = userCredential.user;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
       final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -69,6 +74,7 @@ class Authentication {
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
           if (e.code == 'account-exists-with-different-credential') {
+            // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
                 content:
@@ -76,6 +82,7 @@ class Authentication {
               ),
             );
           } else if (e.code == 'invalid-credential') {
+            // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
                 content:
@@ -84,6 +91,7 @@ class Authentication {
             );
           }
         } catch (e) {
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             Authentication.customSnackBar(
               content: 'Error occurred using Google Sign-In. Try again.',
@@ -94,32 +102,15 @@ class Authentication {
 
       return user;
     }
+    return null;
   }
-
-  // static Future<void> signOut({required BuildContext context}) async {
-  //   final GoogleSignIn googleSignIn = GoogleSignIn();
-
-  //   try {
-  //     if (!kIsWeb) {
-  //       await googleSignIn.signOut();
-  //     }
-
-  //     await FirebaseAuth.instance.signOut();
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       Authentication.customSnackBar(
-  //         content: 'Error signing out. Try again',
-  //       ),
-  //     );
-  //   }
-  // }
 
   static SnackBar customSnackBar({required String content}) {
     return SnackBar(
       backgroundColor: Colors.black,
       content: Text(
         content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+        style: const TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
       ),
     );
   }

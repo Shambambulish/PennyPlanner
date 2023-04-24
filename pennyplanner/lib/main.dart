@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pennyplanner/firebase_options.dart';
@@ -9,12 +8,8 @@ import 'package:pennyplanner/utils/locale_provider.dart';
 import 'package:pennyplanner/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/welcome_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:pennyplanner/pages/home_page.dart';
-import 'package:pennyplanner/pages/settings_page.dart';
 import 'pages/splash_screen.dart';
-import '../pages/welcome_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {

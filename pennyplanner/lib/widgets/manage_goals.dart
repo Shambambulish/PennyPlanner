@@ -1,4 +1,3 @@
-import 'package:expandable/expandable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ad_helper.dart';
 import '../utils/theme_provider.dart';
-import 'add_category_dialog.dart';
 import 'package:pennyplanner/widgets/add_goal_dialog.dart';
-import 'package:pennyplanner/widgets/edit_category_dialog.dart';
 import 'package:pennyplanner/widgets/edit_goal_dialog.dart';
-import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 import 'package:pennyplanner/widgets/edit_income_dialog.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// ignore: must_be_immutable
 class ManageGoals extends StatefulWidget {
   bool? isPremium = false;
   ManageGoals({super.key, this.isPremium});
@@ -251,7 +248,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                               color: ppColors.primaryTextColor,
                                             ),
                                           ),
-                                          Spacer(),
+                                          const Spacer(),
                                           InkWell(
                                             onTap: () {
                                               EditIncomeDialog.run(
@@ -260,9 +257,9 @@ class _ManageGoalsState extends State<ManageGoals> {
                                                   dbData['percentToSave']
                                                       .toDouble());
                                             },
-                                            child: Icon(Icons.edit),
+                                            child: const Icon(Icons.edit),
                                           ),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                         ],
                                       ),
                                     ),
@@ -331,7 +328,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                         ),
                                       ),
                                     if (!widget.isPremium!)
-                                      SizedBox(height: 15), //
+                                      const SizedBox(height: 15), //
 
                                     //AD END
 
@@ -383,11 +380,11 @@ class _ManageGoalsState extends State<ManageGoals> {
                       ],
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
                 });
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         });
   }

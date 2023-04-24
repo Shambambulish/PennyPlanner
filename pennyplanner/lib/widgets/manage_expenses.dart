@@ -2,24 +2,22 @@ import 'dart:async';
 
 import 'package:expandable/expandable.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pennyplanner/widgets/add_expense_dialog.dart';
 import 'package:pennyplanner/widgets/edit_budget_dialog.dart';
 import 'package:pennyplanner/widgets/edit_category_dialog.dart';
 import 'package:pennyplanner/widgets/edit_expense_dialog.dart';
-import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ad_helper.dart';
 import '../utils/theme_provider.dart';
 import 'add_category_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../pages/signup_page.dart';
-import 'add_category_dialog.dart';
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore: must_be_immutable
 class ManageExpenses extends StatefulWidget {
   bool? isPremium = false;
   ManageExpenses({super.key, this.isPremium});
@@ -46,7 +44,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
     // async database query
     // if (user doesn't have premium)
-    print(widget.isPremium);
+    if (kDebugMode) {
+      print(widget.isPremium);
+    }
     if (!widget.isPremium!) {
       MobileAds.instance.initialize();
       BannerAd(
@@ -55,8 +55,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
-            if (this.mounted && _bannerAd!.adUnitId.isEmpty)
+            if (mounted && _bannerAd!.adUnitId.isEmpty) {
               _bannerAd = ad as BannerAd;
+            }
           },
           onAdFailedToLoad: (ad, err) {
             debugPrint('Failed to load a banner ad: ${err.message}');
@@ -150,21 +151,20 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                 children: [
                                   Expanded(
                                     flex: 3,
-                                    child: Container(
-                                      child: Row(
-                                        children: [
-                                          expenseValue['reoccurring']
-                                              ? Icon(
-                                                  Icons.repeat,
-                                                  size: 16,
-                                                )
-                                              : Container(),
-                                          expenseValue['isDue'] != null
-                                              ? Icon(Icons.lock_clock, size: 16)
-                                              : Container(),
-                                          Text(expenseValue['description'])
-                                        ],
-                                      ),
+                                    child: Row(
+                                      children: [
+                                        expenseValue['reoccurring']
+                                            ? const Icon(
+                                                Icons.repeat,
+                                                size: 16,
+                                              )
+                                            : Container(),
+                                        expenseValue['isDue'] != null
+                                            ? const Icon(Icons.lock_clock,
+                                                size: 16)
+                                            : Container(),
+                                        Text(expenseValue['description'])
+                                      ],
                                     ),
                                   ),
                                   Expanded(
@@ -256,7 +256,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                             indicatorValueCalc >=
                                                                     1
                                                                 ? Colors.red
-                                                                : Color(
+                                                                : const Color(
                                                                     0xff7BE116)),
                                                     value: indicatorValueCalc),
                                               ],
@@ -404,7 +404,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                             EditBudgetDialog.run(context,
                                                 dbData['budget'].toDouble());
                                           },
-                                          child: Icon(Icons.edit),
+                                          child: const Icon(Icons.edit),
                                         ),
                                         const SizedBox(
                                           width: 10,
@@ -534,14 +534,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
                 }
               });
         } else {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
       },
     );
-  }
-
-  Future<InitializationStatus> _initGoogleMobileAds() {
-    // TODO: Initialize Google Mobile Ads SDK
-    return MobileAds.instance.initialize();
   }
 }

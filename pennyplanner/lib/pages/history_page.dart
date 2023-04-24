@@ -1,6 +1,5 @@
 import 'package:expandable/expandable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import '../ad_helper.dart';
 import '../utils/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// ignore: must_be_immutable
 class HistoryPage extends StatefulWidget {
   bool? isPremium = false;
   HistoryPage({super.key, this.isPremium});
@@ -100,9 +100,10 @@ class _HistoryPageState extends State<HistoryPage> {
                       .forEach((expenseCategoryKey, expenseCategoryValue) {
                     double sum = 0;
                     expensesIntoList = [];
-                    List<Widget> expensesPerCategory = [];
                     if (expenseCategoryValue['expenses'] != null) {
-                      print(expenseCategoryValue['expenses']);
+                      if (kDebugMode) {
+                        print(expenseCategoryValue['expenses']);
+                      }
                       expenseCategoryValue['expenses']
                           .forEach((expenseKey, expenseValue) {
                         if (DateTime.parse(expenseValue['date'])
@@ -122,21 +123,21 @@ class _HistoryPageState extends State<HistoryPage> {
                               children: [
                                 Expanded(
                                     flex: 3,
-                                    child: Container(
-                                        child: Row(
+                                    child: Row(
                                       children: [
                                         expenseValue['reoccurring']
-                                            ? Icon(
+                                            ? const Icon(
                                                 Icons.repeat,
                                                 size: 16,
                                               )
                                             : Container(),
                                         expenseValue['isDue'] != null
-                                            ? Icon(Icons.lock_clock, size: 16)
+                                            ? const Icon(Icons.lock_clock,
+                                                size: 16)
                                             : Container(),
                                         Text(expenseValue['description'])
                                       ],
-                                    ))),
+                                    )),
                                 Expanded(
                                   flex: 3,
                                   child: Container(
@@ -168,16 +169,14 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: ExpandableTheme(
                               data: const ExpandableThemeData(hasIcon: false),
                               child: ExpandablePanel(
-                                header: Container(
-                                  child: Text(
-                                    expenseCategoryValue['description'],
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Hind Siliguri",
-                                        color: ppColors.primaryTextColor),
-                                  ),
+                                header: Text(
+                                  expenseCategoryValue['description'],
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Hind Siliguri",
+                                      color: ppColors.primaryTextColor),
                                 ),
                                 collapsed: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -326,14 +325,9 @@ class _HistoryPageState extends State<HistoryPage> {
             },
           );
         } else {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
       },
     );
-  }
-
-  Future<InitializationStatus> _initGoogleMobileAds() {
-    // TODO: Initialize Google Mobile Ads SDK
-    return MobileAds.instance.initialize();
   }
 }

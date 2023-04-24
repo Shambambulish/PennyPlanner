@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/home_page.dart';
 import 'package:pennyplanner/utils/auth_service.dart';
@@ -25,8 +24,8 @@ class WelcomePage extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                   color: ppColors.isDarkMode
-                      ? Color(0xff111111)
-                      : Color(0xffaf6363)),
+                      ? const Color(0xff111111)
+                      : const Color(0xffaf6363)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -36,16 +35,17 @@ class WelcomePage extends StatelessWidget {
                     height: 230,
                     child: Image(
                       image: ppColors.isDarkMode
-                          ? AssetImage('assets/pplogo_red.png')
-                          : AssetImage('assets/pplogo.png'),
+                          ? const AssetImage('assets/pplogo_red.png')
+                          : const AssetImage('assets/pplogo.png'),
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: Image(
                         image: ppColors.isDarkMode
-                            ? AssetImage('assets/pplogo_bold_red.png')
-                            : AssetImage('assets/pplogo_bold_yellow.png')),
+                            ? const AssetImage('assets/pplogo_bold_red.png')
+                            : const AssetImage(
+                                'assets/pplogo_bold_yellow.png')),
                   ),
                 ],
               ),
@@ -57,8 +57,8 @@ class WelcomePage extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                   color: ppColors.isDarkMode
-                      ? Color(0xff333333)
-                      : Color(0xffffe380)),
+                      ? const Color(0xff333333)
+                      : const Color(0xffffe380)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -163,7 +163,6 @@ class WelcomePage extends StatelessWidget {
                               await Authentication.signInWithGoogle(
                                       context: context)
                                   .then((value) async {
-                                FirebaseDatabase db = FirebaseDatabase.instance;
                                 DatabaseReference ref =
                                     FirebaseDatabase.instance.ref();
                                 bool userExists =
@@ -175,10 +174,12 @@ class WelcomePage extends StatelessWidget {
 
                                 if (userExists == true) {
                                   //if user exists, no need to create data to database
-                                  print("user found, no need to create");
+                                  if (kDebugMode) {
+                                    print("user found, no need to create");
+                                  }
                                   await ref
                                       .child("users")
-                                      .child(value!.uid)
+                                      .child(value.uid)
                                       .child('isPremium')
                                       .once()
                                       .then((event) {
@@ -199,22 +200,26 @@ class WelcomePage extends StatelessWidget {
                                   });
                                 } else {
                                   //if user doesn't exist, create data to database
-                                  print("No user found, creating");
+                                  if (kDebugMode) {
+                                    print("No user found, creating");
+                                  }
                                   DatabaseReference ref = FirebaseDatabase
                                       .instance
                                       .ref('/users')
-                                      .child(value!.uid);
+                                      .child(value.uid);
                                   ref.set({
                                     "username": value.displayName,
                                     "signUpDate":
                                         DateTime.now().toIso8601String(),
                                     "isPremium": false,
                                   });
-                                  var snackBar = SnackBar(
-                                      content: Text(
-                                          "${AppLocalizations.of(context)!.welcome}, ${usernameController.text}"));
+                                  var snackBar = SnackBar(content: Text(
+                                      // ignore: use_build_context_synchronously
+                                      "${AppLocalizations.of(context)!.welcome}, ${usernameController.text}"));
+                                  // ignore: use_build_context_synchronously
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
+                                  // ignore: use_build_context_synchronously
                                   Navigator.pushAndRemoveUntil(
                                       //move the user to homepage after authentication
                                       context,
@@ -229,10 +234,16 @@ class WelcomePage extends StatelessWidget {
                                   .authStateChanges()
                                   .listen((User? user) {
                                 if (user == null) {
-                                  print('User is currently signed out!');
+                                  if (kDebugMode) {
+                                    print('User is currently signed out!');
+                                  }
                                 } else {
-                                  print('User is signed in!');
-                                  print('User id is:' + user.uid);
+                                  if (kDebugMode) {
+                                    print('User is signed in!');
+                                  }
+                                  if (kDebugMode) {
+                                    print('User id is:${user.uid}');
+                                  }
                                 }
                               });
                             } on FirebaseAuthException catch (e) {
@@ -243,8 +254,10 @@ class WelcomePage extends StatelessWidget {
                                         .userOrPassIncorrect));
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
-                                print(
-                                    'No user found for that email or password is incorrect');
+                                if (kDebugMode) {
+                                  print(
+                                      'No user found for that email or password is incorrect');
+                                }
                               }
                             }
                           },

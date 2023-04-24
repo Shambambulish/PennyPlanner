@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../utils/theme_provider.dart';
 import '../widgets/pp_appbar.dart';
@@ -7,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // page for describing premium features and purchasing premium
 class BuyPremiumPage extends StatefulWidget {
-  BuyPremiumPage({super.key, required payload});
+  const BuyPremiumPage({super.key, required payload});
 
   @override
   State<BuyPremiumPage> createState() => _BuyPremiumPageState();
@@ -28,7 +27,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
   Widget build(BuildContext context) {
     final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
     return Scaffold(
-      appBar: PPAppBar(
+      appBar: const PPAppBar(
         title: 'Settings',
         returnToHomePage: true,
       ),
@@ -63,7 +62,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                           style: TextStyle(
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(AppLocalizations.of(context)!.premiumPageString4,
@@ -71,7 +70,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                           style: TextStyle(
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(AppLocalizations.of(context)!.premiumPageString5,
@@ -79,7 +78,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                           style: TextStyle(
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(AppLocalizations.of(context)!.premiumPageString6,
@@ -87,7 +86,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                           style: TextStyle(
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       ElevatedButton(

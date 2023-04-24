@@ -7,8 +7,14 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditGoalDialog {
-  static void run(BuildContext context, String description, double price,                 // As the filename implies, this is a dialog for editing goals
-      double percentOfSavings, double percentLeft, String goalId) {
+  static void run(
+      BuildContext context,
+      String description,
+      double
+          price, // As the filename implies, this is a dialog for editing goals
+      double percentOfSavings,
+      double percentLeft,
+      String goalId) {
     final initialPercent = percentOfSavings;
     final descriptionTextController = TextEditingController();
     descriptionTextController.text = description;
@@ -223,7 +229,7 @@ class EditGoalDialog {
                         const SizedBox(
                           width: 10,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 12,
                           width: 12,
                         ),

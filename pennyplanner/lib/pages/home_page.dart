@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pennyplanner/pages/buy_premium_page.dart';
 import 'package:pennyplanner/utils/theme_provider.dart';
 import 'package:pennyplanner/widgets/manage_expenses.dart';
@@ -15,6 +14,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   HomePage({super.key, User? user, required this.isPremium});
   bool isPremium;
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     if (!widget.isPremium) {
       waitForPremiumNoti();
 
-      _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
+      _timerForInter = Timer.periodic(const Duration(seconds: 2), (result) {
         showInterAd();
       });
     }
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             },
           );
 
-          if (this.mounted) {
+          if (mounted) {
             setState(() {
               _interstitialAd = ad;
             });

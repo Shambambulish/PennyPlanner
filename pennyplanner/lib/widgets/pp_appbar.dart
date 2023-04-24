@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../pages/home_page.dart';
 import '../pages/settings_page.dart';
 import '../utils/theme_provider.dart';
 

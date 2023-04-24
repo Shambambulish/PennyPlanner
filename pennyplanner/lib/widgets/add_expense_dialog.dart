@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import '../utils/theme_provider.dart';
-import '../pages/signup_page.dart';
 import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -12,7 +11,7 @@ final userid = FirebaseAuth.instance.currentUser!.uid;
 
 class AddExpenseDialog {
   static void run(BuildContext context, categoryName, isPremium) {
-    bool _isPremium = isPremium;
+    bool isPremium0 = isPremium;
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
     DateTime? dueDate;
@@ -144,20 +143,15 @@ class AddExpenseDialog {
                               onChanged: (bool? newValue) {
                                 dueDateTextController.text = "";
                                 setState(() {
-
-                                 if(_isPremium){
-                                   dueDateCheckBoxValue = newValue!;
-                                 }
-                                  else{
+                                  if (isPremium0) {
+                                    dueDateCheckBoxValue = newValue!;
+                                  } else {
                                     var snackBar = const SnackBar(
                                         content: Text(
                                             "Premium Feature, Buy Premium!"));
-                                            ScaffoldMessenger.of(context)
+                                    ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   }
-
-
-                                 
                                 });
                               }),
                         ),
@@ -253,19 +247,15 @@ class AddExpenseDialog {
                               value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-
-
-                                  if(_isPremium){
-                                   repeatEveryMonthCheckBoxValue = newValue!;
-                                 }
-                                  else{
+                                  if (isPremium0) {
+                                    repeatEveryMonthCheckBoxValue = newValue!;
+                                  } else {
                                     var snackBar = const SnackBar(
                                         content: Text(
                                             "Premium Feature, Buy Premium!"));
-                                            ScaffoldMessenger.of(context)
+                                    ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   }
-                                  
                                 });
                               }),
                         ),

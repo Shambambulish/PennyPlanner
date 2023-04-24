@@ -59,7 +59,7 @@ class _StyledDialogPopupState extends State<StyledDialogPopup> {
     return Theme(
         data: StyledDialogPopup.customDialogTheme,
         child: Dialog(
-          backgroundColor: ppColors.isDarkMode ? Color(0xff121212) : null,
+          backgroundColor: ppColors.isDarkMode ? const Color(0xff121212) : null,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

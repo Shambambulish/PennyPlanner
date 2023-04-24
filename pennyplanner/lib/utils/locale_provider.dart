@@ -17,10 +17,10 @@ class LocaleProvider extends ChangeNotifier {
     late Locale newLocale;
     switch (localeSetting) {
       case "English":
-        newLocale = Locale('en');
+        newLocale = const Locale('en');
         break;
       case "Suomi":
-        newLocale = Locale('fi');
+        newLocale = const Locale('fi');
         break;
     }
 

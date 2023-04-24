@@ -14,6 +14,7 @@ import '../utils/theme_provider.dart';
 const List<String> currencyValues = <String>['€', "\$", '£', '¥'];
 const List<String> languageValues = <String>["English", "Suomi"];
 
+// ignore: must_be_immutable
 class SettingsPage extends StatefulWidget {
   bool? isPremium = false;
   SettingsPage({super.key, this.isPremium});
@@ -59,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
             var prefLanguage = prefs.get("language");
             languageSetting = (prefLanguage ?? languageValues.first) as String;
             return Scaffold(
-              appBar: PPAppBar(
+              appBar: const PPAppBar(
                 title: 'Home Page',
                 returnToHomePage: true,
                 showSettingsBtn: false,
@@ -77,20 +78,20 @@ class _SettingsPageState extends State<SettingsPage> {
                             width: MediaQuery.of(context).size.width / 4,
                           ),
                           Container(
-                            padding: EdgeInsets.all(15),
+                            padding: const EdgeInsets.all(15),
                             child: Column(
                               children: [
                                 Text(
                                   AppLocalizations.of(context)!.hi,
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 25,
                                   ),
                                 ),
                                 Text(
                                   snapshot.data![1].snapshot.value,
                                   textAlign: TextAlign.right,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -100,35 +101,34 @@ class _SettingsPageState extends State<SettingsPage> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (widget.isPremium == false) ...{
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BuyPremiumPage(
-                                            payload: "payload")));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size(150, 35),
-                                backgroundColor:
-                                    Color.fromARGB(255, 59, 128, 255),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6.0)),
-                              ),
-                              child: Text(
-                                  AppLocalizations.of(context)!.buyPremium),
-                            )
-                          },
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (widget.isPremium == false) ...{
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BuyPremiumPage(
+                                              payload: "payload")));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(150, 35),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 59, 128, 255),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6.0)),
+                            ),
+                            child:
+                                Text(AppLocalizations.of(context)!.buyPremium),
+                          )
+                        },
+                      ],
                     ),
                     Container(
-                      padding: EdgeInsets.only(top: 20, bottom: 40),
+                      padding: const EdgeInsets.only(top: 20, bottom: 40),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -234,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           Container(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(AppLocalizations.of(context)!.currency,
-                                style: TextStyle(fontSize: 25)),
+                                style: const TextStyle(fontSize: 25)),
                           )
                         ],
                       ),
@@ -262,14 +262,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                         listen: false);
                                 localeProvider.setLocale(value!);
                                 setState(() {
-                                  languageSetting = value!;
+                                  languageSetting = value;
                                   prefs.setString("language", value);
                                 });
                               }),
                           Container(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(AppLocalizations.of(context)!.language,
-                                style: TextStyle(fontSize: 25)),
+                                style: const TextStyle(fontSize: 25)),
                           )
                         ],
                       ),
@@ -305,7 +305,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           Container(
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(AppLocalizations.of(context)!.darkMode,
-                                style: TextStyle(fontSize: 25)),
+                                style: const TextStyle(fontSize: 25)),
                           )
                         ],
                       ),

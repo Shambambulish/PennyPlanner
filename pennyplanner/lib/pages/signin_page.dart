@@ -1,5 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/pages/signup_page.dart';
 import '../utils/auth_service.dart';
@@ -22,9 +22,11 @@ class SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;         // Checking which mode the user has enabled (Dark/Light)
-    return Scaffold(                                                                    
-      body: CustomScrollView(slivers: [                                         // Forming the structure of the page
+    final PPColors ppColors = Theme.of(context).extension<
+        PPColors>()!; // Checking which mode the user has enabled (Dark/Light)
+    return Scaffold(
+      body: CustomScrollView(slivers: [
+        // Forming the structure of the page
         SliverFillRemaining(
           hasScrollBody: false,
           child: Column(children: [
@@ -34,8 +36,8 @@ class SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: ppColors.isDarkMode
-                        ? Color(0xff111111)
-                        : Color(0xffaf6363)),
+                        ? const Color(0xff111111)
+                        : const Color(0xffaf6363)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -45,16 +47,18 @@ class SignInPageState extends State<SignInPage> {
                       height: 230,
                       child: Image(
                         image: ppColors.isDarkMode
-                            ? AssetImage('assets/pplogo_red.png')                 // Depending on the chosen theme, an image is chosen
-                            : AssetImage('assets/pplogo.png'),
+                            ? const AssetImage(
+                                'assets/pplogo_red.png') // Depending on the chosen theme, an image is chosen
+                            : const AssetImage('assets/pplogo.png'),
                       ),
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Image(
                           image: ppColors.isDarkMode
-                              ? AssetImage('assets/pplogo_bold_red.png')
-                              : AssetImage('assets/pplogo_bold_yellow.png')),
+                              ? const AssetImage('assets/pplogo_bold_red.png')
+                              : const AssetImage(
+                                  'assets/pplogo_bold_yellow.png')),
                     ),
                   ],
                 ),
@@ -66,8 +70,8 @@ class SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     color: ppColors.isDarkMode
-                        ? Color(0xff333333)
-                        : Color(0xffffe380)),
+                        ? const Color(0xff333333)
+                        : const Color(0xffffe380)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -88,9 +92,10 @@ class SignInPageState extends State<SignInPage> {
                               ),
                             ),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),     
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
                               child: Text(
-                                AppLocalizations.of(context)!.login,                  //Local variable changes depening on the language chosen by the user
+                                AppLocalizations.of(context)!
+                                    .login, //Local variable changes depening on the language chosen by the user
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
@@ -119,7 +124,9 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
-                                    style: TextStyle(color: Colors.black),                    // TextField for the email
+                                    style: const TextStyle(
+                                        color: Colors
+                                            .black), // TextField for the email
                                     controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
@@ -158,8 +165,9 @@ class SignInPageState extends State<SignInPage> {
                                 ),
                                 SizedBox(
                                   height: 35,
-                                  child: TextField(                                                   // TextField for the password
-                                    style: TextStyle(color: Colors.black),
+                                  child: TextField(
+                                    // TextField for the password
+                                    style: const TextStyle(color: Colors.black),
                                     controller: passwordController,
                                     cursorColor: Colors.black,
                                     obscureText: true,
@@ -190,10 +198,11 @@ class SignInPageState extends State<SignInPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () async { // start processing login data
+                            onPressed: () async {
+                              // start processing login data
                               {
                                 try {
-                                    //Check if all fields are filled
+                                  //Check if all fields are filled
                                   if (emailController.text == "" ||
                                       passwordController.text == "") {
                                     var snackBar = SnackBar(
@@ -222,8 +231,6 @@ class SignInPageState extends State<SignInPage> {
                                           password:
                                               passwordController.text.trim())
                                       .then((value) async {
-                                    FirebaseDatabase db =
-                                        FirebaseDatabase.instance;
                                     DatabaseReference ref =
                                         FirebaseDatabase.instance.ref();
                                     await ref
@@ -252,10 +259,16 @@ class SignInPageState extends State<SignInPage> {
                                       .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
                                       .listen((User? user) {
                                     if (user == null) {
-                                      print('User is currently signed out!');
+                                      if (kDebugMode) {
+                                        print('User is currently signed out!');
+                                      }
                                     } else {
-                                      print('User is signed in!');
-                                      print('User id is:' + user.uid);
+                                      if (kDebugMode) {
+                                        print('User is signed in!');
+                                      }
+                                      if (kDebugMode) {
+                                        print('User id is:${user.uid}');
+                                      }
                                     }
                                   });
                                 } on FirebaseAuthException catch (e) {
@@ -267,8 +280,10 @@ class SignInPageState extends State<SignInPage> {
                                                 .userOrPassIncorrect));
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
-                                    print(
-                                        'No user found for that email or password is incorrect');
+                                    if (kDebugMode) {
+                                      print(
+                                          'No user found for that email or password is incorrect');
+                                    }
                                   }
                                 }
                               }
@@ -324,11 +339,10 @@ class SignInPageState extends State<SignInPage> {
                           IconButton(
                             onPressed: () async {
                               try {
-                                await Authentication.signInWithGoogle(              // Option for signing in with Google
+                                await Authentication.signInWithGoogle(
+                                        // Option for signing in with Google
                                         context: context)
                                     .then((value) async {
-                                  FirebaseDatabase db =
-                                      FirebaseDatabase.instance;
                                   DatabaseReference ref =
                                       FirebaseDatabase.instance.ref();
                                   bool userExists = (await ref
@@ -337,12 +351,15 @@ class SignInPageState extends State<SignInPage> {
                                           .get())
                                       .exists;
 
-                                  if (userExists == true) {                     // Check if user is found
-                                                                                // User is found
-                                    print("user found, no need to create");
+                                  if (userExists == true) {
+                                    // Check if user is found
+                                    // User is found
+                                    if (kDebugMode) {
+                                      print("user found, no need to create");
+                                    }
                                     await ref
                                         .child("users")
-                                        .child(value!.uid)
+                                        .child(value.uid)
                                         .child('isPremium')
                                         .once()
                                         .then((event) {
@@ -362,22 +379,26 @@ class SignInPageState extends State<SignInPage> {
                                           (Route<dynamic> route) => false);
                                     });
                                   } else {
-                                    print("No user found, creating");           // If user is not found, create a new user
+                                    if (kDebugMode) {
+                                      print("No user found, creating");
+                                    } // If user is not found, create a new user
                                     DatabaseReference ref = FirebaseDatabase
                                         .instance
                                         .ref('/users')
-                                        .child(value!.uid);
+                                        .child(value.uid);
                                     ref.set({
                                       "username": value.displayName,
                                       "signUpDate":
                                           DateTime.now().toIso8601String(),
                                       "isPremium": false,
                                     });
-                                    var snackBar = SnackBar(
-                                        content: Text(
-                                            "${AppLocalizations.of(context)!.welcome}, ${usernameController.text}"));
+                                    var snackBar = SnackBar(content: Text(
+                                        // ignore: use_build_context_synchronously
+                                        "${AppLocalizations.of(context)!.welcome}, ${usernameController.text}"));
+                                    // ignore: use_build_context_synchronously
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
+                                    // ignore: use_build_context_synchronously
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
@@ -391,10 +412,16 @@ class SignInPageState extends State<SignInPage> {
                                     .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
                                     .listen((User? user) {
                                   if (user == null) {
-                                    print('User is currently signed out!');
+                                    if (kDebugMode) {
+                                      print('User is currently signed out!');
+                                    }
                                   } else {
-                                    print('User is signed in!');
-                                    print('User id is:' + user.uid);
+                                    if (kDebugMode) {
+                                      print('User is signed in!');
+                                    }
+                                    if (kDebugMode) {
+                                      print('User id is:${user.uid}');
+                                    }
                                   }
                                 });
                               } on FirebaseAuthException catch (e) {
@@ -406,8 +433,10 @@ class SignInPageState extends State<SignInPage> {
                                               .userOrPassIncorrect));
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
-                                  print(
-                                      'No user found for that email or password is incorrect');
+                                  if (kDebugMode) {
+                                    print(
+                                        'No user found for that email or password is incorrect');
+                                  }
                                 }
                               }
                             },

@@ -17,7 +17,7 @@ class EditExpenseDialog {
       String expenseId,
       bool reoccurring,
       isPremium) {
-    bool _isPremium = isPremium;
+    bool isPremium0 = isPremium;
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
     DateTime dueDate =
@@ -262,7 +262,7 @@ class EditExpenseDialog {
                               onChanged: (bool? newValue) {
                                 dueDateTextController.text = "";
                                 setState(() {
-                                  if (_isPremium) {
+                                  if (isPremium0) {
                                     dueDateCheckBoxValue = newValue!;
                                   } else {
                                     var snackBar = const SnackBar(
@@ -367,7 +367,7 @@ class EditExpenseDialog {
                               value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  if (_isPremium) {
+                                  if (isPremium0) {
                                     repeatEveryMonthCheckBoxValue = newValue!;
                                   } else {
                                     var snackBar = const SnackBar(
