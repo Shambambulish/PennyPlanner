@@ -190,7 +190,7 @@ class SignInPageState extends State<SignInPage> {
                             height: 20,
                           ),
                           ElevatedButton(
-                            onPressed: () async {
+                            onPressed: () async { // start processing login data
                               {
                                 try {
                                     //Check if all fields are filled

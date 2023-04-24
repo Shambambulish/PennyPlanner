@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     );
     _interstitialAd?.show().then((value) => {_timerForInter.cancel()});
   }
-
+// send notification about premium for 10 seconds
   void waitForPremiumNoti() async {
     await notificationService.showScheduledNotification(
         id: 0,

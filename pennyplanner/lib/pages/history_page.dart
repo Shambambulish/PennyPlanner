@@ -298,8 +298,6 @@ class _HistoryPageState extends State<HistoryPage> {
                                   showChartValuesOutside: false,
                                   decimalPlaces: 1,
                                 ),
-                                // gradientList: ---To add gradient colors---
-                                // emptyColorGradient: ---Empty Color gradient---
                               )),
                         //PIECHART END
                         Column(children: [
