@@ -95,12 +95,6 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                               backgroundColor:
                                   Theme.of(context).colorScheme.primary),
                           onPressed: () async {
-                            /* hasu vitsi mutta ei ehkä demoon
-                            await notificationService.showNotification(
-                                id: 0,
-                                title: "sike",
-                                body: "ei olis kannattanu");
-                          */
                           },
                           child: Text(
                             AppLocalizations.of(context)!.premiumPageButton,

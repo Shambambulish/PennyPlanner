@@ -7,7 +7,7 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddGoalDialog {
-  static void run(BuildContext context, double percentLeft) {
+  static void run(BuildContext context, double percentLeft) {                     // As the filename implies, this is a dialog for editing goals
     final descriptionTextController = TextEditingController();
     final priceTextController = TextEditingController();
     final percentOfSavingsTextController = TextEditingController();

@@ -7,9 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/expense_category.dart';
-import 'package:pennyplanner/models/budget.dart';
-import 'package:pennyplanner/models/expense.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../ad_helper.dart';
 import '../utils/theme_provider.dart';
@@ -31,6 +28,7 @@ class _HistoryPageState extends State<HistoryPage> {
   BannerAd? _bannerAd;
   Future<SharedPreferences>? prefsFuture;
 
+  //alustetaan stream lukemaan dataa tietokannasta
   Stream<DatabaseEvent> readStream = ref
       .child('budgets')
       .child(FirebaseAuth.instance.currentUser!.uid)
@@ -300,8 +298,6 @@ class _HistoryPageState extends State<HistoryPage> {
                                   showChartValuesOutside: false,
                                   decimalPlaces: 1,
                                 ),
-                                // gradientList: ---To add gradient colors---
-                                // emptyColorGradient: ---Empty Color gradient---
                               )),
                         //PIECHART END
                         Column(children: [

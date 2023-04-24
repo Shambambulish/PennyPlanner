@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../utils/theme_provider.dart';
 
+/*
+custom styled dialog to run other dialogs through to keep themeing the same between dialogs without hardcoding a bunch of styling
+*/
+
 class StyledDialogPopup extends StatefulWidget {
   final List<Widget> children;
 

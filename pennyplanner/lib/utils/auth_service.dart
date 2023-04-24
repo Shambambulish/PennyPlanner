@@ -10,6 +10,7 @@ class Authentication {
 
     try {
       if (!kIsWeb) {
+        //tarkistaa ollaanko web alustalla
         await googleSignIn.signOut();
       }
       await FirebaseAuth.instance.signOut();
@@ -20,15 +21,6 @@ class Authentication {
         ),
       );
     }
-  }
-
-  static Future<FirebaseApp> initializeFirebase(
-      {required BuildContext context}) async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    //ADD auto login logic
-
-    return firebaseApp;
   }
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {

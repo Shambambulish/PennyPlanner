@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pennyplanner/l10n/l10n.dart';
 
+/*
+custom ChangeNotifier class to provide Locale setting
+*/
 class LocaleProvider extends ChangeNotifier {
   LocaleProvider({required prefsLocale}) {
     setLocale(prefsLocale);

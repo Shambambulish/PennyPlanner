@@ -1,6 +1,6 @@
-# PennyPlanner - a self-financing app  
+# PennyPlanner - a self-financing app
 
-<img src="https://raw.githubusercontent.com/Shambambulish/PennyPlanner/dev/pennyplanner/assets/pplogo.png" width="200" height="200">
+<img src="pennyplanner/assets/pplogo.png" width="200" height="200">
 
 This is a student-project for a group of students at Oulu University of Applied Sciences, for a Bachelor of Engineering programme in Information and Communications Technology. This mobile development project lasted approximately 2 months during Spring 2023.
 
@@ -31,7 +31,7 @@ For coding, some of the team members used Visual Studio Code, some used IntelliJ
 Project management such as handling tasks etc. was done with Trello.
 
 Project meeting documents, design documents, etc. were hosted in a team inside Microsoft Teams.
- 
+
 
 # Who did what?
 
@@ -42,8 +42,8 @@ Back-end (Setting up firebase, and linking it to the app, and the functions rela
 
 
 
-## The frontend layout
+## The data layout
 
-Below is a layout of the program's frontend structures using [Mermaid](https://mermaidjs.github.io/).
+Below is a layout of the program's frontend structures using [Lucidchart](https://www.lucidchart.com/pages/).
 
-[![](https://mermaid.ink/img/pako:eNpVj8FuwjAMhl_F8mlI8AI9TCqUbYchpLGdGg5WY0K0NqkcVxsqffeFcmE-Wf4-_5ZHbKJlLPDUxp_mTKLwWZkAucq67PvWN6Q-BjhoZkdYrZ5h_fQenQ-wF_hg55OyLO4r65lvxq_EAj4BtNE5tuDDdBc2s3CdeQ5JsB_0CiU80qreUSDHsP3tOSROx0e6rd_yxSiXf9OX-jVSezNxiR1LR97mp8abY1DP3LHBIreW5NugCVP2aNB4uIQGC5WBlzj0lpQrT06ow-KUA3n6A7K6Wq0?type=png)](https://mermaid.live/edit#pako:eNpVj8FuwjAMhl_F8mlI8AI9TCqUbYchpLGdGg5WY0K0NqkcVxsqffeFcmE-Wf4-_5ZHbKJlLPDUxp_mTKLwWZkAucq67PvWN6Q-BjhoZkdYrZ5h_fQenQ-wF_hg55OyLO4r65lvxq_EAj4BtNE5tuDDdBc2s3CdeQ5JsB_0CiU80qreUSDHsP3tOSROx0e6rd_yxSiXf9OX-jVSezNxiR1LR97mp8abY1DP3LHBIreW5NugCVP2aNB4uIQGC5WBlzj0lpQrT06ow-KUA3n6A7K6Wq0)
+<img src="pennyplanner/assets/programdiagram.png">

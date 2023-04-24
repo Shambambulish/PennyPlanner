@@ -109,15 +109,15 @@ class EditIncomeDialog {
                     height: 12,
                   ),
                   ElevatedButton(
-                      onPressed: () async {
+                      onPressed: () async { // gets user id and updates values in firebase
                         DatabaseReference ref = FirebaseDatabase.instance
                             .ref('budgets')
-                            .child(FirebaseAuth.instance.currentUser!.uid);
+                            .child(FirebaseAuth.instance.currentUser!.uid); // get user id
                         ref.update({
                           "income":
-                              double.parse(incomeTextController.text.trim()),
+                              double.parse(incomeTextController.text.trim()), // submit income to firebase
                           "percentToSave": double.parse(
-                              percentToSaveTextController.text.trim())
+                              percentToSaveTextController.text.trim()) // submit percent to save to firebase
                         }).then((value) {
                           var snackBar = SnackBar(
                               content: Text(
