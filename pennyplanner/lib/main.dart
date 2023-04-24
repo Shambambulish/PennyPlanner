@@ -24,6 +24,7 @@ void main() async {
   FirebaseDatabase.instance
       .setPersistenceEnabled(true); //enables online persistence
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //if initialvalues are null, set to default
   if (prefs.getString("currency") == null) {
     prefs.setString("currency", "€");
   }
@@ -33,6 +34,7 @@ void main() async {
   if (prefs.getBool("isDarkMode") == null) {
     prefs.setBool("isDarkMode", false);
   }
+  //set notifier providers
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(
@@ -52,7 +54,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
@@ -60,10 +61,10 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Penny Planner',
-        theme: themeProvider.getTheme,
-        home: const Splash(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN
-        locale: localeProvider.locale,
-        supportedLocales: PPLocales.all,
+        theme: themeProvider.getTheme, //get theme from ThemeProvider
+        home: const Splash(),
+        locale: localeProvider.locale, //get locale from LocaleProvider
+        supportedLocales: PPLocales.all, //supported locales from l10n/l10n.dart
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/*
+custom ChangeNotifier class to provide Theme setting
+*/
 class PPColors extends ThemeExtension<PPColors> {
   PPColors(
       {required this.isDarkMode,

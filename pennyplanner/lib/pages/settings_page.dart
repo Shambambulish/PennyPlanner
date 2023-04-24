@@ -37,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   @override
-  void initState() {
+  void initState() {  // get user instance from database
     prefsFuture = SharedPreferences.getInstance();
     userNameFromDB = ref
         .child("users")

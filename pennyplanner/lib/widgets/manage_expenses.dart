@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:expandable/expandable.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:pennyplanner/models/budget.dart';
-import 'package:pennyplanner/models/expense.dart';
 import 'package:intl/intl.dart';
 import 'package:pennyplanner/widgets/add_expense_dialog.dart';
 import 'package:pennyplanner/widgets/edit_budget_dialog.dart';
@@ -14,7 +12,6 @@ import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ad_helper.dart';
-import '../models/expense_category.dart';
 import '../utils/theme_provider.dart';
 import 'add_category_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -35,7 +32,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
 
 class _ManageExpensesState extends State<ManageExpenses> {
   BannerAd? _bannerAd;
-
+  //initialize data stream from database for the StreamBuilder
   Stream<DatabaseEvent> readStream = ref
       .child('budgets')
       .child(FirebaseAuth.instance.currentUser!.uid)
@@ -106,6 +103,11 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
                   List<Widget> expensesIntoList = [];
 
+                  //if there are expenseCategories, loop through them
+                  //if there are expenses in those categories, loop through them
+                  //add expenses to a list
+                  //add categories to a list, includes the list of expenses
+                  //append the list to the rendered page further down
                   if (dbData['expenseCategories'] != null) {
                     categoriesIntoCards = [];
                     dbData['expenseCategories']
@@ -116,7 +118,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                           expenseTotal += v['amount'];
                         });
                       }
-                      double indicatorValueCalc = 1 - // NULL CHECK PITÄÄ LISÄTÄ
+                      double indicatorValueCalc = 1 -
                           (expenseCategoryValue['budget'] - expenseTotal) /
                               expenseCategoryValue['budget'] as double;
 
