@@ -74,7 +74,7 @@ class _ManageGoalsState extends State<ManageGoals> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Map<dynamic, dynamic> dbData = {};
-            for (DataSnapshot data in snapshot.data!.snapshot.children) {
+            for (DataSnapshot data in snapshot.data!.snapshot.children) {             // Reads stream of data from the database
               dbData[data.key] = data.value;
             }
 
@@ -91,14 +91,14 @@ class _ManageGoalsState extends State<ManageGoals> {
                     if (dbData['goals'] != null) {
                       dbData['goals'].forEach((goalKey, goalValue) {
                         if (goalValue['percentOfSavings'] != null) {
-                          savingsUsed += goalValue['percentOfSavings'];
+                          savingsUsed += goalValue['percentOfSavings'];               
                         }
                         goals.add(Card(
                             color: ppColors.isDarkMode
                                 ? const Color(0xff141414)
                                 : Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8),                           // Get data to variables from the database and insert it to the cards
                             ),
                             elevation: 3,
                             child: Container(
@@ -154,7 +154,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                               '${goalValue['price']}€ ',
                                               style: TextStyle(
                                                 color:
-                                                    ppColors.secondaryTextColor,
+                                                    ppColors.secondaryTextColor,            // The goal value
                                                 fontSize: 20,
                                               ),
                                             ),
@@ -172,7 +172,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor:
                                                   const Color(0xff0F5B2E),
-                                              shape: RoundedRectangleBorder(
+                                              shape: RoundedRectangleBorder(                      // Edit button for the goal cards
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           18))),
@@ -202,7 +202,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                         Expanded(
                           flex: 2,
                           child: Container(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),                    // Style and form settings for the cards
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: ppColors.isDarkMode
@@ -274,7 +274,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                           Align(
                                             alignment: Alignment.topLeft,
                                             child: Text(
-                                              '${dbData['income']}${prefs.getString("currency")}',
+                                              '${dbData['income']}${prefs.getString("currency")}',          // Display the income, change currency depending on the settings page
                                               style: TextStyle(
                                                 fontSize: 70,
                                                 color:
@@ -313,6 +313,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                               child: Center(
                                 child: Column(
                                   children: [
+
                                     //BANNER AD
 
                                     if (_bannerAd != null)
@@ -328,7 +329,9 @@ class _ManageGoalsState extends State<ManageGoals> {
                                       ),
                                     if (!widget.isPremium!)
                                       SizedBox(height: 15), //
+
                                     //AD END
+
                                     ...goals,
                                     Container(
                                       padding:
@@ -350,7 +353,7 @@ class _ManageGoalsState extends State<ManageGoals> {
                                           AddGoalDialog.run(
                                               context, 100 - savingsUsed);
                                         },
-                                        style: ElevatedButton.styleFrom(
+                                        style: ElevatedButton.styleFrom(                            // Add new goal button
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
