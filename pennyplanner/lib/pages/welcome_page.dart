@@ -157,6 +157,7 @@ class WelcomePage extends StatelessWidget {
                           ),
                         ),
                         IconButton(
+                          //button includes the whole google signup/-in shebang
                           onPressed: () async {
                             try {
                               await Authentication.signInWithGoogle(
@@ -165,13 +166,15 @@ class WelcomePage extends StatelessWidget {
                                 FirebaseDatabase db = FirebaseDatabase.instance;
                                 DatabaseReference ref =
                                     FirebaseDatabase.instance.ref();
-                                bool userExists = (await ref
-                                        .child('users')
-                                        .child(value!.uid)
-                                        .get())
-                                    .exists;
+                                bool userExists =
+                                    (await ref //checks if user already exists in the database
+                                            .child('users')
+                                            .child(value!.uid)
+                                            .get())
+                                        .exists;
 
                                 if (userExists == true) {
+                                  //if user exists, no need to create data to database
                                   print("user found, no need to create");
                                   await ref
                                       .child("users")
@@ -195,6 +198,7 @@ class WelcomePage extends StatelessWidget {
                                         (Route<dynamic> route) => false);
                                   });
                                 } else {
+                                  //if user doesn't exist, create data to database
                                   print("No user found, creating");
                                   DatabaseReference ref = FirebaseDatabase
                                       .instance
@@ -212,6 +216,7 @@ class WelcomePage extends StatelessWidget {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
                                   Navigator.pushAndRemoveUntil(
+                                      //move the user to homepage after authentication
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => HomePage(
@@ -221,7 +226,7 @@ class WelcomePage extends StatelessWidget {
                                 }
                               });
                               FirebaseAuth.instance
-                                  .authStateChanges() // poista authstatechanges tarvittaessa, debug info bla bla
+                                  .authStateChanges()
                                   .listen((User? user) {
                                 if (user == null) {
                                   print('User is currently signed out!');

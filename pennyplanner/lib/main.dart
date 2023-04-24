@@ -21,7 +21,8 @@ void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); //käynnistetään firebase applikaatiossa
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseDatabase.instance.setPersistenceEnabled(true);
+  FirebaseDatabase.instance
+      .setPersistenceEnabled(true); //enables online persistence
   SharedPreferences prefs = await SharedPreferences.getInstance();
   //if initialvalues are null, set to default
   if (prefs.getString("currency") == null) {
