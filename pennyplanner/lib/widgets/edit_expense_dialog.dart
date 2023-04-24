@@ -8,6 +8,7 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditExpenseDialog {
+
   static void run(
       BuildContext context,
       String title,
@@ -15,7 +16,10 @@ class EditExpenseDialog {
       String? dbDueDate,
       String categoryName,
       String expenseId,
-      bool reoccurring) {
+      bool reoccurring,
+      isPremium) {
+
+    bool _isPremium = isPremium;
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
     DateTime dueDate =
@@ -260,7 +264,18 @@ class EditExpenseDialog {
                               onChanged: (bool? newValue) {
                                 dueDateTextController.text = "";
                                 setState(() {
-                                  dueDateCheckBoxValue = newValue!;
+
+                                       if(_isPremium){
+                                   dueDateCheckBoxValue = newValue!;
+                                 }
+                                  else{
+                                    var snackBar = const SnackBar(
+                                        content: Text(
+                                            "Premium Feature, Buy Premium!"));
+                                            ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                  
                                 });
                               }),
                         ),
@@ -357,7 +372,18 @@ class EditExpenseDialog {
                               value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  repeatEveryMonthCheckBoxValue = newValue!;
+
+                                   if(_isPremium){
+                                   repeatEveryMonthCheckBoxValue = newValue!;
+                                 }
+                                  else{
+                                    var snackBar = const SnackBar(
+                                        content: Text(
+                                            "Premium Feature, Buy Premium!"));
+                                            ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                  
                                 });
                               }),
                         ),

@@ -11,7 +11,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 final userid = FirebaseAuth.instance.currentUser!.uid;
 
 class AddExpenseDialog {
-  static void run(BuildContext context, categoryName) {
+  static void run(BuildContext context, categoryName, isPremium) {
+    bool _isPremium = isPremium;
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
     DateTime? dueDate;
@@ -143,7 +144,20 @@ class AddExpenseDialog {
                               onChanged: (bool? newValue) {
                                 dueDateTextController.text = "";
                                 setState(() {
-                                  dueDateCheckBoxValue = newValue!;
+
+                                 if(_isPremium){
+                                   dueDateCheckBoxValue = newValue!;
+                                 }
+                                  else{
+                                    var snackBar = const SnackBar(
+                                        content: Text(
+                                            "Premium Feature, Buy Premium!"));
+                                            ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+
+
+                                 
                                 });
                               }),
                         ),
@@ -239,7 +253,19 @@ class AddExpenseDialog {
                               value: repeatEveryMonthCheckBoxValue,
                               onChanged: (bool? newValue) {
                                 setState(() {
-                                  repeatEveryMonthCheckBoxValue = newValue!;
+
+
+                                  if(_isPremium){
+                                   repeatEveryMonthCheckBoxValue = newValue!;
+                                 }
+                                  else{
+                                    var snackBar = const SnackBar(
+                                        content: Text(
+                                            "Premium Feature, Buy Premium!"));
+                                            ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                  
                                 });
                               }),
                         ),
