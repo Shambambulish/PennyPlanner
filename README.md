@@ -1,4 +1,4 @@
-# Pennyplanner - a self-financing app  
+# PennyPlanner - a self-financing app  
 
 <img src="https://raw.githubusercontent.com/Shambambulish/PennyPlanner/dev/pennyplanner/assets/pplogo.png" width="200" height="200">
 
