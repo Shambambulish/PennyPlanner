@@ -74,6 +74,8 @@
     "premiumPageString2": "Buy premium",
     "premiumPageString3": "You'll get amazing features such as",
     "premiumPageString4": "- No ads",
+    "premiumPageString5": "- Set expense due date",
+    "premiumPageString6": "- Set up repeating expenses",
     "premiumPageButton": "Buy now",
     "signingUp": "Signing up...",
     "userOrPassIncorrect": "Wrong password or user does not exist.",
