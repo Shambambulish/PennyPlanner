@@ -18,6 +18,12 @@ class PPAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
   });
 
+/*
+
+custom appbar with toggleable functionality to pop until first route or show a settings button
+
+*/
+
   @override
   Widget build(BuildContext context) {
     final PPColors ppColors = Theme.of(context).extension<PPColors>()!;

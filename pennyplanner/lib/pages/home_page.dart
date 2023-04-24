@@ -91,6 +91,13 @@ class _HomePageState extends State<HomePage> {
         seconds: 10);
   }
 
+  /*
+  check if budget information for user is empty
+  if empty: set to default values
+  if not: check if budget information is outdated (month has changed)
+          if not: do nothing
+          if yes: update for next month based on current reoccurring expenses and goals
+  */
   void checkAndUpdateBudget() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref().child('budgets');
     ref.child(FirebaseAuth.instance.currentUser!.uid).once().then((event) {

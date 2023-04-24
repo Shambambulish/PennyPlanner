@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pennyplanner/models/savedbudget.dart';
-import 'package:pennyplanner/models/saving_goal.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ad_helper.dart';
@@ -16,7 +14,6 @@ import 'package:pennyplanner/widgets/edit_goal_dialog.dart';
 import 'package:pennyplanner/widgets/styled_dialog_popup.dart';
 import 'package:pennyplanner/widgets/edit_income_dialog.dart';
 
-import '../models/goal_category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ManageGoals extends StatefulWidget {
@@ -31,7 +28,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref();
 
 class _ManageGoalsState extends State<ManageGoals> {
   BannerAd? _bannerAd;
-
+  //alustetaan stream lukemaan dataa tietokannasta
   Stream<DatabaseEvent> readStream = ref
       .child('budgets')
       .child(FirebaseAuth.instance.currentUser!.uid)
@@ -90,6 +87,7 @@ class _ManageGoalsState extends State<ManageGoals> {
 
                     List<Widget> goals = [];
                     double savingsUsed = 0;
+                    //if there are goals, loop through and add them and their data to a list to append to the widget tree below
                     if (dbData['goals'] != null) {
                       dbData['goals'].forEach((goalKey, goalValue) {
                         if (goalValue['percentOfSavings'] != null) {
