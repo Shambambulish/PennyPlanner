@@ -1,6 +1,6 @@
 # PennyPlanner - a self-financing app
 
-<img src="./assets/pplogo.png" width="200" height="200">
+<img src="pennyplanner/assets/pplogo.png" width="200" height="200">
 
 This is a student-project for a group of students at Oulu University of Applied Sciences, for a Bachelor of Engineering programme in Information and Communications Technology. This mobile development project lasted approximately 2 months during Spring 2023.
 
@@ -46,4 +46,4 @@ Back-end (Setting up firebase, and linking it to the app, and the functions rela
 
 Below is a layout of the program's frontend structures using [Lucidchart](https://www.lucidchart.com/pages/).
 
-<img src="./assets/programdiagram.png">
+<img src="pennyplanner/assets/programdiagram.png">
