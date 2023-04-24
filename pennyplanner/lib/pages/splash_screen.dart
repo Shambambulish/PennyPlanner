@@ -12,19 +12,19 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> with TickerProviderStateMixin {
   late AnimationController controller1;
-  late Animation<Alignment> positionAnimation;
+  late Animation<Alignment> positionAnimation;                    // Animations scrapped
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const WelcomePage()));
+          MaterialPageRoute(builder: (context) => const WelcomePage()));      // Navigator routes the app to the WelcomePage() after the Splash Screen duration has gone
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;                   // PPColors is the variable to know whether the user uses Dark or Light mode
     return Scaffold(
         body: Center(
       child: Column(
@@ -34,10 +34,10 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: ppColors.isDarkMode
+                  color: ppColors.isDarkMode                                              
                       ? Color(0xff111111)
                       : Color(0xffaf6363)),
-              child: Column(
+              child: Column(                                                              // Forming the main structure of the Splash Screen
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
@@ -55,7 +55,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                     child: Image(
                         image: ppColors.isDarkMode
                             ? AssetImage('assets/pplogo_bold_red.png')
-                            : AssetImage('assets/pplogo_bold_yellow.png')),
+                            : AssetImage('assets/pplogo_bold_yellow.png')),                // Depending on the chosen theme, an image is chosen
                   ),
                 ],
               ),
@@ -67,7 +67,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: ppColors.isDarkMode
-                      ? AssetImage('assets/PPBG_dark.png')
+                      ? AssetImage('assets/PPBG_dark.png')                                  // Depending on the chosen theme, an image is chosen
                       : AssetImage("assets/PPBG.png"),
                   fit: BoxFit.cover,
                 ),

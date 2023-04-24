@@ -22,9 +22,9 @@ class SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
-    return Scaffold(
-      body: CustomScrollView(slivers: [
+    final PPColors ppColors = Theme.of(context).extension<PPColors>()!;         // Checking which mode the user has enabled (Dark/Light)
+    return Scaffold(                                                                    
+      body: CustomScrollView(slivers: [                                         // Forming the structure of the page
         SliverFillRemaining(
           hasScrollBody: false,
           child: Column(children: [
@@ -45,7 +45,7 @@ class SignInPageState extends State<SignInPage> {
                       height: 230,
                       child: Image(
                         image: ppColors.isDarkMode
-                            ? AssetImage('assets/pplogo_red.png')
+                            ? AssetImage('assets/pplogo_red.png')                 // Depending on the chosen theme, an image is chosen
                             : AssetImage('assets/pplogo.png'),
                       ),
                     ),
@@ -88,9 +88,9 @@ class SignInPageState extends State<SignInPage> {
                               ),
                             ),
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),     
                               child: Text(
-                                AppLocalizations.of(context)!.login,
+                                AppLocalizations.of(context)!.login,                  //Local variable changes depening on the language chosen by the user
                                 style: TextStyle(
                                     fontFamily: 'Hind Siliguri',
                                     fontSize: 27,
@@ -119,7 +119,7 @@ class SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 35,
                                   child: TextField(
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: Colors.black),                    // TextField for the email
                                     controller: emailController,
                                     cursorColor: Colors.black,
                                     obscureText: false,
@@ -158,7 +158,7 @@ class SignInPageState extends State<SignInPage> {
                                 ),
                                 SizedBox(
                                   height: 35,
-                                  child: TextField(
+                                  child: TextField(                                                   // TextField for the password
                                     style: TextStyle(color: Colors.black),
                                     controller: passwordController,
                                     cursorColor: Colors.black,
@@ -193,7 +193,7 @@ class SignInPageState extends State<SignInPage> {
                             onPressed: () async {
                               {
                                 try {
-                                  //check if all fields are filled
+                                    //Check if all fields are filled
                                   if (emailController.text == "" ||
                                       passwordController.text == "") {
                                     var snackBar = SnackBar(
@@ -204,7 +204,7 @@ class SignInPageState extends State<SignInPage> {
                                         .showSnackBar(snackBar);
                                     return;
                                   }
-                                  //check email format
+                                  //Check email format
                                   if (EmailValidator.validate(
                                           emailController.text.trim()) ==
                                       false) {
@@ -324,7 +324,7 @@ class SignInPageState extends State<SignInPage> {
                           IconButton(
                             onPressed: () async {
                               try {
-                                await Authentication.signInWithGoogle(
+                                await Authentication.signInWithGoogle(              // Option for signing in with Google
                                         context: context)
                                     .then((value) async {
                                   FirebaseDatabase db =
@@ -337,7 +337,8 @@ class SignInPageState extends State<SignInPage> {
                                           .get())
                                       .exists;
 
-                                  if (userExists == true) {
+                                  if (userExists == true) {                     // Check if user is found
+                                                                                // User is found
                                     print("user found, no need to create");
                                     await ref
                                         .child("users")
@@ -361,7 +362,7 @@ class SignInPageState extends State<SignInPage> {
                                           (Route<dynamic> route) => false);
                                     });
                                   } else {
-                                    print("No user found, creating");
+                                    print("No user found, creating");           // If user is not found, create a new user
                                     DatabaseReference ref = FirebaseDatabase
                                         .instance
                                         .ref('/users')
