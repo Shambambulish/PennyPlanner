@@ -229,7 +229,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 );
                               }).toList(),
                               onChanged: (String? value) {
-                                // This is called when the user selects an item.
                                 setState(() {
                                   currencySetting = value!;
                                   prefs.setString("currency", value);

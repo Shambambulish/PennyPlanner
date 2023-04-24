@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               totalExpenses += expenseValue['amount'];
               if (expenseValue['reoccurring']) {
                 if (expenseValue['isDue'] != null) {
-                  newExpenses['expenseKey'] = {
+                  newExpenses[expenseKey] = {
                     'amount': expenseValue['amount'],
                     'date': expenseValue['date'],
                     'description': expenseValue['description'],
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                     'isDue': expenseValue['isDue']
                   };
                 } else {
-                  newExpenses['expenseKey'] = {
+                  newExpenses[expenseKey] = {
                     'amount': expenseValue['amount'],
                     'date': expenseValue['date'],
                     'description': expenseValue['description'],
