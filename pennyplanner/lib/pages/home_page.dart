@@ -37,11 +37,7 @@ class _HomePageState extends State<HomePage> {
     notificationService.initialize();
     listenToNotification();
 
-    // async database query
-    //  widget.isPremium = if (user doesn't have premium)
-    // end premium checker
-
-    //SHOW ADS AND NOTI IF NOT PREMIUM
+    // SHOW ADS AND NOTIFICATION IF NOT PREMIUM
     if (!widget.isPremium) {
       waitForPremiumNoti();
 
@@ -50,12 +46,13 @@ class _HomePageState extends State<HomePage> {
       });
     }
     /////////////////////////
+
     checkAndUpdateBudget();
     super.initState();
   }
 
+  //Show full-screen ad
   void showInterAd() {
-    print("show");
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,
       request: const AdRequest(),
@@ -68,9 +65,7 @@ class _HomePageState extends State<HomePage> {
           );
 
           if (this.mounted) {
-            print("ismoutned");
             setState(() {
-              print("here");
               _interstitialAd = ad;
             });
           }
@@ -82,7 +77,8 @@ class _HomePageState extends State<HomePage> {
     );
     _interstitialAd?.show().then((value) => {_timerForInter.cancel()});
   }
-// send notification about premium for 10 seconds
+
+// send notification about premium in 10 seconds after page load
   void waitForPremiumNoti() async {
     await notificationService.showScheduledNotification(
         id: 0,
@@ -250,9 +246,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // listen for taps on the notifications
   void listenToNotification() => notificationService.onNotificationClick.stream
       .listen(onNotificationListener);
 
+  // move user to "buy premium" page after tapping notification
   void onNotificationListener(String? payload) {
     if (payload != null && payload.isNotEmpty) {
       Navigator.push(

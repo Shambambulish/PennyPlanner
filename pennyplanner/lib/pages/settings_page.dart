@@ -23,13 +23,9 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  //SETTINGS
-  //TESTAUSTA VARTEN, JOKU SETTINGS FILU ERIKSEEN
   String? currencySetting;
   String? languageSetting;
   late bool darkModeCheckBoxValue; //set system default
-  bool toinenAsetus = false;
-  bool kolmasAsetus = false;
   late Future<SharedPreferences> prefsFuture;
   late Future<DatabaseEvent> userNameFromDB;
 
@@ -37,7 +33,8 @@ class _SettingsPageState extends State<SettingsPage> {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
 
   @override
-  void initState() {  // get user instance from database
+  void initState() {
+    // get user instance from database
     prefsFuture = SharedPreferences.getInstance();
     userNameFromDB = ref
         .child("users")

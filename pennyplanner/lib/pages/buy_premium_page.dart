@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../utils/theme_provider.dart';
 import '../widgets/pp_appbar.dart';
 import 'package:pennyplanner/notifications.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// page for describing premium features and purchasing premium
 class BuyPremiumPage extends StatefulWidget {
   BuyPremiumPage({super.key, required payload});
 
@@ -94,8 +94,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Theme.of(context).colorScheme.primary),
-                          onPressed: () async {
-                          },
+                          onPressed: () async {},
                           child: Text(
                             AppLocalizations.of(context)!.premiumPageButton,
                             style: TextStyle(

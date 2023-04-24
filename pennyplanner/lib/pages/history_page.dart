@@ -28,7 +28,7 @@ class _HistoryPageState extends State<HistoryPage> {
   BannerAd? _bannerAd;
   Future<SharedPreferences>? prefsFuture;
 
-  //alustetaan stream lukemaan dataa tietokannasta
+  // Set up a stream to read data from the database
   Stream<DatabaseEvent> readStream = ref
       .child('budgets')
       .child(FirebaseAuth.instance.currentUser!.uid)
@@ -39,11 +39,11 @@ class _HistoryPageState extends State<HistoryPage> {
     prefsFuture = SharedPreferences.getInstance();
     super.initState();
 
-    // widget.isPremium = if (async database query user doesn't have premium)
+    // Check if user is premium
     if (!widget.isPremium!) {
       MobileAds.instance.initialize();
 
-      // COMPLETE: Load a banner ad
+      // Load a banner ad
       BannerAd(
         adUnitId: AdHelper.bannerAdUnitId,
         request: const AdRequest(),
