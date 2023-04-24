@@ -45,12 +45,9 @@ class _HomePageState extends State<HomePage> {
     if (!widget.isPremium) {
       waitForPremiumNoti();
 
-      if (_interstitialAd != null && _interstitialAd!.adUnitId.isEmpty) {
-        _interstitialAd!.dispose();
-        _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
-          //showInterAd();
-        });
-      }
+      _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
+        showInterAd();
+      });
     }
     /////////////////////////
     checkAndUpdateBudget();
