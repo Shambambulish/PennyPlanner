@@ -32,7 +32,8 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
         title: 'Settings',
         returnToHomePage: true,
       ),
-      body: Stack(
+      body: SingleChildScrollView(
+          child: Column(
         children: [
           Container(
             width: 422,
@@ -63,7 +64,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
                       SizedBox(
-                        height: 50,
+                        height: 20,
                       ),
                       Text(AppLocalizations.of(context)!.premiumPageString4,
                           textAlign: TextAlign.left,
@@ -71,7 +72,23 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
                               fontSize: 25,
                               color: ppColors.secondaryTextColor)),
                       SizedBox(
-                        height: 50,
+                        height: 20,
+                      ),
+                      Text(AppLocalizations.of(context)!.premiumPageString5,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 25,
+                              color: ppColors.secondaryTextColor)),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(AppLocalizations.of(context)!.premiumPageString6,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 25,
+                              color: ppColors.secondaryTextColor)),
+                      SizedBox(
+                        height: 20,
                       ),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -95,7 +112,7 @@ class _BuyPremiumPageState extends State<BuyPremiumPage> {
             ]),
           ),
         ],
-      ),
+      )),
     );
   }
 }

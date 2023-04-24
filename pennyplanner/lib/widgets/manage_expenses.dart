@@ -58,7 +58,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
-            if (this.mounted) _bannerAd = ad as BannerAd;
+            if (this.mounted && _bannerAd!.adUnitId.isEmpty)
+              _bannerAd = ad as BannerAd;
           },
           onAdFailedToLoad: (ad, err) {
             debugPrint('Failed to load a banner ad: ${err.message}');
@@ -115,7 +116,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                           expenseTotal += v['amount'];
                         });
                       }
-                      double indicatorValueCalc = 1 -                 // NULL CHECK PITÄÄ LISÄTÄ
+                      double indicatorValueCalc = 1 - // NULL CHECK PITÄÄ LISÄTÄ
                           (expenseCategoryValue['budget'] - expenseTotal) /
                               expenseCategoryValue['budget'] as double;
 
@@ -142,7 +143,6 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                     expenseKey,
                                     expenseValue['reoccurring'],
                                     widget.isPremium);
-
                               },
                               child: Row(
                                 children: [
@@ -200,11 +200,9 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                 ],
                               ),
                             ),
-
                           ));
                         });
                       }
-
 
                       categoriesIntoCards.add(Card(
                           color: ppColors.isDarkMode
@@ -314,8 +312,10 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                           BorderRadius.circular(
                                                               18))),
                                               onPressed: () {
-                                                AddExpenseDialog.run(context,
-                                                    expenseCategoryKey,widget.isPremium);
+                                                AddExpenseDialog.run(
+                                                    context,
+                                                    expenseCategoryKey,
+                                                    widget.isPremium);
                                               },
                                               child: const Icon(
                                                 Icons.add,
@@ -420,7 +420,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                     child: Row(
                                       children: [
                                         Align(
-                                          alignment: Alignment.topLeft,       // NULLCHECK TARVITAAN
+                                          alignment: Alignment
+                                              .topLeft, // NULLCHECK TARVITAAN
                                           child: Text(
                                             '${(dbData['budget'] - totalCost).toStringAsFixed(2)}${prefs.getString('currency')}',
                                             style: TextStyle(
@@ -483,7 +484,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                               child: Column(children: [
                                 //BANNER AD
 
-                                if (_bannerAd != null)
+                                if (_bannerAd != null &&
+                                    _bannerAd!.adUnitId.isEmpty)
                                   Align(
                                     alignment: Alignment.topCenter,
                                     child: SizedBox(
