@@ -54,7 +54,8 @@
     "income": "Income",
     "perMonth": "/month",
     "savedSince": "saved since",
-    "amountToSaveInPeriod": "Amount to save in period",
+    "percentOfSavings": "Percent of savings to save",
+    "percentOfSavingsToGoal": "Percent of savings towards goal",
     "hi": "Hi",
     "settings": "Settings",
     "currency": "Currency",
@@ -87,5 +88,12 @@
     "updatedBudget": "Updated budget.",
     "addedExpense": "Expense added.",
     "updatedExpense": "Expense updated.",
-    "updatedCategory": "Category updated."
+    "updatedCategory": "Category updated.",
+    "addedGoal": "Goal added.",
+    "updatedIncome": "Goal settings updated.",
+    "max": "max",
+    "intoSavings": "into savings after expenses",
+    "savingsExceeded": "Savings exceeded",
+    "updatedGoal": "Goal updated.",
+    "buyPremium": "Buy Premium"
 }

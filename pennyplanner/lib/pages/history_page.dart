@@ -26,7 +26,7 @@ class HistoryPage extends StatefulWidget {
 DatabaseReference ref = FirebaseDatabase.instance.ref();
 
 class _HistoryPageState extends State<HistoryPage> {
-  DateTime startDate = DateTime.now();
+  DateTime startDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
   DateTime endDate = DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
   BannerAd? _bannerAd;
   Future<SharedPreferences>? prefsFuture;
@@ -53,7 +53,7 @@ class _HistoryPageState extends State<HistoryPage> {
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
-              _bannerAd = ad as BannerAd;
+              if (_bannerAd!.adUnitId.isEmpty) _bannerAd = ad as BannerAd;
             });
           },
           onAdFailedToLoad: (ad, err) {
@@ -74,78 +74,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    void fetchWithDate() {
-      if (kDebugMode) {
-        print("fetchwithdate");
-      }
-
-      //tietokantakutsu startdaten ja enddaten perusteella
-      // asetus resultdataan
-    }
-
-    fetchWithDate();
-
-    Budget history = Budget(
-        id: 0,
-        startDate: DateTime.now(),
-        endDate: DateTime(2023, 4, 30),
-        budget: 2000,
-        expenseCategories: [
-          ExpenseCategory(
-            id: 0,
-            title: 'Groceries',
-            allottedMaximum: 350.00,
-            expenses: [
-              Expense(
-                id: 0,
-                title: 'Bottle of soda',
-                amount: 1.72,
-                date: DateTime.now(),
-              ),
-              Expense(
-                id: 1,
-                title: 'Bacon',
-                amount: 2.89,
-                date: DateTime.now(),
-              ),
-            ],
-          ),
-          ExpenseCategory(
-            id: 1,
-            title: 'Bills',
-            allottedMaximum: 500.00,
-            expenses: [
-              Expense(
-                  id: 0,
-                  title: 'Electricity',
-                  amount: 50,
-                  reoccurring: true,
-                  date: DateTime.now(),
-                  dueDate: DateTime(2023, 4, 12)),
-              Expense(
-                  id: 1,
-                  title: 'Car payment',
-                  amount: 200,
-                  reoccurring: true,
-                  date: DateTime.now(),
-                  dueDate: DateTime(2023, 5, 2)),
-            ],
-          ),
-        ]);
-    //init dummy data end
-
-    Map<String, double> calcPercentages() {
-      Map<String, double> chartMap = {};
-      for (ExpenseCategory e in history.expenseCategories) {
-        double sum = 0;
-        for (Expense ex in e.expenses) {
-          sum += ex.amount;
-        }
-        chartMap[e.title] = sum;
-      }
-      return chartMap;
-    }
-
     DateFormat dateFormat =
         DateFormat.yMMMMd(); // how you want it to be formatted
 
@@ -173,8 +101,10 @@ class _HistoryPageState extends State<HistoryPage> {
                   dbData['expenseCategories']
                       .forEach((expenseCategoryKey, expenseCategoryValue) {
                     double sum = 0;
-
+                    expensesIntoList = [];
+                    List<Widget> expensesPerCategory = [];
                     if (expenseCategoryValue['expenses'] != null) {
+                      print(expenseCategoryValue['expenses']);
                       expenseCategoryValue['expenses']
                           .forEach((expenseKey, expenseValue) {
                         if (DateTime.parse(expenseValue['date'])
@@ -213,8 +143,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                   flex: 3,
                                   child: Container(
                                     alignment: Alignment.center,
-                                    child: Text(DateFormat('dd.MM.yyyy')
-                                        .format(expenseValue['date'])),
+                                    child: Text(DateFormat('dd.MM.yyyy').format(
+                                        DateTime.parse(expenseValue['date']))),
                                   ),
                                 ),
                                 Expanded(
@@ -226,45 +156,49 @@ class _HistoryPageState extends State<HistoryPage> {
                               ],
                             ),
                           ));
-
-                          categoriesIntoCards.add(Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            elevation: 3,
-                            child: Container(
-                              margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
-                              child: ExpandableTheme(
-                                data: const ExpandableThemeData(hasIcon: false),
-                                child: ExpandablePanel(
-                                  header: Container(
-                                    child: Text(
-                                      expenseValue['description'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "Hind Siliguri",
-                                          color: ppColors.primaryTextColor),
-                                    ),
-                                  ),
-                                  collapsed: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                        height: 20,
-                                        child: Text(
-                                            '${expensesIntoList.length.toString()} ${AppLocalizations.of(context)!.transactions}')),
-                                  ),
-                                  expanded: Column(children: expensesIntoList),
-                                ),
-                              ),
-                            ),
-                          ));
                         }
                       });
 
-                      expensesForCalc[expenseCategoryValue['description']] =
-                          sum;
+                      if (expensesIntoList.isNotEmpty) {
+                        categoriesIntoCards.add(Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 3,
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(8, 5, 4, 5),
+                            child: ExpandableTheme(
+                              data: const ExpandableThemeData(hasIcon: false),
+                              child: ExpandablePanel(
+                                header: Container(
+                                  child: Text(
+                                    expenseCategoryValue['description'],
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Hind Siliguri",
+                                        color: ppColors.primaryTextColor),
+                                  ),
+                                ),
+                                collapsed: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SizedBox(
+                                      height: 20,
+                                      child: Text(
+                                          '${expensesIntoList.length.toString()} ${AppLocalizations.of(context)!.transactions}')),
+                                ),
+                                expanded: Column(children: expensesIntoList),
+                              ),
+                            ),
+                          ),
+                        ));
+                      }
+
+                      if (sum > 0) {
+                        expensesForCalc[expenseCategoryValue['description']] =
+                            sum;
+                      }
                     }
                   });
                 }
@@ -337,37 +271,38 @@ class _HistoryPageState extends State<HistoryPage> {
                           ]),
                         ),
                         //PIECHART
-                        Container(
-                            padding: const EdgeInsets.only(bottom: 50),
-                            child: PieChart(
-                              dataMap: expensesForCalc,
-                              animationDuration:
-                                  const Duration(milliseconds: 800),
-                              chartLegendSpacing: 32,
-                              chartRadius:
-                                  MediaQuery.of(context).size.width / 3.2,
-                              initialAngleInDegree: 0,
-                              chartType: ChartType.ring,
-                              ringStrokeWidth: 32,
-                              centerText: "",
-                              legendOptions: const LegendOptions(
-                                showLegendsInRow: false,
-                                legendPosition: LegendPosition.right,
-                                showLegends: true,
-                                legendTextStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                        if (expensesForCalc.isNotEmpty)
+                          Container(
+                              padding: const EdgeInsets.only(bottom: 50),
+                              child: PieChart(
+                                dataMap: expensesForCalc,
+                                animationDuration:
+                                    const Duration(milliseconds: 800),
+                                chartLegendSpacing: 32,
+                                chartRadius:
+                                    MediaQuery.of(context).size.width / 3.2,
+                                initialAngleInDegree: 0,
+                                chartType: ChartType.ring,
+                                ringStrokeWidth: 32,
+                                centerText: "",
+                                legendOptions: const LegendOptions(
+                                  showLegendsInRow: false,
+                                  legendPosition: LegendPosition.right,
+                                  showLegends: true,
+                                  legendTextStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              chartValuesOptions: const ChartValuesOptions(
-                                showChartValueBackground: true,
-                                showChartValues: true,
-                                showChartValuesInPercentage: false,
-                                showChartValuesOutside: false,
-                                decimalPlaces: 1,
-                              ),
-                              // gradientList: ---To add gradient colors---
-                              // emptyColorGradient: ---Empty Color gradient---
-                            )),
+                                chartValuesOptions: const ChartValuesOptions(
+                                  showChartValueBackground: true,
+                                  showChartValues: true,
+                                  showChartValuesInPercentage: false,
+                                  showChartValuesOutside: false,
+                                  decimalPlaces: 1,
+                                ),
+                                // gradientList: ---To add gradient colors---
+                                // emptyColorGradient: ---Empty Color gradient---
+                              )),
                         //PIECHART END
                         Column(children: [
                           //BANNER AD

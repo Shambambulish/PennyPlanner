@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,6 +21,7 @@ void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); //käynnistetään firebase applikaatiossa
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (prefs.getString("currency") == null) {
     prefs.setString("currency", "€");
@@ -55,6 +57,7 @@ class MyApp extends StatelessWidget {
     final localeProvider = Provider.of<LocaleProvider>(context);
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Penny Planner',
         theme: themeProvider.getTheme,
         home: const Splash(), //MUISTA VAIHTAA TAKAISIN WELCOMEEN

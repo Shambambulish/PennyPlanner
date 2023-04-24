@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -44,12 +45,15 @@ class _HomePageState extends State<HomePage> {
     if (!widget.isPremium) {
       waitForPremiumNoti();
 
-      _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
-        showInterAd();
-      });
+      if (_interstitialAd != null && _interstitialAd!.adUnitId.isEmpty) {
+        _interstitialAd!.dispose();
+        _timerForInter = Timer.periodic(Duration(seconds: 2), (result) {
+          //showInterAd();
+        });
+      }
     }
     /////////////////////////
-
+    checkAndUpdateBudget();
     super.initState();
   }
 
@@ -90,6 +94,108 @@ class _HomePageState extends State<HomePage> {
         seconds: 10);
   }
 
+  void checkAndUpdateBudget() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref().child('budgets');
+    ref.child(FirebaseAuth.instance.currentUser!.uid).once().then((event) {
+      Map<dynamic, dynamic> dbData = {};
+      if (event.snapshot.children.isNotEmpty) {
+        for (DataSnapshot data in event.snapshot.children) {
+          dbData[data.key] = data.value;
+        }
+        DateTime firstOfThisMonth =
+            DateTime(DateTime.now().year, DateTime.now().month, 1);
+        if (DateTime.parse(dbData['createdOn']).isBefore(firstOfThisMonth)) {
+          Map<String, dynamic> newCategories = {};
+
+          double totalExpenses = 0;
+          dbData['expenseCategories']
+              .forEach((expenseCategoryKey, expenseCategoryValue) {
+            Map<String, dynamic> newExpenses = {};
+            expenseCategoryValue['expenses']
+                .forEach((expenseKey, expenseValue) {
+              totalExpenses += expenseValue['amount'];
+              if (expenseValue['reoccurring']) {
+                if (expenseValue['isDue'] != null) {
+                  newExpenses['expenseKey'] = {
+                    'amount': expenseValue['amount'],
+                    'date': expenseValue['date'],
+                    'description': expenseValue['description'],
+                    'reoccurring': expenseValue['reoccurring'],
+                    'isDue': expenseValue['isDue']
+                  };
+                } else {
+                  newExpenses['expenseKey'] = {
+                    'amount': expenseValue['amount'],
+                    'date': expenseValue['date'],
+                    'description': expenseValue['description'],
+                    'reoccurring': expenseValue['reoccurring']
+                  };
+                }
+              }
+            });
+
+            if (newExpenses.isNotEmpty) {
+              newCategories[expenseCategoryKey] = {
+                'budget': expenseCategoryValue['budget'],
+                'categoryCreatedOn': expenseCategoryValue['categoryCreatedOn'],
+                'description': expenseCategoryValue['description'],
+                'expenses': newExpenses,
+              };
+            } else {
+              newCategories[expenseCategoryKey] = {
+                'budget': expenseCategoryValue['budget'],
+                'categoryCreatedOn': expenseCategoryValue['categoryCreatedOn'],
+                'description': expenseCategoryValue['description']
+              };
+            }
+          });
+
+          double totalMoneySaved = (dbData['budget'] - totalExpenses) *
+              dbData['percentToSave'] /
+              100;
+
+          Map<String, dynamic> newGoals = {};
+          if (dbData['goals'] != null) {
+            dbData['goals'].forEach((goalKey, goalValue) {
+              double goalMoneySaved = 0;
+              if (goalValue['percentOfSavings'] != null &&
+                  goalValue['percentOfSavings'].toDouble != 0) {
+                goalMoneySaved +=
+                    totalMoneySaved * goalValue['percentOfSavings'] / 100;
+              }
+              newGoals[goalKey] = {
+                'amountSaved': goalValue['amountSaved'] + goalMoneySaved,
+                'description': goalValue['description'],
+                'percentOfSavings': goalValue['percentOfSavings'],
+                'price': goalValue['price']
+              };
+            });
+          }
+
+          Map<String, dynamic> newBudget = {};
+
+          newBudget[FirebaseAuth.instance.currentUser!.uid] = {
+            'budget': dbData['budget'],
+            'createdOn': DateTime.now().toIso8601String(),
+            'expenseCategories': newCategories,
+            'goals': newGoals,
+            'income': dbData['income'],
+            'percentToSave': dbData['percentToSave']
+          };
+
+          ref.set(newBudget);
+        }
+      } else {
+        ref.child(FirebaseAuth.instance.currentUser!.uid).set({
+          'budget': 0,
+          'income': 0,
+          'percentToSave': 0,
+          'createdOn': DateTime.now().toIso8601String()
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final PPColors ppColors = Theme.of(context).extension<PPColors>()!;
@@ -100,6 +206,7 @@ class _HomePageState extends State<HomePage> {
           title: 'Home Page',
           returnToHomePage: false,
           showSettingsBtn: true,
+          isPremium: widget.isPremium,
         ),
         body: Column(
           children: [

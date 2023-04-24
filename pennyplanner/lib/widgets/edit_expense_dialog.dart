@@ -8,13 +8,29 @@ import 'styled_dialog_popup.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditExpenseDialog {
-  static void run(BuildContext context, String title, double amount,
-      DateTime? dbDueDate, String categoryName, String expenseId, isPremium) {
+
+  static void run(
+      BuildContext context,
+      String title,
+      double amount,
+      String? dbDueDate,
+      String categoryName,
+      String expenseId,
+      bool reoccurring,
+      isPremium) {
+
     bool _isPremium = isPremium;
     bool dueDateCheckBoxValue = false;
     bool repeatEveryMonthCheckBoxValue = false;
-    DateTime? dueDate = dbDueDate;
+    DateTime dueDate =
+        DateTime.parse(dbDueDate ?? DateTime.now().toIso8601String());
+    reoccurring
+        ? repeatEveryMonthCheckBoxValue = true
+        : repeatEveryMonthCheckBoxValue = false;
 
+    dbDueDate == null
+        ? dueDateCheckBoxValue = false
+        : dueDateCheckBoxValue = true;
     final descriptionTextController = TextEditingController();
     descriptionTextController.text = title;
     final amountTextController = TextEditingController();
@@ -22,7 +38,7 @@ class EditExpenseDialog {
     final dueDateTextController = TextEditingController();
     if (dbDueDate != null) {
       dueDateTextController.text =
-          DateFormat('dd.MM.yyyy').format(dbDueDate).toString();
+          DateFormat('dd.MM.yyyy').format(DateTime.parse(dbDueDate)).toString();
     }
     showDialog(
         context: context,
